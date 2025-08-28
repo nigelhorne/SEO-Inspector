@@ -32,7 +32,7 @@ SEO::Inspector - Perform common SEO checks on web pages
 
 =head1 DESCRIPTION
 
-C<SEO::Inspector> is a lightweight Perl module for running
+C<SEO::Inspector> is a lightweight module for running
 basic SEO (Search Engine Optimization) checks against a web page.
 
 It is designed for web developers, SEO analysts, and site owners
@@ -149,14 +149,13 @@ Each check returns a hashref like:
 =cut
 
 sub new {
-    my ($class, %args) = @_;
-    my $self = bless {
-        url     => $args{url},
-        ua      => Mojo::UserAgent->new,
-        html    => undef,
-        plugins => {},   # plugin name -> coderef
-    }, $class;
-    return $self;
+	my ($class, %args) = @_;
+	return bless {
+		url     => $args{url},
+		ua      => $args{'ua'} || Mojo::UserAgent->new(),
+		html    => undef,
+		plugins => {},   # plugin name -> coderef
+	}, $class;
 }
 
 sub _fetch_html {

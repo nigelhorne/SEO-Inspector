@@ -60,4 +60,6 @@ jobs:
           destination_dir: coverage
           user_name: github-actions
           user_email: github-actions@github.com
+          # Create completly new gh-pages branch
           force_orphan: true
+          keep_files: false
