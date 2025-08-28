@@ -12,4 +12,5 @@ t/eof.t
 t/eol.t
 t/plugins.t
 t/pod-synopsis.t
+t/seo-inspect.t
 t/url.t

@@ -25,6 +25,11 @@ WriteMakefile(
 	PL_FILES	=> {},
 	CONFIGURE_REQUIRES => {
 		'ExtUtils::MakeMaker' => 6.64,	# Minimum version for TEST_REQUIRES
+	}, PREREQ_PM => {
+		'Carp' => 0,
+		'Mojo::UserAgent' => 0,
+		'Module::Pluggable' => 0,
+		'HTML::TreeBuilder' => 0,
 	}, TEST_REQUIRES => {
 		'File::Path' => 0,
 		'File::Spec' => 0,
@@ -39,10 +44,6 @@ WriteMakefile(
 		'autodie' => 0,
 		'strict' => 0,
 		'warnings' => 0,
-	}, PREREQ_PM => {
-		'Carp' => 0,
-		'Mojo::UserAgent' => 0,
-		'Module::Pluggable' => 0
 	}, dist => $dist,
 	clean		=> { FILES => 'SEO-Inspector-*' },
 	# META_ADD => {
