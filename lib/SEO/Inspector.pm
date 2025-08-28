@@ -9,7 +9,7 @@ use Module::Pluggable require => 1, search_path => 'SEO::Inspector::Plugin';
 
 =head1 NAME
 
-SEO::Inspector - A Perl module for running SEO checks and plugins on HTML or URLs.
+SEO::Inspector - Run SEO checks on HTML or URLs
 
 =head1 SYNOPSIS
 
@@ -44,6 +44,8 @@ SEO::Inspector provides:
 =head1 METHODS
 
 =head2 new(%args)
+
+Create a new inspector object. Accepts optional C<url> argument.
 
 =cut
 
@@ -247,8 +249,6 @@ sub _check_links_alt_text {
 
 1;
 __END__
-
-Create a new inspector object. Accepts optional C<url> argument.
 
 =head2 load_plugins
 

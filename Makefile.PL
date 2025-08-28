@@ -29,6 +29,7 @@ WriteMakefile(
 		'Carp' => 0,
 		'Getopt::Long' => 0,
 		'File::Slurp' => 0,
+		'IPC::System::Simple' => 0,
 		'JSON::MaybeXS' => 0,
 		'Mojo::UserAgent' => 0,
 		'Module::Pluggable' => 0,
