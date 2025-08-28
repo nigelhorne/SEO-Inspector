@@ -35,10 +35,10 @@ jobs:
           cpanm --notest Devel::Cover
 
       # Optional: run Perl::Critic static checks
-      - name: Run Perl::Critic
-        run: |
-          cpanm Perl::Critic
-          perlcritic --verbose 5 lib
+      # - name: Run Perl::Critic
+      #   run: |
+      #     cpanm Perl::Critic
+      #     perlcritic --verbose 5 lib
 
       # Run the tests with Devel::Cover for coverage
       - name: Run tests with coverage

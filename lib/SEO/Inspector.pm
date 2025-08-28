@@ -317,19 +317,13 @@ sub _check_links_alt_text {
 
 __END__
 
-=head1 DEPENDENCIES
-
-=over 4
-
-=item * L<Mojo::UserAgent>
-
-=item * Perl 5.10+
-
-=back
-
 =head1 SEE ALSO
 
 L<Mojolicious>, L<LWP::UserAgent>, L<HTML::TreeBuilder>
+
+=head2 COVERAGE REPORT
+
+L<https://nigelhorne.github.io/SEO-Inspector/coverage/index.html
 
 =head1 AUTHOR
 
