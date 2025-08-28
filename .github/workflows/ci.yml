@@ -30,6 +30,7 @@ jobs:
       - name: Install dependencies
         run: |
           cpanm --notest --installdeps .
+          cpanm --notest Devel::Cover
 
       # Optional: run Perl::Critic static checks
       - name: Run Perl::Critic
@@ -37,7 +38,14 @@ jobs:
           cpanm Perl::Critic
           perlcritic --verbose 5 lib
 
-      # Run the tests
-      - name: Run tests
+      # Run the tests with Devel::Cover for coverage
+      - name: Run tests with coverage
         run: |
-          prove -lv t
+          cover -test
+
+      # Upload coverage report (to GitHub artifacts)
+      - name: Upload coverage report
+        uses: actions/upload-artifact@v3
+        with:
+          name: coverage-report
+          path: cover_db/
