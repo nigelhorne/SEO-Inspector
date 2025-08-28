@@ -24,15 +24,15 @@ SEO::Inspector - Perform common SEO checks on web pages
 
 # DESCRIPTION
 
-`SEO::Inspector` is a lightweight Perl module for running
+`SEO::Inspector` is a lightweight Perl module for running 
 basic SEO (Search Engine Optimization) checks against a web page.
 
-It is designed for web developers, SEO analysts, and site owners
-who want to quickly validate on-page elements without requiring
+It is designed for web developers, SEO analysts, and site owners 
+who want to quickly validate on-page elements without requiring 
 heavy external tools.
 
-Pages are fetched using [Mojo::UserAgent](https://metacpan.org/pod/Mojo%3A%3AUserAgent), and results are
-returned in a structured hash format, making it easy to integrate
+Pages are fetched using [Mojo::UserAgent](https://metacpan.org/pod/Mojo%3A%3AUserAgent), and results are 
+returned in a structured hash format, making it easy to integrate 
 with dashboards, reporting tools, or CI pipelines.
 
 # METHODS
@@ -47,7 +47,7 @@ Creates a new inspector for the given URL.
 
     my $report = $inspector->run_all;
 
-Runs the default suite of SEO checks and returns an arrayref of results.
+Runs the default suite of SEO checks and returns an arrayref of results.  
 Each result is a hashref with keys:
 
 - `name` - the check name
@@ -59,6 +59,14 @@ Each result is a hashref with keys:
     my $result = $inspector->check('title');
 
 Runs a single named check. Returns a hashref as above.
+
+## load\_plugin
+
+    $inspector->load_plugin('SocialTags');
+
+Loads a plugin module from the `SEO::Inspector::Plugin::` namespace.  
+The plugin must provide a `run($self, $html)` method that returns 
+a hashref in the same format as built-in checks.
 
 # CHECKS
 
@@ -72,6 +80,36 @@ The following checks are currently implemented:
 - `h1_presence` - Ensures at least one &lt;h1> element exists.
 - `word_count` - Counts visible words on the page.
 - `links_alt_text` - Ensures all &lt;img> tags have alt attributes.
+
+# PLUGIN SYSTEM
+
+`SEO::Inspector` supports a simple plugin mechanism to add custom checks.
+
+A plugin is just a Perl module under the `SEO::Inspector::Plugin::` 
+namespace that provides a `run($self, $html)` method.
+
+For example:
+
+    package SEO::Inspector::Plugin::SocialTags;
+
+    sub run {
+        my ($self, $html) = @_;
+        if ($html =~ m{<meta\s+property=["']og:title["']}i) {
+            return { name=>'socialtags', status=>'ok' };
+        }
+        return { name=>'socialtags', status=>'missing' };
+    }
+
+    1;
+
+To enable plugins:
+
+    my $inspector = SEO::Inspector->new(url => $url);
+    $inspector->load_plugin('SocialTags');
+
+    my $result = $inspector->check('socialtags');
+
+This allows developers to extend `SEO::Inspector` without modifying the core module.
 
 # RETURN VALUES
 

@@ -229,11 +229,11 @@ Each result is a hashref with keys:
 
 =over 4
 
-=item * C<name> — the check name
+=item * C<name> - the check name
 
-=item * C<status> — result status (C<ok>, C<missing>, or a numeric/string value)
+=item * C<status> - result status (C<ok>, C<missing>, or a numeric/string value)
 
-=item * C<notes> — optional notes or extracted values
+=item * C<notes> - optional notes or extracted values
 
 =back
 
@@ -257,21 +257,21 @@ The following checks are currently implemented:
 
 =over 4
 
-=item * C<title> — Ensures a <title> tag is present.
+=item * C<title> - Ensures a <title> tag is present.
 
-=item * C<meta_description> — Looks for a meta description tag.
+=item * C<meta_description> - Looks for a meta description tag.
 
-=item * C<canonical> — Validates a canonical link tag.
+=item * C<canonical> - Validates a canonical link tag.
 
-=item * C<robots_meta> — Checks for a robots meta directive.
+=item * C<robots_meta> - Checks for a robots meta directive.
 
-=item * C<viewport> — Checks for a responsive viewport meta tag.
+=item * C<viewport> - Checks for a responsive viewport meta tag.
 
-=item * C<h1_presence> — Ensures at least one <h1> element exists.
+=item * C<h1_presence> - Ensures at least one <h1> element exists.
 
-=item * C<word_count> — Counts visible words on the page.
+=item * C<word_count> - Counts visible words on the page.
 
-=item * C<links_alt_text> — Ensures all <img> tags have alt attributes.
+=item * C<links_alt_text> - Ensures all <img> tags have alt attributes.
 
 =back
 

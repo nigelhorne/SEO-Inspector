@@ -7,3 +7,4 @@ README.md
 t/10-load.t
 t/30-basics.t
 t/checks.t
+t/plugins.t
