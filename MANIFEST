@@ -1,4 +1,3 @@
-bin/seo
 bin/seo-inspect
 lib/SEO/Inspector.pm
 lib/SEO/Inspector/Plugin/MetaDescriptionCheck.pm
@@ -9,8 +8,8 @@ MANIFEST			This list of files
 README.md
 t/10-load.t
 t/30-basics.t
-t/checks.t
 t/eof.t
 t/eol.t
 t/plugins.t
 t/pod-synopsis.t
+t/url.t

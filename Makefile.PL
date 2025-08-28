@@ -37,7 +37,9 @@ WriteMakefile(
 		'strict' => 0,
 		'warnings' => 0,
 	}, PREREQ_PM => {
-		'LWP::UserAgent' => 0,
+		'Carp' => 0,
+		'Mojo::UserAgent' => 0,
+		'Module::Pluggable' => 0
 	}, dist => $dist,
 	clean		=> { FILES => 'SEO-Inspector-*' },
 	# META_ADD => {
