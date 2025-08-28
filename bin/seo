@@ -1,17 +1,21 @@
+#!/usr/bin/env perl
+
 use strict;
 use warnings;
+
+use lib 'lib';
 use SEO::Inspector;
 
 my $inspector = SEO::Inspector->new(
-    url => 'https://example.com/',
+	url => $ARGV[0] || 'https://www.nigelhorne.com/cgi-bin/page.fcgi?page=index'
 );
 
 # Run all checks
-my $report = $inspector->run_all;
+my $report = $inspector->run_all();
 
 foreach my $check (@$report) {
-    printf "%-20s : %s\n", $check->{name}, $check->{status};
-    print "  Notes: $check->{notes}\n" if $check->{notes};
+	printf "%-20s : %s\n", $check->{name}, $check->{status};
+	print "  Notes: $check->{notes}\n" if $check->{notes};
 }
 
 # Run only selected checks
