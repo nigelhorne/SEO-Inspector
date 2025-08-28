@@ -49,7 +49,7 @@ jobs:
       - name: Generate HTML report
         run: |
           cover -report html
-        working-directory: ${{ github.workspace }}
+      # working-directory: ${{ github.workspace }}
 
       # Deploy HTML report to GitHub Pages
       - name: Publish coverage report
