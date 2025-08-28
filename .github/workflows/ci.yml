@@ -38,7 +38,7 @@ jobs:
       # - name: Run Perl::Critic
       #   run: |
       #     cpanm Perl::Critic
-      #     perlcritic --verbose 5 lib
+      #     perlcritic --verbose 5 lib || true
 
       # Run the tests with Devel::Cover for coverage
       - name: Run tests with coverage
@@ -60,3 +60,4 @@ jobs:
           destination_dir: coverage
           user_name: github-actions
           user_email: github-actions@github.com
+          force_orphan: true
