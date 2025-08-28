@@ -51,23 +51,6 @@ with dashboards, reporting tools, or CI pipelines.
 
 Creates a new inspector for the given URL.
 
-=head2 run_all
-
-  my $report = $inspector->run_all;
-
-Runs the default suite of SEO checks and returns an arrayref of results.
-Each result is a hashref with keys:
-
-=over 4
-
-=item * C<name> - the check name
-
-=item * C<status> - result status (C<ok>, C<missing>, or a numeric/string value)
-
-=item * C<notes> - optional notes or extracted values
-
-=back
-
 =head2 check
 
   my $result = $inspector->check('title');
@@ -158,34 +141,57 @@ sub new {
 	}, $class;
 }
 
-sub _fetch_html {
-    my ($self) = @_;
-    return $self->{html} if $self->{html};
+sub _fetch_html
+{
+	my $self = $_[0];
 
-    my $res = $self->{ua}->get($self->{url})->result;
-    die "Fetch failed: " . $res->message unless $res->is_success;
+	return $self->{html} if $self->{html};
 
-    $self->{html} = $res->body;
-    return $self->{html};
+	my $res = $self->{ua}->get($self->{url})->result;
+	die 'Fetch failed: ', $res->message() unless $res->is_success;
+
+	$self->{html} = $res->body();
+	return $self->{html};
 }
 
-sub run_all {
-    my ($self) = @_;
-    my @checks = qw(
-        title
-        meta_description
-        canonical
-        robots_meta
-        viewport
-        h1_presence
-        word_count
-        links_alt_text
-    );
+=head2 run_all
 
-    # include plugin checks
-    push @checks, keys %{ $self->{plugins} };
+  my $report = $inspector->run_all;
 
-    return [ map { $self->check($_) } @checks ];
+Runs the default suite of SEO checks and returns an arrayref of results.
+Each result is a hashref with keys:
+
+=over 4
+
+=item * C<name> - the check name
+
+=item * C<status> - result status (C<ok>, C<missing>, or a numeric/string value)
+
+=item * C<notes> - optional notes or extracted values
+
+=back
+
+=cut
+
+sub run_all
+{
+	my $self = $_[0];
+
+	my @checks = qw(
+		title
+		meta_description
+		canonical
+		robots_meta
+		viewport
+		h1_presence
+		word_count
+		links_alt_text
+	);
+
+	# include plugin checks
+	push @checks, keys %{ $self->{plugins} };
+
+	return [ map { $self->check($_) } @checks ];
 }
 
 sub check {
