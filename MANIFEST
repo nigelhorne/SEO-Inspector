@@ -7,4 +7,7 @@ README.md
 t/10-load.t
 t/30-basics.t
 t/checks.t
+t/eof.t
+t/eol.t
 t/plugins.t
+t/pod-synopsis.t
