@@ -43,14 +43,6 @@ Pages are fetched using L<Mojo::UserAgent>, and results are
 returned in a structured hash format, making it easy to integrate
 with dashboards, reporting tools, or CI pipelines.
 
-=head1 METHODS
-
-=head2 new
-
-  my $inspector = SEO::Inspector->new(url => $url);
-
-Creates a new inspector for the given URL.
-
 =head1 CHECKS
 
 The following checks are currently implemented:
@@ -105,6 +97,18 @@ To enable plugins:
 
 This allows developers to extend C<SEO::Inspector> without modifying the core module.
 
+Plugins should inherit from L<SEO::Inspector::Plugin> and implement:
+
+=over 4
+
+=item * new - constructor
+
+=item * name - plugin name
+
+=item * run($html) - returns a hashref with keys C<status> and C<notes>
+
+=back
+
 =head1 RETURN VALUES
 
 Each check returns a hashref like:
@@ -115,16 +119,140 @@ Each check returns a hashref like:
       notes  => 'Example Domain',
   }
 
+=head1 METHODS
+
+=head2 new
+
+  my $inspector = SEO::Inspector->new(url => $url);
+
+Creates a new inspector for the given URL.
+Automatically loads all installed plugins.
+
 =cut
 
 sub new {
 	my ($class, %args) = @_;
-	return bless {
+	my $self = bless {
 		url     => $args{url},
-		ua      => $args{'ua'} || Mojo::UserAgent->new(),
-		html    => undef,
+		ua      => $args{'ua'} || Mojo::UserAgent->new(timeout => 10),
 		plugins => {},   # plugin name -> coderef
 	}, $class;
+
+	$self->load_plugins();
+
+	return $self;
+}
+
+=head2 load_plugins
+
+  $inspector->load_plugins;
+
+Load all available SEO::Inspector::Plugin::* modules dynamically.  
+Normally called automatically by C<new>, but can be invoked manually if you install new plugins at runtime.
+
+=cut
+
+# --- Load all Plugin::* modules dynamically
+sub load_plugins {
+    my ($self) = @_;
+    no strict 'refs';
+    for my $mod (@{ $INC{'SEO/Inspector/Plugin'} || [] }) {
+        eval {
+            require_module($mod);
+            $self->{plugins}->{ lc($mod =~ s/.*:://r) } = $mod->new;
+        };
+        warn "Failed to load plugin $mod: $@" if $@;
+    }
+}
+
+=head2 check_html
+
+  my $results = $inspector->check_html($html);
+
+Run all loaded plugins against a given HTML string.  
+Returns a hashref where keys are plugin identifiers and values are hashrefs with:
+
+=over 4
+
+=item * name - Plugin name
+
+=item * status - Check status (e.g., 'ok', 'warn', 'error')
+
+=item * notes - Any notes from the plugin
+
+=back
+
+=cut
+
+# --- Run all plugins against a HTML string
+sub check_html {
+    my ($self, $html) = @_;
+    my %results;
+    for my $key (keys %{ $self->{plugins} }) {
+        my $plugin = $self->{plugins}{$key};
+        my $res = $plugin->run($html);
+        $results{$key} = {
+            name   => $plugin->name,
+            status => $res->{status} // 'unknown',
+            notes  => $res->{notes}  // '',
+        };
+    }
+    return \%results;
+}
+
+=head2 check_url
+
+  my $results = $inspector->check_url($url);
+
+Fetch the given URL and run all plugins on its HTML content.  
+Returns the same hashref structure as C<check_html>.  
+If fetching fails, returns a hashref containing an C<error> key with the HTTP status message.
+
+=cut
+
+# --- Fetch a URL and analyze HTML
+sub check_url {
+	my ($self, $url) = @_;
+	my $res = $self->{ua}->get($url);
+
+	return { error => $res->status_line } unless $res->is_success;
+	return $self->check_html($res->decoded_content);
+}
+
+=head2 render_report
+
+  my $text = $inspector->render_report($results);
+  my $json = $inspector->render_report($results, 'json');
+
+Format plugin results for output.  
+
+=over 4
+
+=item * $results - hashref returned from C<check_html> or C<check_url>
+
+=item * $format - optional, 'text' (default) or 'json'
+
+=back
+
+Returns a string containing the formatted report.
+
+=cut
+
+# --- Render a report in JSON or text
+sub render_report {
+    my ($self, $results, $format) = @_;
+    $format ||= 'text';
+
+    if ($format eq 'json') {
+        return encode_json($results);
+    } else {
+        my $out = "";
+        for my $key (sort keys %$results) {
+            my $r = $results->{$key};
+            $out .= sprintf("[%s] %s: %s\n", $r->{status}, $r->{name}, $r->{notes});
+        }
+        return $out;
+    }
 }
 
 sub _fetch_html

@@ -35,14 +35,6 @@ Pages are fetched using [Mojo::UserAgent](https://metacpan.org/pod/Mojo%3A%3AUse
 returned in a structured hash format, making it easy to integrate
 with dashboards, reporting tools, or CI pipelines.
 
-# METHODS
-
-## new
-
-    my $inspector = SEO::Inspector->new(url => $url);
-
-Creates a new inspector for the given URL.
-
 # CHECKS
 
 The following checks are currently implemented:
@@ -86,6 +78,12 @@ To enable plugins:
 
 This allows developers to extend `SEO::Inspector` without modifying the core module.
 
+Plugins should inherit from [SEO::Inspector::Plugin](https://metacpan.org/pod/SEO%3A%3AInspector%3A%3APlugin) and implement:
+
+- new - constructor
+- name - plugin name
+- run($html) - returns a hashref with keys `status` and `notes`
+
 # RETURN VALUES
 
 Each check returns a hashref like:
@@ -95,6 +93,53 @@ Each check returns a hashref like:
         status => 'ok',
         notes  => 'Example Domain',
     }
+
+# METHODS
+
+## new
+
+    my $inspector = SEO::Inspector->new(url => $url);
+
+Creates a new inspector for the given URL.
+Automatically loads all installed plugins.
+
+## load\_plugins
+
+    $inspector->load_plugins;
+
+Load all available SEO::Inspector::Plugin::\* modules dynamically.  
+Normally called automatically by `new`, but can be invoked manually if you install new plugins at runtime.
+
+## check\_html
+
+    my $results = $inspector->check_html($html);
+
+Run all loaded plugins against a given HTML string.  
+Returns a hashref where keys are plugin identifiers and values are hashrefs with:
+
+- name - Plugin name
+- status - Check status (e.g., 'ok', 'warn', 'error')
+- notes - Any notes from the plugin
+
+## check\_url
+
+    my $results = $inspector->check_url($url);
+
+Fetch the given URL and run all plugins on its HTML content.  
+Returns the same hashref structure as `check_html`.  
+If fetching fails, returns a hashref containing an `error` key with the HTTP status message.
+
+## render\_report
+
+    my $text = $inspector->render_report($results);
+    my $json = $inspector->render_report($results, 'json');
+
+Format plugin results for output.  
+
+- $results - hashref returned from `check_html` or `check_url`
+- $format - optional, 'text' (default) or 'json'
+
+Returns a string containing the formatted report.
 
 ## run\_all
 
