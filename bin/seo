@@ -1,0 +1,19 @@
+use strict;
+use warnings;
+use SEO::Inspector;
+
+my $inspector = SEO::Inspector->new(
+    url => 'https://example.com/',
+);
+
+# Run all checks
+my $report = $inspector->run_all;
+
+foreach my $check (@$report) {
+    printf "%-20s : %s\n", $check->{name}, $check->{status};
+    print "  Notes: $check->{notes}\n" if $check->{notes};
+}
+
+# Run only selected checks
+my $meta = $inspector->check('meta_description');
+print "Meta description: $meta->{status}\n";
