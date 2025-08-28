@@ -1,5 +1,7 @@
 bin/seo
 lib/SEO/Inspector.pm
+lib/SEO/Plugin/MetaDescriptionCheck.pm
+lib/SEO/Plugin/TitleCheck.pm
 LICENSE
 Makefile.PL
 MANIFEST			This list of files
