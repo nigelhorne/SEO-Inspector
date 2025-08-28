@@ -71,11 +71,12 @@ sub new {
 # Load plugins from SEO::Inspector::Plugin namespace
 # -------------------------------
 sub load_plugins {
-    my ($self) = @_;
-    for my $plugin ($self->plugins) {
-        my $key = lc($plugin =~ s/.*:://r);
-        $self->{plugins}{$key} = $plugin->new;
-    }
+	my $self = $_[0];
+
+	for my $plugin ($self->plugins) {
+		my $key = lc($plugin =~ s/.*:://r);
+		$self->{plugins}{$key} = $plugin->new();
+	}
 }
 
 # -------------------------------

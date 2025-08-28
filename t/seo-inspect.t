@@ -1,7 +1,7 @@
 use strict;
 use warnings;
-
 use autodie qw(:all);
+
 use File::Temp qw(tempfile tempdir);
 use FindBin;
 use IPC::Run3;
@@ -14,15 +14,18 @@ use lib "$FindBin::Bin/../lib";
 # Temporary plugin directory
 # -------------------------------
 my $plugin_dir = tempdir(CLEANUP => 1);
+diag($plugin_dir);
 my $plugin_ns_dir = "$plugin_dir/SEO/Inspector/Plugin";
 mkdir "$plugin_dir/SEO" or die $!;
 mkdir "$plugin_dir/SEO/Inspector" or die $!;
 mkdir "$plugin_ns_dir" or die $!;
 
+diag(`ls -l $plugin_ns_dir`);
+
 # Create a fake plugin
 my $plugin_file = "$plugin_ns_dir/FakeCLI.pm";
 open my $fh, '>', $plugin_file or die $!;
-print $fh <<"END";
+print $fh <<'END';
 package SEO::Inspector::Plugin::FakeCLI;
 sub new { bless {}, shift }
 sub run { return { name => 'FakeCLI', status => 'ok', notes => 'plugin ran' }; }
@@ -30,6 +33,7 @@ sub run { return { name => 'FakeCLI', status => 'ok', notes => 'plugin ran' }; }
 END
 close $fh;
 
+diag(`ls -l $plugin_ns_dir`);
 # -------------------------------
 # Temporary HTML file
 # -------------------------------
@@ -37,11 +41,13 @@ my ($fh2, $html_file) = tempfile();
 print $fh2 '<html><head><title>CLI Test</title><meta name="description" content="desc"></head><body><h1>Heading</h1></body></html>';
 close $fh2;
 
+diag(`ls -l $plugin_ns_dir`);
 # -------------------------------
 # CLI script path
 # -------------------------------
 my $cli_script = "$FindBin::Bin/../bin/seo-inspect";
 
+diag(`ls -l $plugin_ns_dir`);
 # -------------------------------
 # Run CLI with --file option
 # -------------------------------

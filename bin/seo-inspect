@@ -32,17 +32,16 @@ my $inspector = SEO::Inspector->new(url => $url);
 my ($html, $plugin_results, $builtin_results);
 
 if ($file) {
-    $html = read_file($file);
-    die "File is empty\n" unless $html;
+	$html = read_file($file);
+	die 'File is empty' unless $html;
 
-    $plugin_results  = $inspector->check_html($html);
-    $builtin_results = $inspector->run_all($html);
-}
-else {
-    my $all_results = $inspector->check_url($url);
-    $html            = delete $all_results->{_html}; # remove internal HTML
-    $plugin_results  = { map { $_ => $all_results->{$_} } grep { exists $inspector->{plugins}{$_} } keys %$all_results };
-    $builtin_results = { map { $_ => $all_results->{$_} } grep { !exists $inspector->{plugins}{$_} } keys %$all_results };
+	$plugin_results  = $inspector->check_html($html);
+	$builtin_results = $inspector->run_all($html);
+} else {
+	my $all_results = $inspector->check_url($url);
+	$html            = delete $all_results->{_html}; # remove internal HTML
+	$plugin_results  = { map { $_ => $all_results->{$_} } grep { exists $inspector->{plugins}{$_} } keys %$all_results };
+	$builtin_results = { map { $_ => $all_results->{$_} } grep { !exists $inspector->{plugins}{$_} } keys %$all_results };
 }
 
 # -------------------------------

@@ -10,12 +10,12 @@ use SEO::Inspector;
 # Fake plugin for testing
 # -------------------------------
 {
-    package SEO::Inspector::Plugin::TestPlugin;
-    sub new { bless {}, shift }
-    sub run { return { name => 'TestPlugin', status => 'ok', notes => 'ran' }; }
+	package SEO::Inspector::Plugin::TestPlugin;
+	sub new { bless {}, shift }
+	sub run { return { name => 'TestPlugin', status => 'ok', notes => 'ran' }; }
 }
 
-my $inspector = SEO::Inspector->new;
+my $inspector = SEO::Inspector->new();
 
 # Plugin should be loaded
 my $plugins = $inspector->{plugins};
