@@ -2,7 +2,10 @@ package SEO::Inspector;
 
 use strict;
 use warnings;
-use Mojo::UserAgent;
+
+use LWP::UserAgent;
+use File::Find;
+use Module::Runtime qw(require_module);
 
 our $VERSION = '0.02';
 
@@ -39,7 +42,7 @@ It is designed for web developers, SEO analysts, and site owners
 who want to quickly validate on-page elements without requiring
 heavy external tools.
 
-Pages are fetched using L<Mojo::UserAgent>, and results are
+Pages are fetched using L<LWP::UserAgent>, and results are
 returned in a structured hash format, making it easy to integrate
 with dashboards, reporting tools, or CI pipelines.
 
@@ -134,7 +137,7 @@ sub new {
 	my ($class, %args) = @_;
 	my $self = bless {
 		url     => $args{url},
-		ua      => $args{'ua'} || Mojo::UserAgent->new(timeout => 10),
+		ua      => $args{'ua'} || LWP::UserAgent->new(timeout => 10),
 		plugins => {},   # plugin name -> coderef
 	}, $class;
 
@@ -153,13 +156,32 @@ Normally called automatically by C<new>, but can be invoked manually if you inst
 =cut
 
 # --- Load all Plugin::* modules dynamically
+
 sub load_plugins {
     my ($self) = @_;
-    no strict 'refs';
-    for my $mod (@{ $INC{'SEO/Inspector/Plugin'} || [] }) {
+    my $plugin_dir = 'SEO/Inspector/Plugin';  # relative to @INC
+
+    # Find all .pm files under @INC/lib/SEO/Inspector/Plugin
+    my @modules;
+    for my $inc (@INC) {
+        my $dir = "$inc/$plugin_dir";
+        next unless -d $dir;
+        find(sub {
+            return unless /\.pm$/;
+            my $file = $File::Find::name;
+            $file =~ s/^\Q$inc\E\/?//;     # make path relative to @INC
+            $file =~ s/\.pm$//;
+            $file =~ s{/}{::}g;
+            push @modules, $file;
+        }, $dir);
+    }
+
+    # Load them
+    for my $mod (@modules) {
         eval {
             require_module($mod);
-            $self->{plugins}->{ lc($mod =~ s/.*:://r) } = $mod->new;
+            my $key = lc($mod =~ s/.*:://r);
+            $self->{plugins}{$key} = $mod->new;
         };
         warn "Failed to load plugin $mod: $@" if $@;
     }
@@ -186,18 +208,21 @@ Returns a hashref where keys are plugin identifiers and values are hashrefs with
 
 # --- Run all plugins against a HTML string
 sub check_html {
-    my ($self, $html) = @_;
-    my %results;
-    for my $key (keys %{ $self->{plugins} }) {
-        my $plugin = $self->{plugins}{$key};
-        my $res = $plugin->run($html);
-        $results{$key} = {
-            name   => $plugin->name,
-            status => $res->{status} // 'unknown',
-            notes  => $res->{notes}  // '',
-        };
-    }
-    return \%results;
+	my ($self, $html) = @_;
+	my %results;
+
+	# warn "Loaded plugins: ", join(", ", keys %{ $self->{plugins} }), "\n";
+    
+	for my $key (keys %{ $self->{plugins} }) {
+		my $plugin = $self->{plugins}{$key};
+		my $res = $plugin->run($html);
+		$results{$key} = {
+		    name   => $plugin->name,
+		    status => $res->{status} // 'unknown',
+		    notes  => $res->{notes}  // '',
+		};
+	}
+	return \%results;
 }
 
 =head2 check_url
@@ -215,8 +240,8 @@ sub check_url {
 	my ($self, $url) = @_;
 	my $res = $self->{ua}->get($url);
 
-	return { error => $res->status_line } unless $res->is_success;
-	return $self->check_html($res->decoded_content);
+	return { error => $res->status_line } unless $res->is_success();
+	return $self->check_html($res->decoded_content());
 }
 
 =head2 render_report
@@ -261,10 +286,10 @@ sub _fetch_html
 
 	return $self->{html} if $self->{html};
 
-	my $res = $self->{ua}->get($self->{url})->result;
-	die 'Fetch failed: ', $res->message() unless $res->is_success;
+	my $res = $self->{ua}->get($self->{url});
+	die 'Fetch failed: ', $res->message() unless $res->is_success();
 
-	$self->{html} = $res->body();
+	$self->{html} = $res->decoded_content();
 	return $self->{html};
 }
 
@@ -464,7 +489,7 @@ This module is provided as-is without any warranty.
 
 =head1 SEE ALSO
 
-L<Mojolicious>, L<LWP::UserAgent>, L<HTML::TreeBuilder>
+L<LWP::UserAgent>, L<HTML::TreeBuilder>
 
 =head2 COVERAGE REPORT
 
