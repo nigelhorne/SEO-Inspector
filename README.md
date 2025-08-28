@@ -30,8 +30,6 @@ SEO::Inspector provides:
 
 ## new(%args)
 
-Create a new inspector object. Accepts optional `url` argument.
-
 ## load\_plugins
 
 Automatically loads plugins from `SEO::Inspector::Plugin` namespace.

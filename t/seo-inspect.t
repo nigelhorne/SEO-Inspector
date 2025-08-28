@@ -1,6 +1,7 @@
 use strict;
 use warnings;
 
+use autodie qw(:all);
 use File::Temp qw(tempfile tempdir);
 use FindBin;
 use IPC::Run3;
@@ -14,9 +15,9 @@ use lib "$FindBin::Bin/../lib";
 # -------------------------------
 my $plugin_dir = tempdir(CLEANUP => 1);
 my $plugin_ns_dir = "$plugin_dir/SEO/Inspector/Plugin";
-mkdir "$plugin_dir/SEO"               or die $!;
-mkdir "$plugin_dir/SEO/Inspector"     or die $!;
-mkdir "$plugin_ns_dir"                or die $!;
+mkdir "$plugin_dir/SEO" or die $!;
+mkdir "$plugin_dir/SEO/Inspector" or die $!;
+mkdir "$plugin_ns_dir" or die $!;
 
 # Create a fake plugin
 my $plugin_file = "$plugin_ns_dir/FakeCLI.pm";
@@ -34,7 +35,7 @@ close $fh;
 # -------------------------------
 my ($fh2, $html_file) = tempfile();
 print $fh2 '<html><head><title>CLI Test</title><meta name="description" content="desc"></head><body><h1>Heading</h1></body></html>';
-close $fh2;  # IMPORTANT! Must close so CLI can read
+close $fh2;
 
 # -------------------------------
 # CLI script path
@@ -49,9 +50,11 @@ local $ENV{PERL5LIB} = "$plugin_dir:$FindBin::Bin/../lib:$ENV{PERL5LIB}";
 
 run3 [ $cli_script, '--file', $html_file ], undef, \$stdout, \$stderr;
 
+diag($stderr) if(defined($stderr));
+
 ok(!$stderr, 'CLI did not produce errors');
 like($stdout, qr/FakeCLI/, 'CLI output includes FakeCLI plugin');
-like($stdout, qr/Title/,   'CLI output includes built-in check');
+like($stdout, qr/Title/, 'CLI output includes built-in check');
 like($stdout, qr/Meta Description/, 'CLI output includes meta_description');
 
 # -------------------------------

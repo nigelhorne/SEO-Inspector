@@ -7,22 +7,62 @@ use Carp;
 use Mojo::UserAgent;
 use Module::Pluggable require => 1, search_path => 'SEO::Inspector::Plugin';
 
+=head1 NAME
+
+SEO::Inspector - A Perl module for running SEO checks and plugins on HTML or URLs.
+
+=head1 SYNOPSIS
+
+  use SEO::Inspector;
+
+  my $inspector = SEO::Inspector->new(url => 'https://example.com');
+
+  # Run plugins
+  my $html = '<html><body>......</body></html>';
+  my $plugin_results = $inspector->check_html($html);
+
+  # Run built-in checks
+  my $builtin_results = $inspector->run_all($html);
+
+  # Check a single URL and get all results
+  my $all_results = $inspector->check_url('https://example.com');
+
+=head1 DESCRIPTION
+
+SEO::Inspector provides:
+
+=over 4
+
+=item * Built-in SEO checks: title, meta description, canonical link, robots meta, viewport, H1 presence, word count, image alt text
+
+=item * Plugin system: dynamically load modules under SEO::Inspector::Plugin namespace
+
+=item * Methods to check HTML strings or fetch and analyze a URL
+
+=back
+
+=head1 METHODS
+
+=head2 new(%args)
+
+=cut
+
 our $VERSION = '0.01';
 
 # -------------------------------
 # Constructor
 # -------------------------------
 sub new {
-    my ($class, %args) = @_;
-    my $self = bless {}, $class;
+	my ($class, %args) = @_;
+	my $self = bless {}, $class;
 
-    $self->{url} = $args{url};                # optional default URL
-    $self->{ua}  = Mojo::UserAgent->new;
-    $self->{plugins} = {};
+	$self->{url} = $args{url};                # optional default URL
+	$self->{ua}  = Mojo::UserAgent->new();
+	$self->{plugins} = {};
 
-    $self->load_plugins;
+	$self->load_plugins();
 
-    return $self;
+	return $self;
 }
 
 # -------------------------------
@@ -207,44 +247,6 @@ sub _check_links_alt_text {
 
 1;
 __END__
-
-=head1 NAME
-
-SEO::Inspector - A Perl module for running SEO checks and plugins on HTML or URLs.
-
-=head1 SYNOPSIS
-
-  use SEO::Inspector;
-
-  my $inspector = SEO::Inspector->new(url => 'https://example.com');
-
-  # Run plugins
-  my $html = '<html><body>......</body></html>';
-  my $plugin_results = $inspector->check_html($html);
-
-  # Run built-in checks
-  my $builtin_results = $inspector->run_all($html);
-
-  # Check a single URL and get all results
-  my $all_results = $inspector->check_url('https://example.com');
-
-=head1 DESCRIPTION
-
-SEO::Inspector provides:
-
-=over 4
-
-=item * Built-in SEO checks: title, meta description, canonical link, robots meta, viewport, H1 presence, word count, image alt text
-
-=item * Plugin system: dynamically load modules under SEO::Inspector::Plugin namespace
-
-=item * Methods to check HTML strings or fetch and analyze a URL
-
-=back
-
-=head1 METHODS
-
-=head2 new(%args)
 
 Create a new inspector object. Accepts optional C<url> argument.
 
