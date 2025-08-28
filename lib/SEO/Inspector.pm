@@ -235,7 +235,7 @@ sub load_plugin {
     }
 
     # Register plugin check
-    $self->{plugins}{ lc $plugin_name } = $runner;
+    $self->{plugins}{ lc $plugin_name } = $full_class->new();
 
     return 1;
 }

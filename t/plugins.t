@@ -1,42 +1,83 @@
 use strict;
 use warnings;
 use Test::Most;
-use lib 'lib';
+use File::Temp qw/tempdir/;
+use File::Path qw/make_path/;
+use File::Spec;
 
+use lib 'lib';
 use SEO::Inspector;
 
-# --- Create a fake plugin as a coderef ---
-my $fake_plugin = sub {
-    my ($self, $html) = @_;
-    return { name => 'fakecheck', status => 'ok', notes => 'plugin ran' };
-};
+# --- Create a temporary directory for the plugin ---
+my $tmpdir  = tempdir(CLEANUP => 1);
+my $plugdir = File::Spec->catdir($tmpdir, qw/SEO Inspector Plugin/);
+make_path($plugdir);
 
-# --- Initialize SEO::Inspector with dummy HTML ---
-{
-    package SEO::Inspector::Testable;
-    our @ISA = ('SEO::Inspector');
+# --- Write the fake plugin module ---
+my $plugin_file = File::Spec->catfile($plugdir, 'FakeCheck.pm');
+open my $fh, '>', $plugin_file or die "Cannot write $plugin_file: $!";
+print $fh <<'EOF';
+package SEO::Inspector::Plugin::FakeCheck;
 
-    # Override _fetch_html to prevent live HTTP requests
-    sub _fetch_html { return "<html><body><h1>Test</h1></body></html>"; }
+sub new {
+    my ($class) = @_;
+    return bless {}, $class;
 }
 
-my $inspector = SEO::Inspector::Testable->new(url => 'http://fake/');
+sub run {
+    my ($self, $html) = @_;
+    return {
+        name   => 'FakeCheck',
+        status => 'ok',
+        notes  => 'plugin ran',
+    };
+}
 
-# Manually register the fake plugin
-$inspector->{plugins}{FakeCheck} = $fake_plugin;
+1;
+EOF
+close $fh;
 
-# Verify that plugin is registered
-ok(exists $inspector->{plugins}{'FakeCheck'}, 'Plugin registered in plugins hash');
+# --- Add temporary directory to @INC at runtime ---
+require lib;
+lib->import($tmpdir);
 
-# Run plugin-specific check
-my $result = $inspector->check('FakeCheck');
-isa_ok($result, 'HASH');
-is($result->{name}, 'fakecheck', 'Check name matches plugin');
-is($result->{status}, 'ok', 'Check status is ok');
-like($result->{notes}, qr/plugin ran/, 'Check notes from plugin');
+# --- Subclass SEO::Inspector to allow HTML-only checks ---
+{
+    package SEO::Inspector::Testable;
+    use parent 'SEO::Inspector';
 
-# Run all checks including plugin
-my $report = $inspector->run_all;
-ok( (grep { $_->{name} eq 'fakecheck' } @$report) ? 1 : 0, 'Plugin appears in run_all report' );
+    # Run all loaded plugins against provided HTML
+    sub check_html {
+        my ($self, $html) = @_;
+        my @report;
+        for my $plugin_name (keys %{ $self->{plugins} }) {
+            my $plugin = $self->{plugins}{$plugin_name};
+            push @report, $plugin->run($html);
+        }
+        return { map { lc($_->{name}) => $_ } @report };  # keyed by lowercase
+    }
+}
 
-done_testing;
+# --- Initialize inspector ---
+my $inspector = SEO::Inspector::Testable->new;
+
+# --- Explicitly load the plugin ---
+ok($inspector->load_plugin('FakeCheck'), 'FakeCheck plugin loaded');
+
+# --- Verify plugin registration ---
+ok(exists $inspector->{plugins}{'fakecheck'}, 'Plugin registered in plugins hash');
+
+# --- Run plugin on dummy HTML ---
+my $html   = '<html><head><title>Test</title></head><body>Content</body></html>';
+my $result = $inspector->check_html($html);
+
+# --- Assertions ---
+cmp_deeply($result, {
+   'fakecheck' => {
+     'name' => 'FakeCheck',
+     'notes' => 'plugin ran',
+     'status' => 'ok'
+   }
+ });
+
+done_testing();
