@@ -1,6 +1,9 @@
 ---
 name: CI
 
+permissions:
+  contents: write  # needed to push to gh-pages
+
 on:
   push:
     branches: [main, master]
@@ -16,7 +19,7 @@ jobs:
     steps:
       # Checkout repository
       - name: Checkout code
-        uses: actions/checkout@v3
+      - uses: actions/checkout@v5
 
       # Install Perl via perlbrew
       - name: Setup Perl
@@ -43,9 +46,18 @@ jobs:
         run: |
           cover -test
 
-      # Upload coverage report (to GitHub artifacts)
-      - name: Upload coverage report
-        uses: actions/upload-artifact@v3
+      # Generate HTML coverage report
+      - name: Generate HTML report
+        run: |
+          cover -report html
+        working-directory: ${{ github.workspace }}
+
+      # Deploy HTML report to GitHub Pages
+      - name: Publish coverage report
+        uses: peaceiris/actions-gh-pages@v6
         with:
-          name: coverage-report
-          path: cover_db/
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./cover_html
+          destination_dir: coverage
+          user_name: github-actions
+          user_email: github-actions@github.com
