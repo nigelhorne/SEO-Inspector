@@ -2,9 +2,11 @@
 
 use strict;
 use warnings;
+
 use Getopt::Long qw(GetOptions);
 use File::Slurp qw(read_file);
 use JSON::MaybeXS;
+
 use SEO::Inspector;
 
 # -------------------------------

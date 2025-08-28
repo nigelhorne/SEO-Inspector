@@ -27,6 +27,9 @@ WriteMakefile(
 		'ExtUtils::MakeMaker' => 6.64,	# Minimum version for TEST_REQUIRES
 	}, PREREQ_PM => {
 		'Carp' => 0,
+		'Getopt::Long' => 0,
+		'File::Slurp' => 0,
+		'JSON::MaybeXS' => 0,
 		'Mojo::UserAgent' => 0,
 		'Module::Pluggable' => 0,
 		'HTML::TreeBuilder' => 0,
@@ -36,7 +39,6 @@ WriteMakefile(
 		'File::Temp' => 0,
 		'FindBin' => 0,
 		'IPC::Run3' => 0,
-		'JSON::MaybeXS' => 0,
 		'Test::DescribeMe' => 0,
 		'Test::Most' => 0,
 		'Test::Needs' => 0,

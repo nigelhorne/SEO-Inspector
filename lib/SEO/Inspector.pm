@@ -219,6 +219,7 @@ SEO::Inspector - A Perl module for running SEO checks and plugins on HTML or URL
   my $inspector = SEO::Inspector->new(url => 'https://example.com');
 
   # Run plugins
+  my $html = '<html><body>......</body></html>';
   my $plugin_results = $inspector->check_html($html);
 
   # Run built-in checks
