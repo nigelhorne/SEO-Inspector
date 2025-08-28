@@ -1,3 +1,11 @@
+package SEO::Inspector;
+
+use strict;
+use warnings;
+use Mojo::UserAgent;
+
+our $VERSION = '0.01';
+
 =head1 NAME
 
 SEO::Inspector - Perform common SEO checks on web pages
@@ -126,3 +134,5 @@ This library is free software; you can redistribute it and/or modify
 it under the same terms as Perl itself.
 
 =cut
+
+1;
