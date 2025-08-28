@@ -1,11 +1,11 @@
 use strict;
 use warnings;
-use Test::Most;
-use File::Temp qw/tempdir/;
+
 use File::Path qw/make_path/;
 use File::Spec;
+use File::Temp qw/tempdir/;
+use Test::Most;
 
-use lib 'lib';
 use SEO::Inspector;
 
 # --- Create a temporary directory for the plugin ---

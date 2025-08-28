@@ -323,7 +323,7 @@ L<Mojolicious>, L<LWP::UserAgent>, L<HTML::TreeBuilder>
 
 =head2 COVERAGE REPORT
 
-L<https://nigelhorne.github.io/SEO-Inspector/coverage/index.html
+L<https://nigelhorne.github.io/SEO-Inspector/coverage/index.html>
 
 =head1 AUTHOR
 
