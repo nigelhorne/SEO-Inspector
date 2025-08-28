@@ -24,7 +24,7 @@ SEO::Inspector - Perform common SEO checks on web pages
 
 # DESCRIPTION
 
-`SEO::Inspector` is a lightweight Perl module for running
+`SEO::Inspector` is a lightweight module for running
 basic SEO (Search Engine Optimization) checks against a web page.
 
 It is designed for web developers, SEO analysts, and site owners
@@ -42,31 +42,6 @@ with dashboards, reporting tools, or CI pipelines.
     my $inspector = SEO::Inspector->new(url => $url);
 
 Creates a new inspector for the given URL.
-
-## run\_all
-
-    my $report = $inspector->run_all;
-
-Runs the default suite of SEO checks and returns an arrayref of results.
-Each result is a hashref with keys:
-
-- `name` - the check name
-- `status` - result status (`ok`, `missing`, or a numeric/string value)
-- `notes` - optional notes or extracted values
-
-## check
-
-    my $result = $inspector->check('title');
-
-Runs a single named check. Returns a hashref as above.
-
-## load\_plugin
-
-    $inspector->load_plugin('SocialTags');
-
-Loads a plugin module from the `SEO::Inspector::Plugin::` namespace.
-The plugin must provide a `run($self, $html)` method that returns
-a hashref in the same format as built-in checks.
 
 # CHECKS
 
@@ -121,18 +96,46 @@ Each check returns a hashref like:
         notes  => 'Example Domain',
     }
 
-# DEPENDENCIES
+## run\_all
 
-- [Mojo::UserAgent](https://metacpan.org/pod/Mojo%3A%3AUserAgent)
-- Perl 5.10+
+    my $report = $inspector->run_all;
+
+Runs the default suite of SEO checks and returns an arrayref of results.
+Each result is a hashref with keys:
+
+- `name` - the check name
+- `status` - result status (`ok`, `missing`, or a numeric/string value)
+- `notes` - optional notes or extracted values
+
+## check
+
+    my $result = $inspector->check('title');
+
+Runs a single named check. Returns a hashref as above.
+
+## load\_plugin
+
+    $inspector->load_plugin('SocialTags');
+
+Loads a plugin module from the `SEO::Inspector::Plugin::` namespace.
+The plugin must provide a `run($self, $html)` method that returns
+a hashref in the same format as built-in checks.
+
+# AUTHOR
+
+Nigel Horne, `<njh at nigelhorne.com>`
+
+# SUPPORT
+
+This module is provided as-is without any warranty.
 
 # SEE ALSO
 
 [Mojolicious](https://metacpan.org/pod/Mojolicious), [LWP::UserAgent](https://metacpan.org/pod/LWP%3A%3AUserAgent), [HTML::TreeBuilder](https://metacpan.org/pod/HTML%3A%3ATreeBuilder)
 
-# AUTHOR
+## COVERAGE REPORT
 
-Nigel Horne <njh@bandsman.co.uk>
+[https://nigelhorne.github.io/SEO-Inspector/coverage/index.html](https://nigelhorne.github.io/SEO-Inspector/coverage/index.html)
 
 # COPYRIGHT AND LICENSE
 

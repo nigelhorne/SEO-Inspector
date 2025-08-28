@@ -51,20 +51,6 @@ with dashboards, reporting tools, or CI pipelines.
 
 Creates a new inspector for the given URL.
 
-=head2 check
-
-  my $result = $inspector->check('title');
-
-Runs a single named check. Returns a hashref as above.
-
-=head2 load_plugin
-
-  $inspector->load_plugin('SocialTags');
-
-Loads a plugin module from the C<SEO::Inspector::Plugin::> namespace.
-The plugin must provide a C<run($self, $html)> method that returns
-a hashref in the same format as built-in checks.
-
 =head1 CHECKS
 
 The following checks are currently implemented:
@@ -194,55 +180,73 @@ sub run_all
 	return [ map { $self->check($_) } @checks ];
 }
 
+=head2 check
+
+  my $result = $inspector->check('title');
+
+Runs a single named check. Returns a hashref as above.
+
+=cut
+
 sub check {
-    my ($self, $check_name) = @_;
-    my $html = $self->_fetch_html;
+	my ($self, $check_name) = @_;
+	my $html = $self->_fetch_html;
 
-    my %dispatch = (
-        title           => \&_check_title,
-        meta_description=> \&_check_meta_description,
-        canonical       => \&_check_canonical,
-        robots_meta     => \&_check_robots_meta,
-        viewport        => \&_check_viewport,
-        h1_presence     => \&_check_h1_presence,
-        word_count      => \&_check_word_count,
-        links_alt_text  => \&_check_links_alt_text,
-    );
+	my %dispatch = (
+		title           => \&_check_title,
+		meta_description=> \&_check_meta_description,
+		canonical       => \&_check_canonical,
+		robots_meta     => \&_check_robots_meta,
+		viewport        => \&_check_viewport,
+		h1_presence     => \&_check_h1_presence,
+		word_count      => \&_check_word_count,
+		links_alt_text  => \&_check_links_alt_text,
+	);
 
-    # built-in checks
-    if (exists $dispatch{$check_name}) {
-        return $dispatch{$check_name}->($self, $html);
-    }
+	# built-in checks
+	if (exists $dispatch{$check_name}) {
+		return $dispatch{$check_name}->($self, $html);
+	}
 
-    # plugin checks
-    if (exists $self->{plugins}{$check_name}) {
-        my $plugin = $self->{plugins}{$check_name};
-        return $plugin->($self, $html);
-    }
+	# plugin checks
+	if (exists $self->{plugins}{$check_name}) {
+		my $plugin = $self->{plugins}{$check_name};
+		return $plugin->($self, $html);
+	}
 
-    return { name => $check_name, status => 'unknown', notes => '' };
+	return { name => $check_name, status => 'unknown', notes => '' };
 }
 
 ### --- Plugin System ---
 
+=head2 load_plugin
+
+  $inspector->load_plugin('SocialTags');
+
+Loads a plugin module from the C<SEO::Inspector::Plugin::> namespace.
+The plugin must provide a C<run($self, $html)> method that returns
+a hashref in the same format as built-in checks.
+
+=cut
+
 sub load_plugin {
-    my ($self, $plugin_name) = @_;
+	my ($self, $plugin_name) = @_;
 
-    my $full_class = "SEO::Inspector::Plugin::$plugin_name";
-    eval "require $full_class";
-    die "Failed to load plugin $full_class: $@" if $@;
+	my $full_class = "SEO::Inspector::Plugin::$plugin_name";
+	eval "require $full_class";
+	die "Failed to load plugin $full_class: $@" if $@;
 
-    my $runner;
-    if ($full_class->can('run')) {
-        $runner = sub { $full_class->run(@_) };
-    } else {
-        die "Plugin $full_class must implement a run() method";
-    }
+	my $runner;
+	if ($full_class->can('run')) {
+		$runner = sub { $full_class->run(@_) };
+	} else {
+		die "Plugin $full_class must implement a run() method";
+	}
 
-    # Register plugin check
-    $self->{plugins}{ lc $plugin_name } = $full_class->new();
+	# Register plugin check
+	$self->{plugins}{ lc $plugin_name } = $full_class->new();
 
-    return 1;
+	return 1;
 }
 
 ### --- Built-in Checks ---
@@ -314,13 +318,21 @@ sub _check_links_alt_text {
     return {
         name   => 'links_alt_text',
         status => @missing ? 'missing' : 'ok',
-        notes  => @missing ? scalar(@missing) . " images without alt" : '',
+        notes  => @missing ? scalar(@missing) . ' images without alt' : '',
     };
 }
 
 1;
 
 __END__
+
+=head1 AUTHOR
+
+Nigel Horne, C<< <njh at nigelhorne.com> >>
+
+=head1 SUPPORT
+
+This module is provided as-is without any warranty.
 
 =head1 SEE ALSO
 
@@ -329,10 +341,6 @@ L<Mojolicious>, L<LWP::UserAgent>, L<HTML::TreeBuilder>
 =head2 COVERAGE REPORT
 
 L<https://nigelhorne.github.io/SEO-Inspector/coverage/index.html>
-
-=head1 AUTHOR
-
-Nigel Horne E<lt>njh@bandsman.co.ukE<gt>
 
 =head1 COPYRIGHT AND LICENSE
 
