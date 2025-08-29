@@ -28,19 +28,23 @@ my $coverage_badge_url = "https://img.shields.io/badge/coverage-${coverage_pct}%
 my $html = <<"HTML";
 <!DOCTYPE html>
 <html>
-<head>
-  <meta charset="UTF-8">
-  <title>SEO::Inspector Coverage Report</title>
-  <style>
-    body { font-family: sans-serif; }
-    table { border-collapse: collapse; width: 100%; }
-    th, td { border: 1px solid #ccc; padding: 8px; text-align: left; }
-    th { background-color: #f2f2f2; }
-    .low { background-color: #fdd; }
-    .med { background-color: #ffd; }
-    .high { background-color: #dfd; }
-    .badges img { margin-right: 10px; }
-  </style>
+	<head>
+	<meta charset="UTF-8">
+	<title>SEO::Inspector Coverage Report</title>
+	<style>
+		body { font-family: sans-serif; }
+		table { border-collapse: collapse; width: 100%; }
+		th, td { border: 1px solid #ccc; padding: 8px; text-align: left; }
+		th { background-color: #f2f2f2; }
+		.low { background-color: #fdd; }
+		.med { background-color: #ffd; }
+		.high { background-color: #dfd; }
+		.badges img { margin-right: 10px; }
+		.disabled-icon {
+			opacity: 0.4;
+			cursor: default;
+		}
+	</style>
 </head>
 <body>
 <div class="badges">
@@ -51,7 +55,7 @@ my $html = <<"HTML";
 </div>
 <h1>SEO::Inspector Coverage Report</h1>
 <table>
-  <tr><th>File</th><th>Stmt</th><th>Branch</th><th>Cond</th><th>Sub</th><th>Total</th></tr>
+<tr><th>File</th><th>Stmt</th><th>Branch</th><th>Cond</th><th>Sub</th><th>Total</th></tr>
 HTML
 
 my $commit_sha = `git rev-parse HEAD`;
@@ -64,7 +68,7 @@ for my $file (sort keys %{$data->{summary}}) {
 
 	my $info = $data->{summary}{$file};
 	my $html_file = $file;
-	$html_file =~ s|/|-|g;    # Convert path separators to hyphens
+	$html_file =~ s|/|-|g;	# Convert path separators to hyphens
 	$html_file =~ s|\.pm$|-pm|;	# Replace .pm with -pm
 	$html_file =~ s|\.pl$|-pl|;	# Optional: handle .pl files too
 
@@ -76,20 +80,21 @@ for my $file (sort keys %{$data->{summary}}) {
 
 	my $has_coverage = (
 		defined $info->{statement}{percentage} ||
-		defined $info->{branch}{percentage}    ||
+		defined $info->{branch}{percentage} ||
 		defined $info->{condition}{percentage} ||
 		defined $info->{subroutine}{percentage}
 	);
 
 	my $source_link = $has_coverage
 		? sprintf('<a href="%s" title="View source on GitHub">&#128269;</a>', $source_url)
-		: '';
+		: '<span class="disabled-icon" title="No coverage data">&#128269;</span>'
+		; 
 
 	$html .= sprintf(
 		qq{<tr class="%s"><td><a href="%s">%s</a> %s</td><td>%.1f</td><td>%.1f</td><td>%.1f</td><td>%.1f</td><td>%.1f</td></tr>\n},
 		$class, $html_file, $file, $source_link,
 		$info->{statement}{percentage} // 0,
-		$info->{branch}{percentage}    // 0,
+		$info->{branch}{percentage} // 0,
 		$info->{condition}{percentage} // 0,
 		$info->{subroutine}{percentage} // 0,
 		$total
