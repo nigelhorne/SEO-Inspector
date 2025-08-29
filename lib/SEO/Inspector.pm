@@ -73,14 +73,10 @@ sub new {
 sub load_plugins {
 	my $self = $_[0];
 
-print STDERR __LINE__, "\n";
-print STDERR $ENV{PERL5LIB}, "\n";
 	for my $plugin ($self->plugins()) {
-print STDERR "$plugin\n";
 		my $key = lc($plugin =~ s/.*:://r);
 		$self->{plugins}{$key} = $plugin->new();
 	}
-print STDERR "Done Plugins\n";
 }
 
 # -------------------------------

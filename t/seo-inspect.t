@@ -14,26 +14,24 @@ use lib "$FindBin::Bin/../lib";
 # Temporary plugin directory
 # -------------------------------
 my $plugin_dir = tempdir(CLEANUP => 1);
-diag($plugin_dir);
 my $plugin_ns_dir = "$plugin_dir/SEO/Inspector/Plugin";
 mkdir "$plugin_dir/SEO" or die $!;
 mkdir "$plugin_dir/SEO/Inspector" or die $!;
 mkdir "$plugin_ns_dir" or die $!;
-
-diag(`ls -l $plugin_ns_dir`);
 
 # Create a fake plugin
 my $plugin_file = "$plugin_ns_dir/FakeCLI.pm";
 open my $fh, '>', $plugin_file or die $!;
 print $fh <<'END';
 package SEO::Inspector::Plugin::FakeCLI;
+use strict;
+use warnings;
 sub new { bless {}, shift }
 sub run { return { name => 'FakeCLI', status => 'ok', notes => 'plugin ran' }; }
 1;
 END
 close $fh;
 
-diag(`ls -l $plugin_ns_dir`);
 # -------------------------------
 # Temporary HTML file
 # -------------------------------
@@ -41,23 +39,20 @@ my ($fh2, $html_file) = tempfile();
 print $fh2 '<html><head><title>CLI Test</title><meta name="description" content="desc"></head><body><h1>Heading</h1></body></html>';
 close $fh2;
 
-diag(`ls -l $plugin_ns_dir`);
 # -------------------------------
 # CLI script path
 # -------------------------------
 my $cli_script = "$FindBin::Bin/../bin/seo-inspect";
 
-diag(`ls -l $plugin_ns_dir`);
 # -------------------------------
 # Run CLI with --file option
 # -------------------------------
 my ($stdout, $stderr);
-$ENV{PERL5LIB} = "$plugin_dir:$FindBin::Bin/../lib:$ENV{PERL5LIB}";
+local $ENV{PERL5LIB} = "$plugin_dir:$FindBin::Bin/../lib:$ENV{PERL5LIB}";
 
 run3 [ $cli_script, '--file', $html_file ], undef, \$stdout, \$stderr;
 
 diag($stderr) if(defined($stderr));
-diag(`ls -l $plugin_ns_dir`);
 
 ok(!$stderr, 'CLI did not produce errors');
 like($stdout, qr/FakeCLI/, 'CLI output includes FakeCLI plugin');
