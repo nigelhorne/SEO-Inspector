@@ -339,12 +339,39 @@ sub check_url {
 # -------------------------------
 sub _check_title {
     my ($self, $html) = @_;
+
     if ($html =~ /<title>(.*?)<\/title>/is) {
         my $title = $1;
-        return { name => 'Title', status => length($title) ? 'ok' : 'error', notes => length($title) ? 'title present' : 'missing title' };
+        $title =~ s/^\s+|\s+$//g;         # trim
+        $title =~ s/\s{2,}/ /g;           # collapse spaces
+
+        my $len = length($title);
+        my $status = 'ok';
+        my $notes  = "title present ($len chars)";
+
+        if ($len == 0) {
+            $status = 'error';
+            $notes  = 'empty title';
+        } elsif ($len < 10) {
+            $status = 'warn';
+            $notes  = "title too short ($len chars)";
+        } elsif ($len > 65) {
+            $status = 'warn';
+            $notes  = "title too long ($len chars)";
+        }
+
+        # Flag really weak titles
+        if ($title =~ /^(home|untitled|index)$/i) {
+            $status = 'warn';
+            $notes  = "generic title: $title";
+        }
+
+        return { name => 'Title', status => $status, notes => $notes };
     }
+
     return { name => 'Title', status => 'error', notes => 'missing title' };
 }
+
 
 sub _check_meta_description {
     my ($self, $html) = @_;
@@ -433,7 +460,6 @@ sub _check_headings {
         notes  => %counts ? $summary : 'no headings found',
     };
 }
-
 
 sub _check_links {
     my ($self, $html) = @_;
