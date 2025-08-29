@@ -399,6 +399,7 @@ Fetch the URL and run all plugins and built-in checks.
 
 =head1 SEE ALSO
 
-L<https://nigelhorne.github.io/SEO-Inspector/covertage>
+Test coverage summary: L<https://nigelhorne.github.io/SEO-Inspector/coverage>
+Test coverage detail: L<https://nigelhorne.github.io/SEO-Inspector/coverage/blib-lib-SEO-Inspector-pm.html>
 
 =cut
