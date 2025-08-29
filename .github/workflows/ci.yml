@@ -32,7 +32,7 @@ jobs:
       - name: Install dependencies
         run: |
           cpanm --notest --installdeps .
-          cpanm --notest Devel::Cover Devel::Cover::Report::Html
+          cpanm --notest Devel::Cover Devel::Cover::Report::Html Devel::Cover::Report::JSON
 
       # Optional: run Perl::Critic static checks
       # - name: Run Perl::Critic
