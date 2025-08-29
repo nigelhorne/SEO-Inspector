@@ -13,9 +13,15 @@ my $json_text = read_file($cover_db);
 my $data = decode_json($json_text);
 
 my $coverage_pct = 0;
+my $badge_color = 'red';
+
 if (my $total_info = $data->{summary}{Total}) {
     $coverage_pct = int($total_info->{total}{percentage} // 0);
+    $badge_color = $coverage_pct > 80 ? 'brightgreen' :
+                   $coverage_pct > 50 ? 'yellow' : 'red';
 }
+
+my $coverage_badge_url = "https://img.shields.io/badge/coverage-${coverage_pct}%25-${badge_color}";
 
 # Start HTML
 my $html = <<"HTML";
@@ -23,7 +29,7 @@ my $html = <<"HTML";
 <html>
 <head>
   <meta charset="UTF-8">
-  <title>Coverage Report</title>
+  <title>SEO::Inspector Coverage Report</title>
   <style>
     body { font-family: sans-serif; }
     table { border-collapse: collapse; width: 100%; }
@@ -40,9 +46,9 @@ my $html = <<"HTML";
   <a href="https://github.com/nigelhorne/SEO-Inspector">
     <img src="https://img.shields.io/github/stars/nigelhorne/SEO-Inspector?style=social" alt="GitHub stars">
   </a>
-  <img src="https://img.shields.io/badge/coverage-${coverage_pct}%25-${coverage_pct > 80 ? 'brightgreen' : $coverage_pct > 50 ? 'yellow' : 'red'}" alt="Coverage badge">
+  <img src="$coverage_badge_url" alt="Coverage badge">
 </div>
-<h1>Coverage Report</h1>
+<h1>SEO::Inspector Coverage Report</h1>
 <table>
   <tr><th>File</th><th>Stmt</th><th>Branch</th><th>Cond</th><th>Sub</th><th>Total</th></tr>
 HTML
