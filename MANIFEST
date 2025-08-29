@@ -1,4 +1,5 @@
 bin/seo-inspect
+Changes
 lib/SEO/Inspector.pm
 lib/SEO/Inspector/Plugin/MetaDescriptionCheck.pm
 lib/SEO/Inspector/Plugin/TitleCheck.pm

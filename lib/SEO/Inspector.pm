@@ -42,6 +42,107 @@ SEO::Inspector provides:
 
 =back
 
+=head1 PLUGIN SYSTEM
+
+In addition to the built-in SEO checks, C<SEO::Inspector> supports a flexible
+plugin system.
+Plugins allow you to extend the checker with new rules or
+specialized analysis without modifying the core module.
+
+=head2 How Plugins Are Found
+
+Plugins are loaded dynamically from the C<SEO::Inspector::Plugin> namespace.
+For example, a module called:
+
+    package SEO::Inspector::Plugin::MyCheck;
+
+will be detected and loaded automatically if it is available in C<@INC>.
+
+You can also tell the constructor to search additional directories by passing
+the C<plugin_dirs> argument:
+
+    my $inspector = SEO::Inspector->new(
+        plugin_dirs => ['t/lib', '/path/to/custom/plugins'],
+    );
+
+Each directory must contain files under a subpath corresponding to the
+namespace, for example:
+
+    /path/to/custom/plugins/SEO/Inspector/Plugin/Foo.pm
+
+=head2 Plugin Interface
+
+A plugin must provide at least two methods:
+
+=over 4
+
+=item * C<new>
+
+Constructor, called with no arguments.
+
+=item * C<run($html)>
+
+Given a string of raw HTML, return a hashref describing the result of the check.
+The hashref should have at least these keys:
+
+    {
+        name   => 'My Check',
+        status => 'ok' | 'warn' | 'error',
+        notes  => 'human-readable message',
+    }
+
+=back
+
+=head2 Running Plugins
+
+You can run all loaded plugins against a piece of HTML with:
+
+    my $results = $inspector->check_html($html);
+
+This returns a hashref keyed by plugin name (lowercased), each value being the
+hashref returned by the plugin's C<run> method.
+
+Plugins are also run automatically when you call C<check_url>:
+
+    my $results = $inspector->check_url('https://example.com');
+
+That result will include both built-in checks and plugin checks.
+
+=head2 Example Plugin
+
+Here is a minimal example plugin that checks whether the page contains
+the string "Hello":
+
+    package SEO::Inspector::Plugin::HelloCheck;
+    use strict;
+    use warnings;
+
+    sub new { bless {}, shift }
+
+    sub run {
+        my ($self, $html) = @_;
+        if ($html =~ /Hello/) {
+            return { name => 'Hello Check', status => 'ok', notes => 'found Hello' };
+        } else {
+            return { name => 'Hello Check', status => 'warn', notes => 'no Hello' };
+        }
+    }
+
+    1;
+
+Place this file under C<lib/SEO/Inspector/Plugin/HelloCheck.pm> (or another
+directory listed in C<plugin_dirs>), and it will be discovered automatically.
+
+=head2 Naming Conventions
+
+The plugin key stored in C<< $inspector->{plugins} >> is derived from the final
+part of the package name, lowercased. For example:
+
+    SEO::Inspector::Plugin::HelloCheck -> "hellocheck"
+
+This is the key you will see in the hashref returned by C<check_html> or
+C<check_url>.
+
 =head1 METHODS
 
 =head2 new(%args)
@@ -70,7 +171,7 @@ sub new {
 
 =head2 load_plugins
 
-Automatically loads plugins from C<SEO::Inspector::Plugin> namespace.
+Loads plugins from the C<SEO::Inspector::Plugin> namespace.
 
 =cut
 
@@ -117,42 +218,54 @@ sub _fetch_html {
 	return $res->body;
 }
 
+=head2 check($check_name, $html)
+
+Run a single built-in check or plugin on provided HTML (or fetch from object URL if HTML not provided).
+
+=cut
+
 # -------------------------------
 # Run a single plugin or built-in check
 # -------------------------------
 sub check {
-    my ($self, $check_name, $html) = @_;
-    $html //= $self->_fetch_html();
+	my ($self, $check_name, $html) = @_;
+	$html //= $self->_fetch_html();
 
-    my %dispatch = (
-        title            => \&_check_title,
-        meta_description => \&_check_meta_description,
-        canonical        => \&_check_canonical,
-        robots_meta      => \&_check_robots_meta,
-        viewport         => \&_check_viewport,
-        h1_presence      => \&_check_h1_presence,
-        word_count       => \&_check_word_count,
-        links_alt_text   => \&_check_links_alt_text,
-	check_structured_data => \&_check_structured_data,
-	check_headings	=> \&_check_headings,
-	check_links	=> \&_check_links,
-    );
+	my %dispatch = (
+		title            => \&_check_title,
+		meta_description => \&_check_meta_description,
+		canonical        => \&_check_canonical,
+		robots_meta      => \&_check_robots_meta,
+		viewport         => \&_check_viewport,
+		h1_presence      => \&_check_h1_presence,
+		word_count       => \&_check_word_count,
+		links_alt_text   => \&_check_links_alt_text,
+		check_structured_data => \&_check_structured_data,
+		check_headings	=> \&_check_headings,
+		check_links	=> \&_check_links,
+	);
 
-    # built-in checks
-    if (exists $dispatch{$check_name}) {
-        return $dispatch{$check_name}->($self, $html);
-    } else {
-	croak "Unknown check $check_name";
+	# built-in checks
+	if (exists $dispatch{$check_name}) {
+		return $dispatch{$check_name}->($self, $html);
+	} else {
+		croak "Unknown check $check_name";
 	}
 
-    # plugin checks
-    if (exists $self->{plugins}{$check_name}) {
-        my $plugin = $self->{plugins}{$check_name};
-        return $plugin->run($html);
-    }
+	# plugin checks
+	if (exists $self->{plugins}{$check_name}) {
+		my $plugin = $self->{plugins}{$check_name};
+		return $plugin->run($html);
+	}
 
-    return { name => $check_name, status => 'unknown', notes => '' };
+	return { name => $check_name, status => 'unknown', notes => '' };
 }
+
+=head2 run_all($html)
+
+Run all built-in checks on HTML (or object URL).
+
+=cut
 
 # -------------------------------
 # Run all built-in checks
@@ -173,6 +286,12 @@ sub run_all
 	return \%results;
 }
 
+=head2 check_html($html)
+
+Run all loaded plugins on HTML.
+
+=cut
+
 # -------------------------------
 # Run all plugins on HTML
 # -------------------------------
@@ -189,22 +308,30 @@ sub check_html {
     return \%results;
 }
 
+=head2 check_url($url)
+
+Fetch the URL and run all plugins and built-in checks.
+
+=cut
+
 # -------------------------------
 # Run URL: fetch and check
 # -------------------------------
 sub check_url {
-    my ($self, $url) = @_;
-    $url //= $self->{url};
-    croak "URL missing" unless $url;
+	my ($self, $url) = @_;
 
-    my $html = $self->_fetch_html($url);
+	$url //= $self->{url};
 
-    my $plugin_results  = $self->check_html($html);
-    my $builtin_results = $self->run_all($html);
+	croak "URL missing" unless $url;
 
-    # merge all results
-    my %results = (%$plugin_results, %$builtin_results, _html => $html);
-    return \%results;
+	my $html = $self->_fetch_html($url);
+
+	my $plugin_results  = $self->check_html($html);
+	my $builtin_results = $self->run_all($html);
+
+	# merge all results
+	my %results = (%$plugin_results, %$builtin_results, _html => $html);
+	return \%results;
 }
 
 # -------------------------------
@@ -379,28 +506,82 @@ sub _check_links {
     };
 }
 
-1;
+=head1 AUTHOR
 
-__END__
-
-=head2 check($check_name, $html)
-
-Run a single built-in check or plugin on provided HTML (or fetch from object URL if HTML not provided).
-
-=head2 run_all($html)
-
-Run all built-in checks on HTML (or object URL).
-
-=head2 check_html($html)
-
-Run all loaded plugins on HTML.
-
-=head2 check_url($url)
-
-Fetch the URL and run all plugins and built-in checks.
+Nigel Horne, C<< <njh at nigelhorne.com> >>
 
 =head1 SEE ALSO
 
 Test coverage report: L<https://nigelhorne.github.io/SEO-Inspector/coverage/>
 
+=over 4
+
+=item * L<https://github.com/nigelhorne/SEO-Checker>
+
+=item * L<https://github.com/sethblack/python-seo-analyzer>
+
+=back
+
+=head1 REPOSITORY
+
+L<https://github.com/nigelhorne/SEO-Inspector>
+
+=head1 SUPPORT
+
+This module is provided as-is without any warranty.
+
+Please report any bugs or feature requests to C<bug-seo-inspector at rt.cpan.org>,
+or through the web interface at
+L<http://rt.cpan.org/NoAuth/ReportBug.html?Queue=SEO-Inspector>.
+I will be notified, and then you'll
+automatically be notified of progress on your bug as I make changes.
+
+You can find documentation for this module with the perldoc command.
+
+    perldoc SEO::Inspector
+
+You can also look for information at:
+
+=over 4
+
+=item * MetaCPAN
+
+L<https://metacpan.org/dist/SEO-Inspector>
+
+=item * RT: CPAN's request tracker
+
+L<https://rt.cpan.org/NoAuth/Bugs.html?Dist=SEO-Inspector>
+
+=item * CPAN Testers' Matrix
+
+L<http://matrix.cpantesters.org/?dist=SEO-Inspector>
+
+=item * CPAN Testers Dependencies
+
+L<http://deps.cpantesters.org/?module=SEO::Inspector>
+
+=back
+
+=head1 LICENCE AND COPYRIGHT
+
+Copyright 2010-2025 Nigel Horne.
+
+Usage is subject to licence terms.
+
+The licence terms of this software are as follows:
+
+=over 4
+
+=item * Personal single user, single computer use: GPL2
+
+=item * All other users (including Commercial, Charity, Educational, Government)
+  must apply in writing for a licence for use from Nigel Horne at the
+  above e-mail.
+
+=back
+
 =cut
+
+1;
+
+__END__
