@@ -5,6 +5,7 @@ use warnings;
 
 use Carp;
 use Mojo::UserAgent;
+use Mojo::URL;
 use Module::Pluggable require => 1, search_path => 'SEO::Inspector::Plugin';
 
 =head1 NAME
@@ -126,12 +127,17 @@ sub check {
         h1_presence      => \&_check_h1_presence,
         word_count       => \&_check_word_count,
         links_alt_text   => \&_check_links_alt_text,
+	check_structured_data => \&_check_structured_data,
+	check_headings	=> \&_check_headings,
+	check_links	=> \&_check_links,
     );
 
     # built-in checks
     if (exists $dispatch{$check_name}) {
         return $dispatch{$check_name}->($self, $html);
-    }
+    } else {
+    	croak "Unknown check $check_name";
+	}
 
     # plugin checks
     if (exists $self->{plugins}{$check_name}) {
@@ -145,18 +151,20 @@ sub check {
 # -------------------------------
 # Run all built-in checks
 # -------------------------------
-sub run_all {
-    my ($self, $html) = @_;
-    $html //= $self->_fetch_html();
+sub run_all
+{
+	my ($self, $html) = @_;
+	$html //= $self->_fetch_html();
 
-    my %results;
-    for my $check (qw(
-        title meta_description canonical robots_meta viewport h1_presence word_count links_alt_text
-    )) {
-        $results{$check} = $self->check($check, $html);
-    }
+	my %results;
+	for my $check (qw(
+		title meta_description canonical robots_meta viewport h1_presence word_count links_alt_text
+		check_structured_data check_headings check_links
+	)) {
+		$results{$check} = $self->check($check, $html);
+	}
 
-    return \%results;
+	return \%results;
 }
 
 # -------------------------------
@@ -264,7 +272,109 @@ sub _check_links_alt_text {
     return { name => 'Links Alt Text', status => @missing ? 'warn' : 'ok', notes => @missing ? scalar(@missing) . " images missing alt" : 'all images have alt' };
 }
 
+sub _check_structured_data {
+    my ($self, $html) = @_;
+
+    my @jsonld = ($html =~ /<script\b[^>]*type=["']application\/ld\+json["'][^>]*>(.*?)<\/script>/gis);
+
+    return {
+        name   => 'Structured Data',
+        status => @jsonld ? 'ok' : 'warn',
+        notes  => @jsonld ? scalar(@jsonld) . " JSON-LD block(s) found" : 'no structured data found',
+    };
+}
+
+sub _check_headings {
+    my ($self, $html) = @_;
+
+    my %counts;
+    while ($html =~ /<(h[1-6])\b[^>]*>/gi) {
+        $counts{lc $1}++;
+    }
+
+    my $summary = join ', ', map { "$_: $counts{$_}" } sort keys %counts;
+
+    return {
+        name   => 'Headings',
+        status => %counts ? 'ok' : 'warn',
+        notes  => %counts ? $summary : 'no headings found',
+    };
+}
+
+
+sub _check_links {
+    my ($self, $html) = @_;
+
+    my $base_host;
+    if ($self->{url} && $self->{url} =~ m{^https?://}i) {
+        $base_host = Mojo::URL->new($self->{url})->host;
+    }
+
+    my ($total, $internal, $external, $badtext) = (0,0,0,0);
+
+    # common "bad" link text patterns (exact match or just punctuation around)
+    my $bad_rx = qr/^(?:click\s*here|read\s*more|more|link|here|details)$/i;
+
+    while ($html =~ m{<a\b([^>]*)>(.*?)</a>}gis) {
+        my $attrs = $1;
+        my $text  = $2 // '';
+
+        $total++;
+
+        # get href (prefer quoted values)
+        my ($href) = $attrs =~ /\bhref\s*=\s*"(.*?)"/i;
+        $href //= ($attrs =~ /\bhref\s*=\s*'(.*?)'/i ? $1 : undef);
+        $href //= ($attrs =~ /\bhref\s*=\s*([^\s>]+)/i ? $1 : undef);
+
+        # classify internal vs external
+        if (defined $href && $href =~ m{^\s*https?://}i) {
+            # attempt to compare host
+            my ($host) = $href =~ m{^\s*https?://([^/:\s]+)}i;
+            if (defined $base_host && defined $host) {
+                if (lc $host eq lc $base_host) {
+                    $internal++;
+                } else {
+                    $external++;
+                }
+            } else {
+                # no base host to compare; treat as external if absolute URL
+                $external++;
+            }
+        } else {
+            # relative URL or fragment or mailto/etc -> treat as internal
+            $internal++;
+        }
+
+        # normalize visible text: strip tags, trim whitespace, collapse spaces
+        $text =~ s/<[^>]+>//g;
+        $text =~ s/^\s+|\s+$//g;
+        $text =~ s/\s+/ /g;
+
+        # check for bad link text (exact-ish)
+        if ($text =~ $bad_rx) {
+            $badtext++;
+        }
+    }
+
+    my $status = ($external || $badtext) ? 'warn' : ($total ? 'ok' : 'warn');
+
+    my $notes;
+    if ($total) {
+        $notes = sprintf("%d total (%d internal, %d external). %d link(s) with poor anchor text",
+                         $total, $internal, $external, $badtext);
+    } else {
+        $notes = 'no links found';
+    }
+
+    return {
+        name   => 'Links',
+        status => $status,
+        notes  => $notes,
+    };
+}
+
 1;
+
 __END__
 
 =head2 load_plugins

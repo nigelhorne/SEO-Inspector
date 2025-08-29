@@ -32,6 +32,7 @@ WriteMakefile(
 		'IPC::System::Simple' => 0,
 		'JSON::MaybeXS' => 0,
 		'Mojo::UserAgent' => 0,
+		'Mojo::URL' => 0,
 		'Module::Pluggable' => 0,
 		'HTML::TreeBuilder' => 0,
 	}, TEST_REQUIRES => {
