@@ -46,7 +46,7 @@ You can also tell the constructor to search additional directories by passing
 the `plugin_dirs` argument:
 
     my $inspector = SEO::Inspector->new(
-        plugin_dirs => ['t/lib', '/path/to/custom/plugins'],
+      plugin_dirs => ['t/lib', '/path/to/custom/plugins'],
     );
 
 Each directory must contain files under a subpath corresponding to the
@@ -68,9 +68,9 @@ A plugin must provide at least two methods:
     The hashref should have at least these keys:
 
         {
-            name   => 'My Check',
-            status => 'ok' | 'warn' | 'error',
-            notes  => 'human-readable message',
+          name   => 'My Check',
+          status => 'ok' | 'warn' | 'error',
+          notes  => 'human-readable message',
         }
 
 ## Running Plugins
@@ -93,22 +93,22 @@ That result will include both built-in checks and plugin checks.
 Here is a minimal example plugin that checks whether the page contains
 the string "Hello":
 
-    package SEO::Inspector::Plugin::HelloCheck;
-    use strict;
-    use warnings;
+        package SEO::Inspector::Plugin::HelloCheck;
+        use strict;
+        use warnings;
 
-    sub new { bless {}, shift }
+        sub new { bless {}, shift }
 
-    sub run {
-        my ($self, $html) = @_;
-        if ($html =~ /Hello/) {
-            return { name => 'Hello Check', status => 'ok', notes => 'found Hello' };
-        } else {
-            return { name => 'Hello Check', status => 'warn', notes => 'no Hello' };
+        sub run {
+                my ($self, $html) = @_;
+                if ($html =~ /Hello/) {
+                        return { name => 'Hello Check', status => 'ok', notes => 'found Hello' };
+                } else {
+                        return { name => 'Hello Check', status => 'warn', notes => 'no Hello' };
+                }
         }
-    }
 
-    1;
+        1;
 
 Place this file under `lib/SEO/Inspector/Plugin/HelloCheck.pm` (or another
 directory listed in `plugin_dirs`), and it will be discovered automatically.
@@ -118,7 +118,7 @@ directory listed in `plugin_dirs`), and it will be discovered automatically.
 The plugin key stored in `$inspector->{plugins}` is derived from the final
 part of the package name, lowercased. For example:
 
-    SEO::Inspector::Plugin::HelloCheck -> "hellocheck"
+        SEO::Inspector::Plugin::HelloCheck -> "hellocheck"
 
 This is the key you will see in the hashref returned by `check_html` or
 `check_url`.
