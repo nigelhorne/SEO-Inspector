@@ -40,6 +40,10 @@ jobs:
       #     cpanm Perl::Critic
       #     perlcritic --verbose 5 lib || true
 
+      - name: Run tests manually
+        run: |
+          prove -v t
+
       # Run the tests with Devel::Cover for coverage
       - name: Run tests with coverage
         run: |
