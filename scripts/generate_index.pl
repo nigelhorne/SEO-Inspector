@@ -41,7 +41,10 @@ for my $file (sort keys %{$data->{summary}}) {
 
     my $info = $data->{summary}{$file};
     my $html_file = $file;
-    $html_file =~ s|/|_|g;
+	$html_file =~ s|/|-|g;         # Convert path separators to hyphens
+	$html_file =~ s|\.pm$|-pm|;    # Replace .pm with -pm
+	$html_file =~ s|\.pl$|-pl|;    # Optional: handle .pl files too
+
     $html_file .= '.html';
 
     my $total = $info->{total}{percentage} // 0;
@@ -57,7 +60,6 @@ for my $file (sort keys %{$data->{summary}}) {
         $total
     );
 }
-
 
 # Close HTML
 $html .= <<'HTML';
