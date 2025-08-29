@@ -102,11 +102,16 @@ if (my $stat = stat($cover_db)) {
 	$timestamp = strftime("%Y-%m-%d %H:%M:%S", localtime($stat->mtime));
 }
 
+my $commit_sha = `git rev-parse HEAD`;
+chomp $commit_sha;
+my $commit_url = "https://github.com/nigelhorne/SEO-Inspector/commit/$commit_sha";
+
 $html .= <<'HTML';
 </table>
 <footer>
   <p>Project: <a href="https://github.com/nigelhorne/SEO-Inspector">SEO-Inspector</a></p>
-  <p><em>Last updated: $timestamp</em></p>
+<p><em>Last updated: $timestamp — <a href="$commit_url">commit <code>$commit_sha</code></a></em></p>
+  
 </footer>
 <p><em>Last updated: $timestamp</em></p>
 </body>
