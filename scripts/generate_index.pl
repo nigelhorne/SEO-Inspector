@@ -8,7 +8,7 @@ use POSIX qw(strftime);
 use File::stat;
 
 my $cover_db = 'cover_db/cover.json';
-my $output   = 'cover_html/index.html';
+my $output = 'cover_html/index.html';
 
 # Read and decode coverage data
 my $json_text = read_file($cover_db);
@@ -18,9 +18,8 @@ my $coverage_pct = 0;
 my $badge_color = 'red';
 
 if (my $total_info = $data->{summary}{Total}) {
-    $coverage_pct = int($total_info->{total}{percentage} // 0);
-    $badge_color = $coverage_pct > 80 ? 'brightgreen' :
-                   $coverage_pct > 50 ? 'yellow' : 'red';
+	$coverage_pct = int($total_info->{total}{percentage} // 0);
+	$badge_color = $coverage_pct > 80 ? 'brightgreen' : $coverage_pct > 50 ? 'yellow' : 'red';
 }
 
 my $coverage_badge_url = "https://img.shields.io/badge/coverage-${coverage_pct}%25-${badge_color}";
@@ -61,9 +60,9 @@ for my $file (sort keys %{$data->{summary}}) {
 
 	my $info = $data->{summary}{$file};
 	my $html_file = $file;
-	$html_file =~ s|/|-|g;         # Convert path separators to hyphens
-	$html_file =~ s|\.pm$|-pm|;    # Replace .pm with -pm
-	$html_file =~ s|\.pl$|-pl|;    # Optional: handle .pl files too
+	$html_file =~ s|/|-|g;      # Convert path separators to hyphens
+	$html_file =~ s|\.pm$|-pm|;	# Replace .pm with -pm
+	$html_file =~ s|\.pl$|-pl|;	# Optional: handle .pl files too
 
 	$html_file .= '.html';
 
@@ -74,7 +73,7 @@ for my $file (sort keys %{$data->{summary}}) {
 		qq{<tr class="%s"><td><a href="%s">%s</a></td><td>%.1f</td><td>%.1f</td><td>%.1f</td><td>%.1f</td><td>%.1f</td></tr>\n},
 		$class, $html_file, $file,
 		$info->{statement}{percentage} // 0,
-		$info->{branch}{percentage}    // 0,
+		$info->{branch}{percentage} // 0,
 		$info->{condition}{percentage} // 0,
 		$info->{subroutine}{percentage} // 0,
 		$total
@@ -90,7 +89,7 @@ if (my $total_info = $data->{summary}{Total}) {
 		qq{<tr class="%s"><td><strong>Total</strong></td><td>%.1f</td><td>%.1f</td><td>%.1f</td><td>%.1f</td><td><strong>%.1f</strong></td></tr>\n},
 		$class,
 		$total_info->{statement}{percentage} // 0,
-		$total_info->{branch}{percentage}    // 0,
+		$total_info->{branch}{percentage} // 0,
 		$total_info->{condition}{percentage} // 0,
 		$total_info->{subroutine}{percentage} // 0,
 		$total_pct
@@ -105,13 +104,13 @@ if (my $stat = stat($cover_db)) {
 my $commit_sha = `git rev-parse HEAD`;
 chomp $commit_sha;
 my $commit_url = "https://github.com/nigelhorne/SEO-Inspector/commit/$commit_sha";
+my $short_sha = substr($commit_sha, 0, 7);
 
-$html .= <<'HTML';
+$html .= <<"HTML";
 </table>
 <footer>
-  <p>Project: <a href="https://github.com/nigelhorne/SEO-Inspector">SEO-Inspector</a></p>
-<p><em>Last updated: $timestamp — <a href="$commit_url">commit <code>$commit_sha</code></a></em></p>
-  
+	<p>Project: <a href="https://github.com/nigelhorne/SEO-Inspector">SEO-Inspector</a></p>
+	<p><em>Last updated: $timestamp — <a href="$commit_url">commit <code>$short_sha</code></a></em></p>
 </footer>
 <p><em>Last updated: $timestamp</em></p>
 </body>
