@@ -75,7 +75,7 @@ for my $file (sort keys %{$data->{summary}}) {
 	my $source_url = $github_base . $file;
 
 	$html .= sprintf(
-		qq{<tr class="%s"><td><a href="%s">%s</a><br><small><a href="%s">View source</a></small></td><td>%.1f</td><td>%.1f</td><td>%.1f</td><td>%.1f</td><td>%.1f</td></tr>\n},
+		qq{<tr class="%s"><td><a href="%s">%s</a> <small><a href="%s">&#128269;</a></small></td><td>%.1f</td><td>%.1f</td><td>%.1f</td><td>%.1f</td><td>%.1f</td></tr>\n},
 		$class, $html_file, $file, $source_url,
 		$info->{statement}{percentage} // 0,
 		$info->{branch}{percentage}    // 0,
