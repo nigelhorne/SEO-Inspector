@@ -29,7 +29,6 @@ my $html = <<"HTML";
 <!DOCTYPE html>
 <html>
 	<head>
-	<meta charset="UTF-8">
 	<title>SEO::Inspector Coverage Report</title>
 	<style>
 		body { font-family: sans-serif; }
@@ -43,6 +42,9 @@ my $html = <<"HTML";
 		.disabled-icon {
 			opacity: 0.4;
 			cursor: default;
+		}
+		.icon-link {
+			text-decoration: none;
 		}
 	</style>
 </head>
@@ -86,7 +88,7 @@ for my $file (sort keys %{$data->{summary}}) {
 	);
 
 	my $source_link = $has_coverage
-		? sprintf('<a href="%s" title="View source on GitHub">&#128269;</a>', $source_url)
+		? sprintf('<a href="%s" class="icon-link" title="View source on GitHub">&#128269;</a>', $source_url)
 		: '<span class="disabled-icon" title="No coverage data">&#128269;</span>'
 		; 
 
