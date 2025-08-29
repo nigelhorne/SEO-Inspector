@@ -56,11 +56,11 @@ HTML
 
 # Add rows
 for my $file (sort keys %{$data->{summary}}) {
-	next if $file eq 'Total';  # Skip the aggregate row
+	next if $file eq 'Total';	# Skip the aggregate row
 
 	my $info = $data->{summary}{$file};
 	my $html_file = $file;
-	$html_file =~ s|/|-|g;      # Convert path separators to hyphens
+	$html_file =~ s|/|-|g;    # Convert path separators to hyphens
 	$html_file =~ s|\.pm$|-pm|;	# Replace .pm with -pm
 	$html_file =~ s|\.pl$|-pl|;	# Optional: handle .pl files too
 
@@ -112,7 +112,6 @@ $html .= <<"HTML";
 	<p>Project: <a href="https://github.com/nigelhorne/SEO-Inspector">SEO-Inspector</a></p>
 	<p><em>Last updated: $timestamp — <a href="$commit_url">commit <code>$short_sha</code></a></em></p>
 </footer>
-<p><em>Last updated: $timestamp</em></p>
 </body>
 </html>
 HTML
