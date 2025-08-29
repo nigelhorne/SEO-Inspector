@@ -51,7 +51,13 @@ my ($stdout, $stderr);
 local $ENV{PERL5LIB} = "$plugin_dir:$FindBin::Bin/../lib:$ENV{PERL5LIB}";
 
 # run3 [ $cli_script, '--file', $html_file ], undef, \$stdout, \$stderr;
-run3 [ $^X, "-I$plugin_dir", '-Ilib', $cli_script, '--file', $html_file ], undef, \$stdout, \$stderr;
+run3 [
+  $^X,
+  "-I$plugin_dir",                 # where SEO/Inspector/Plugin/FakeCLI.pm lives
+  "-I$FindBin::Bin/../lib",        # module lib
+  $cli_script,
+  '--file', $html_file
+], undef, \$stdout, \$stderr;
 
 diag($stderr) if(defined($stderr) && length($stderr));
 
