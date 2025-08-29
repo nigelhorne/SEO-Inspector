@@ -5,7 +5,9 @@ lib/SEO/Inspector/Plugin/TitleCheck.pm
 LICENSE
 Makefile.PL
 MANIFEST			This list of files
+MANIFEST.SKIP
 README.md
+scripts/generate_index.pl
 t/10-load.t
 t/30-basics.t
 t/eof.t
