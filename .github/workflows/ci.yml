@@ -47,7 +47,7 @@ jobs:
       # Run the tests with Devel::Cover for coverage
       - name: Run tests with coverage
         run: |
-          cover -test
+          COVER_VERBOSE=1 cover -test
         working-directory: ${{ github.workspace }}
 
       - name: Check for coverage database
