@@ -74,9 +74,20 @@ for my $file (sort keys %{$data->{summary}}) {
 	my $class = $total > 80 ? 'high' : $total > 50 ? 'med' : 'low';
 	my $source_url = $github_base . $file;
 
+	my $has_coverage = (
+		defined $info->{statement}{percentage} ||
+		defined $info->{branch}{percentage}    ||
+		defined $info->{condition}{percentage} ||
+		defined $info->{subroutine}{percentage}
+	);
+
+	my $source_link = $has_coverage
+		? sprintf('<a href="%s" title="View source on GitHub">&#128269;</a>', $source_url)
+		: '';
+
 	$html .= sprintf(
-		qq{<tr class="%s"><td><a href="%s">%s</a> <small><a href="%s">&#128269;</a></small></td><td>%.1f</td><td>%.1f</td><td>%.1f</td><td>%.1f</td><td>%.1f</td></tr>\n},
-		$class, $html_file, $file, $source_url,
+		qq{<tr class="%s"><td><a href="%s">%s</a> %s</td><td>%.1f</td><td>%.1f</td><td>%.1f</td><td>%.1f</td><td>%.1f</td></tr>\n},
+		$class, $html_file, $file, $source_link,
 		$info->{statement}{percentage} // 0,
 		$info->{branch}{percentage}    // 0,
 		$info->{condition}{percentage} // 0,
