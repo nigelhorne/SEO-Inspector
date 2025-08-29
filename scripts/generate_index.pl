@@ -46,6 +46,10 @@ my $html = <<"HTML";
 		.icon-link {
 			text-decoration: none;
 		}
+		.icon-link:hover {
+			opacity: 0.7;
+			cursor: pointer;
+		}
 	</style>
 </head>
 <body>
