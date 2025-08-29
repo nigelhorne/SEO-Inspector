@@ -51,6 +51,12 @@ jobs:
           cover -report html
       # working-directory: ${{ github.workspace }}
 
+      - name: Debug coverage output
+        run: |
+          echo "Listing contents of ./cover_html"
+          ls -l ./cover_html
+          find ./cover_html
+
       # Deploy HTML report to GitHub Pages
       - name: Publish coverage report
         uses: peaceiris/actions-gh-pages@v4

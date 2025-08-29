@@ -397,4 +397,8 @@ Run all loaded plugins on HTML.
 
 Fetch the URL and run all plugins and built-in checks.
 
+=head1 SEE ALSO
+
+L<https://nigelhorne.github.io/SEO-Inspector/covertage>
+
 =cut
