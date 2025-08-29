@@ -73,25 +73,29 @@ sub new {
 sub load_plugins {
 	my $self = $_[0];
 
-	for my $plugin ($self->plugins) {
+print STDERR __LINE__, "\n";
+print STDERR $ENV{PERL5LIB}, "\n";
+	for my $plugin ($self->plugins()) {
+print STDERR "$plugin\n";
 		my $key = lc($plugin =~ s/.*:://r);
 		$self->{plugins}{$key} = $plugin->new();
 	}
+print STDERR "Done Plugins\n";
 }
 
 # -------------------------------
 # Fetch HTML from URL or object default
 # -------------------------------
 sub _fetch_html {
-    my ($self, $url) = @_;
-    $url //= $self->{url};
-    croak "URL missing" unless $url;
+	my ($self, $url) = @_;
+	$url //= $self->{url};
+	croak 'URL missing' unless $url;
 
-    my $res = $self->{ua}->get($url)->result;
-    if ($res->is_error) {
-        croak "Fetch failed: " . $res->message;
-    }
-    return $res->body;
+	my $res = $self->{ua}->get($url)->result;
+	if ($res->is_error) {
+		croak 'Fetch failed: ', $res->message();
+	}
+	return $res->body;
 }
 
 # -------------------------------
