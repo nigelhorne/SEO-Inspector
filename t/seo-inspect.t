@@ -52,11 +52,12 @@ diag(`ls -l $plugin_ns_dir`);
 # Run CLI with --file option
 # -------------------------------
 my ($stdout, $stderr);
-local $ENV{PERL5LIB} = "$plugin_dir:$FindBin::Bin/../lib:$ENV{PERL5LIB}";
+$ENV{PERL5LIB} = "$plugin_dir:$FindBin::Bin/../lib:$ENV{PERL5LIB}";
 
 run3 [ $cli_script, '--file', $html_file ], undef, \$stdout, \$stderr;
 
 diag($stderr) if(defined($stderr));
+diag(`ls -l $plugin_ns_dir`);
 
 ok(!$stderr, 'CLI did not produce errors');
 like($stdout, qr/FakeCLI/, 'CLI output includes FakeCLI plugin');
