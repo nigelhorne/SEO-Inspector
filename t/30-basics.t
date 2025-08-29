@@ -44,7 +44,8 @@ like($plugin_results->{fakecheck}->{notes}, qr/plugin ran/, 'FakeCheck notes cor
 # -------------------------------
 my $builtin = $inspector->run_all($html);
 isa_ok($builtin, 'HASH', 'run_all returns a hashref');
-ok($builtin->{title}->{status} eq 'ok', 'Title check passed');
+diag(Data::Dumper->new([$builtin])->Dump()) if($ENV{'TEST_VERBOSE'});
+ok($builtin->{title}->{notes} eq 'title too short (4 chars)', 'Title is too short');
 ok($builtin->{meta_description}->{status} eq 'ok', 'Meta description check passed');
 
 done_testing();

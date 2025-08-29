@@ -54,21 +54,21 @@ specialized analysis without modifying the core module.
 Plugins are loaded dynamically from the C<SEO::Inspector::Plugin> namespace.
 For example, a module called:
 
-    package SEO::Inspector::Plugin::MyCheck;
+  package SEO::Inspector::Plugin::MyCheck;
 
 will be detected and loaded automatically if it is available in C<@INC>.
 
 You can also tell the constructor to search additional directories by passing
 the C<plugin_dirs> argument:
 
-    my $inspector = SEO::Inspector->new(
-        plugin_dirs => ['t/lib', '/path/to/custom/plugins'],
-    );
+  my $inspector = SEO::Inspector->new(
+    plugin_dirs => ['t/lib', '/path/to/custom/plugins'],
+  );
 
 Each directory must contain files under a subpath corresponding to the
 namespace, for example:
 
-    /path/to/custom/plugins/SEO/Inspector/Plugin/Foo.pm
+  /path/to/custom/plugins/SEO/Inspector/Plugin/Foo.pm
 
 =head2 Plugin Interface
 
@@ -85,11 +85,11 @@ Constructor, called with no arguments.
 Given a string of raw HTML, return a hashref describing the result of the check.
 The hashref should have at least these keys:
 
-    {
-        name   => 'My Check',
-        status => 'ok' | 'warn' | 'error',
-        notes  => 'human-readable message',
-    }
+  {
+    name   => 'My Check',
+    status => 'ok' | 'warn' | 'error',
+    notes  => 'human-readable message',
+  }
 
 =back
 
@@ -97,14 +97,14 @@ The hashref should have at least these keys:
 
 You can run all loaded plugins against a piece of HTML with:
 
-    my $results = $inspector->check_html($html);
+  my $results = $inspector->check_html($html);
 
 This returns a hashref keyed by plugin name (lowercased), each value being the
 hashref returned by the plugin's C<run> method.
 
 Plugins are also run automatically when you call C<check_url>:
 
-    my $results = $inspector->check_url('https://example.com');
+  my $results = $inspector->check_url('https://example.com');
 
 That result will include both built-in checks and plugin checks.
 
@@ -113,22 +113,22 @@ That result will include both built-in checks and plugin checks.
 Here is a minimal example plugin that checks whether the page contains
 the string "Hello":
 
-    package SEO::Inspector::Plugin::HelloCheck;
-    use strict;
-    use warnings;
+	package SEO::Inspector::Plugin::HelloCheck;
+	use strict;
+	use warnings;
 
-    sub new { bless {}, shift }
+	sub new { bless {}, shift }
 
-    sub run {
-        my ($self, $html) = @_;
-        if ($html =~ /Hello/) {
-            return { name => 'Hello Check', status => 'ok', notes => 'found Hello' };
-        } else {
-            return { name => 'Hello Check', status => 'warn', notes => 'no Hello' };
-        }
-    }
+	sub run {
+		my ($self, $html) = @_;
+		if ($html =~ /Hello/) {
+			return { name => 'Hello Check', status => 'ok', notes => 'found Hello' };
+		} else {
+			return { name => 'Hello Check', status => 'warn', notes => 'no Hello' };
+		}
+	}
 
-    1;
+	1;
 
 Place this file under C<lib/SEO/Inspector/Plugin/HelloCheck.pm> (or another
 directory listed in C<plugin_dirs>), and it will be discovered automatically.
@@ -138,7 +138,7 @@ directory listed in C<plugin_dirs>), and it will be discovered automatically.
 The plugin key stored in C<< $inspector->{plugins} >> is derived from the final
 part of the package name, lowercased. For example:
 
-    SEO::Inspector::Plugin::HelloCheck -> "hellocheck"
+	SEO::Inspector::Plugin::HelloCheck -> "hellocheck"
 
 This is the key you will see in the hashref returned by C<check_html> or
 C<check_url>.
@@ -191,7 +191,7 @@ sub load_plugins {
 
 			my $finder = Module::Pluggable::Object->new(
 				search_path => ['SEO::Inspector::Plugin'],
-				require     => 1,
+				require	 => 1,
 				instantiate => 'new',
 			);
 
@@ -232,14 +232,14 @@ sub check {
 	$html //= $self->_fetch_html();
 
 	my %dispatch = (
-		title            => \&_check_title,
+		title			=> \&_check_title,
 		meta_description => \&_check_meta_description,
-		canonical        => \&_check_canonical,
-		robots_meta      => \&_check_robots_meta,
-		viewport         => \&_check_viewport,
-		h1_presence      => \&_check_h1_presence,
-		word_count       => \&_check_word_count,
-		links_alt_text   => \&_check_links_alt_text,
+		canonical		=> \&_check_canonical,
+		robots_meta	=> \&_check_robots_meta,
+		viewport		 => \&_check_viewport,
+		h1_presence	=> \&_check_h1_presence,
+		word_count	 => \&_check_word_count,
+		links_alt_text => \&_check_links_alt_text,
 		check_structured_data => \&_check_structured_data,
 		check_headings	=> \&_check_headings,
 		check_links	=> \&_check_links,
@@ -296,16 +296,16 @@ Run all loaded plugins on HTML.
 # Run all plugins on HTML
 # -------------------------------
 sub check_html {
-    my ($self, $html) = @_;
-    $html //= $self->_fetch_html();
-    my %results;
+	my ($self, $html) = @_;
+	$html //= $self->_fetch_html();
+	my %results;
 
-    for my $key (keys %{ $self->{plugins} }) {
-        my $plugin = $self->{plugins}{$key};
-        $results{$key} = $plugin->run($html);
-    }
+	for my $key (keys %{ $self->{plugins} }) {
+		my $plugin = $self->{plugins}{$key};
+		$results{$key} = $plugin->run($html);
+	}
 
-    return \%results;
+	return \%results;
 }
 
 =head2 check_url($url)
@@ -326,7 +326,7 @@ sub check_url {
 
 	my $html = $self->_fetch_html($url);
 
-	my $plugin_results  = $self->check_html($html);
+	my $plugin_results = $self->check_html($html);
 	my $builtin_results = $self->run_all($html);
 
 	# merge all results
@@ -338,198 +338,277 @@ sub check_url {
 # Built-in check implementations
 # -------------------------------
 sub _check_title {
-    my ($self, $html) = @_;
+	my ($self, $html) = @_;
 
-    if ($html =~ /<title>(.*?)<\/title>/is) {
-        my $title = $1;
-        $title =~ s/^\s+|\s+$//g;         # trim
-        $title =~ s/\s{2,}/ /g;           # collapse spaces
+	if ($html =~ /<title>(.*?)<\/title>/is) {
+		my $title = $1;
+		$title =~ s/^\s+|\s+$//g;		 # trim
+		$title =~ s/\s{2,}/ /g;		   # collapse spaces
 
-        my $len = length($title);
-        my $status = 'ok';
-        my $notes  = "title present ($len chars)";
+		my $len = length($title);
+		my $status = 'ok';
+		my $notes = "title present ($len chars)";
 
-        if ($len == 0) {
-            $status = 'error';
-            $notes  = 'empty title';
-        } elsif ($len < 10) {
-            $status = 'warn';
-            $notes  = "title too short ($len chars)";
-        } elsif ($len > 65) {
-            $status = 'warn';
-            $notes  = "title too long ($len chars)";
-        }
+		if ($len == 0) {
+			$status = 'error';
+			$notes = 'empty title';
+		} elsif ($len < 10) {
+			$status = 'warn';
+			$notes = "title too short ($len chars)";
+		} elsif ($len > 65) {
+			$status = 'warn';
+			$notes = "title too long ($len chars)";
+		}
 
-        # Flag really weak titles
-        if ($title =~ /^(home|untitled|index)$/i) {
-            $status = 'warn';
-            $notes  = "generic title: $title";
-        }
+		# Flag really weak titles
+		if ($title =~ /^(home|untitled|index)$/i) {
+			$status = 'warn';
+			$notes = "generic title: $title";
+		}
 
-        return { name => 'Title', status => $status, notes => $notes };
-    }
+		return { name => 'Title', status => $status, notes => $notes };
+	}
 
-    return { name => 'Title', status => 'error', notes => 'missing title' };
+	return { name => 'Title', status => 'error', notes => 'missing title' };
 }
 
 
 sub _check_meta_description {
-    my ($self, $html) = @_;
-    if ($html =~ /<meta\s+name=["']description["']\s+content=["'](.*?)["']/is) {
-        my $desc = $1;
-        return { name => 'Meta Description', status => 'ok', notes => 'meta description present' };
-    }
-    return { name => 'Meta Description', status => 'warn', notes => 'missing meta description' };
+	my ($self, $html) = @_;
+	if ($html =~ /<meta\s+name=["']description["']\s+content=["'](.*?)["']/is) {
+		my $desc = $1;
+		return { name => 'Meta Description', status => 'ok', notes => 'meta description present' };
+	}
+	return { name => 'Meta Description', status => 'warn', notes => 'missing meta description' };
 }
 
 sub _check_canonical {
-    my ($self, $html) = @_;
-    if ($html =~ /<link\s+rel=["']canonical["']\s+href=["'](.*?)["']/is) {
-        return { name => 'Canonical', status => 'ok', notes => 'canonical link present' };
-    }
-    return { name => 'Canonical', status => 'warn', notes => 'missing canonical link' };
+	my ($self, $html) = @_;
+	if ($html =~ /<link\s+rel=["']canonical["']\s+href=["'](.*?)["']/is) {
+		return { name => 'Canonical', status => 'ok', notes => 'canonical link present' };
+	}
+	return { name => 'Canonical', status => 'warn', notes => 'missing canonical link' };
 }
 
 sub _check_robots_meta {
-    my ($self, $html) = @_;
-    if ($html =~ /<meta\s+name=["']robots["']\s+content=["'](.*?)["']/is) {
-        return { name => 'Robots Meta', status => 'ok', notes => 'robots meta present' };
-    }
-    return { name => 'Robots Meta', status => 'warn', notes => 'missing robots meta' };
+	my ($self, $html) = @_;
+	if ($html =~ /<meta\s+name=["']robots["']\s+content=["'](.*?)["']/is) {
+		return { name => 'Robots Meta', status => 'ok', notes => 'robots meta present' };
+	}
+	return { name => 'Robots Meta', status => 'warn', notes => 'missing robots meta' };
 }
 
 sub _check_viewport {
-    my ($self, $html) = @_;
-    if ($html =~ /<meta\s+name=["']viewport["']\s+content=["'](.*?)["']/is) {
-        return { name => 'Viewport', status => 'ok', notes => 'viewport meta present' };
-    }
-    return { name => 'Viewport', status => 'warn', notes => 'missing viewport meta' };
+	my ($self, $html) = @_;
+	if ($html =~ /<meta\s+name=["']viewport["']\s+content=["'](.*?)["']/is) {
+		return { name => 'Viewport', status => 'ok', notes => 'viewport meta present' };
+	}
+	return { name => 'Viewport', status => 'warn', notes => 'missing viewport meta' };
 }
 
 sub _check_h1_presence {
-    my ($self, $html) = @_;
-    if ($html =~ /<h1\b[^>]*>(.*?)<\/h1>/is) {
-        return { name => 'H1 Presence', status => 'ok', notes => 'h1 tag present' };
-    }
-    return { name => 'H1 Presence', status => 'warn', notes => 'missing h1' };
+	my ($self, $html) = @_;
+	if ($html =~ /<h1\b[^>]*>(.*?)<\/h1>/is) {
+		return { name => 'H1 Presence', status => 'ok', notes => 'h1 tag present' };
+	}
+	return { name => 'H1 Presence', status => 'warn', notes => 'missing h1' };
 }
 
 sub _check_word_count {
-    my ($self, $html) = @_;
-    my $text = $html;
-    $text =~ s/<[^>]+>//g;
-    my $words = scalar split /\s+/, $text;
-    return { name => 'Word Count', status => $words > 0 ? 'ok' : 'warn', notes => "$words words" };
+	my ($self, $html) = @_;
+	my $text = $html;
+	$text =~ s/<[^>]+>//g;
+	my $words = scalar split /\s+/, $text;
+	return { name => 'Word Count', status => $words > 0 ? 'ok' : 'warn', notes => "$words words" };
 }
 
 sub _check_links_alt_text {
-    my ($self, $html) = @_;
-    my @missing;
-    while ($html =~ /<img\b(.*?)>/gis) {
-        my $attr = $1;
-        push @missing, $1 unless $attr =~ /alt=/i;
-    }
-    return { name => 'Links Alt Text', status => @missing ? 'warn' : 'ok', notes => @missing ? scalar(@missing) . " images missing alt" : 'all images have alt' };
+	my ($self, $html) = @_;
+	my @missing;
+	while ($html =~ /<img\b(.*?)>/gis) {
+		my $attr = $1;
+		push @missing, $1 unless $attr =~ /alt=/i;
+	}
+	return { name => 'Links Alt Text', status => @missing ? 'warn' : 'ok', notes => @missing ? scalar(@missing) . " images missing alt" : 'all images have alt' };
 }
 
 sub _check_structured_data {
-    my ($self, $html) = @_;
+	my ($self, $html) = @_;
 
-    my @jsonld = ($html =~ /<script\b[^>]*type=["']application\/ld\+json["'][^>]*>(.*?)<\/script>/gis);
+	my @jsonld = ($html =~ /<script\b[^>]*type=["']application\/ld\+json["'][^>]*>(.*?)<\/script>/gis);
 
-    return {
-        name   => 'Structured Data',
-        status => @jsonld ? 'ok' : 'warn',
-        notes  => @jsonld ? scalar(@jsonld) . " JSON-LD block(s) found" : 'no structured data found',
-    };
+	return {
+		name => 'Structured Data',
+		status => @jsonld ? 'ok' : 'warn',
+		notes => @jsonld ? scalar(@jsonld) . " JSON-LD block(s) found" : 'no structured data found',
+	};
 }
 
+# _check_headings
+# ----------------
+# Analyzes the HTML document for heading structure and returns a structured
+# SEO/a11y report.
+#
+# Checks performed:
+#   - Presence of headings (<h1>–<h6>), with counts of each level.
+#   - Ensures exactly one <h1> exists (warns if missing or multiple).
+#   - Validates heading hierarchy (no skipped levels, e.g. <h3> should not appear before an <h2>).
+#   - Flags suspicious heading text lengths (too short < 2 chars, or too long > 120 chars).
+#
+# Returns:
+#   {
+#	 name   => 'Headings',
+#	 status => 'ok' | 'warn',
+#	 notes  => 'summary of counts and issues'
+#   }
+#
+# Notes:
+#   - Status is 'warn' if issues are found, otherwise 'ok'.
+#   - 'error' status is reserved for future use (currently unused).
+
 sub _check_headings {
-    my ($self, $html) = @_;
+	my ($self, $html) = @_;
 
-    my %counts;
-    while ($html =~ /<(h[1-6])\b[^>]*>/gi) {
-        $counts{lc $1}++;
-    }
+	my %counts;
+	my @headings;
 
-    my $summary = join ', ', map { "$_: $counts{$_}" } sort keys %counts;
+	# Capture all headings and their order
+	while ($html =~ /<(h[1-6])\b[^>]*>(.*?)<\/\1>/gi) {
+		my $tag  = lc $1;
+		my $text = $2 // '';
+		$text =~ s/\s+/ /g;	# normalize whitespace
+		$text =~ s/^\s+|\s+$//g;
 
-    return {
-        name   => 'Headings',
-        status => %counts ? 'ok' : 'warn',
-        notes  => %counts ? $summary : 'no headings found',
-    };
+		$counts{$tag}++;
+		push @headings, { level => substr($tag, 1), text => $text };
+	}
+
+	my @issues;
+	my $status = 'ok';
+
+	# Check for no headings
+	if (!%counts) {
+		return {
+			name   => 'Headings',
+			status => 'warn',
+			notes  => 'no headings found',
+		};
+	}
+
+	# Check H1 presence/uniqueness
+	if (!$counts{h1}) {
+		push @issues, 'missing <h1>';
+		$status = 'warn';
+	}
+	elsif ($counts{h1} > 1) {
+		push @issues, 'multiple <h1> tags';
+		$status = 'warn';
+	}
+
+	# Check heading hierarchy (no skipped levels)
+	my $last_level = 0;
+	for my $h (@headings) {
+		my $level = $h->{level};
+		if ($last_level && $level > $last_level + 1) {
+			push @issues, "skipped heading level before <h$level>";
+			$status = 'warn';
+		}
+		$last_level = $level;
+	}
+
+	# Check heading text length (too short or too long)
+	for my $h (@headings) {
+		my $len = length($h->{text});
+		if ($len < 2) {
+			push @issues, "<h$h->{level}> too short";
+			$status = 'warn';
+		}
+		elsif ($len > 120) {
+			push @issues, "<h$h->{level}> too long";
+			$status = 'warn';
+		}
+	}
+
+	# Summarize counts and issues
+	my $summary = join ', ', map { "$_: $counts{$_}" } sort keys %counts;
+	$summary   .= @issues ? " | Issues: " . join('; ', @issues) : '';
+
+	return {
+		name   => 'Headings',
+		status => $status,
+		notes  => $summary,
+	};
 }
 
 sub _check_links {
-    my ($self, $html) = @_;
+	my ($self, $html) = @_;
 
-    my $base_host;
-    if ($self->{url} && $self->{url} =~ m{^https?://}i) {
-        $base_host = Mojo::URL->new($self->{url})->host;
-    }
+	my $base_host;
+	if ($self->{url} && $self->{url} =~ m{^https?://}i) {
+		$base_host = Mojo::URL->new($self->{url})->host;
+	}
 
-    my ($total, $internal, $external, $badtext) = (0,0,0,0);
+	my ($total, $internal, $external, $badtext) = (0,0,0,0);
 
-    # common "bad" link text patterns (exact match or just punctuation around)
-    my $bad_rx = qr/^(?:click\s*here|read\s*more|more|link|here|details)$/i;
+	# common "bad" link text patterns (exact match or just punctuation around)
+	my $bad_rx = qr/^(?:click\s*here|read\s*more|more|link|here|details)$/i;
 
-    while ($html =~ m{<a\b([^>]*)>(.*?)</a>}gis) {
-        my $attrs = $1;
-        my $text  = $2 // '';
+	while ($html =~ m{<a\b([^>]*)>(.*?)</a>}gis) {
+		my $attrs = $1;
+		my $text  = $2 // '';
 
-        $total++;
+		$total++;
 
-        # get href (prefer quoted values)
-        my ($href) = $attrs =~ /\bhref\s*=\s*"(.*?)"/i;
-        $href //= ($attrs =~ /\bhref\s*=\s*'(.*?)'/i ? $1 : undef);
-        $href //= ($attrs =~ /\bhref\s*=\s*([^\s>]+)/i ? $1 : undef);
+		# get href (prefer quoted values)
+		my ($href) = $attrs =~ /\bhref\s*=\s*"(.*?)"/i;
+		$href //= ($attrs =~ /\bhref\s*=\s*'(.*?)'/i ? $1 : undef);
+		$href //= ($attrs =~ /\bhref\s*=\s*([^\s>]+)/i ? $1 : undef);
 
-        # classify internal vs external
-        if (defined $href && $href =~ m{^\s*https?://}i) {
-            # attempt to compare host
-            my ($host) = $href =~ m{^\s*https?://([^/:\s]+)}i;
-            if (defined $base_host && defined $host) {
-                if (lc $host eq lc $base_host) {
-                    $internal++;
-                } else {
-                    $external++;
-                }
-            } else {
-                # no base host to compare; treat as external if absolute URL
-                $external++;
-            }
-        } else {
-            # relative URL or fragment or mailto/etc -> treat as internal
-            $internal++;
-        }
+		# classify internal vs external
+		if (defined $href && $href =~ m{^\s*https?://}i) {
+			# attempt to compare host
+			my ($host) = $href =~ m{^\s*https?://([^/:\s]+)}i;
+			if (defined $base_host && defined $host) {
+				if (lc $host eq lc $base_host) {
+					$internal++;
+				} else {
+					$external++;
+				}
+			} else {
+				# no base host to compare; treat as external if absolute URL
+				$external++;
+			}
+		} else {
+			# relative URL or fragment or mailto/etc -> treat as internal
+			$internal++;
+		}
 
-        # normalize visible text: strip tags, trim whitespace, collapse spaces
-        $text =~ s/<[^>]+>//g;
-        $text =~ s/^\s+|\s+$//g;
-        $text =~ s/\s+/ /g;
+		# normalize visible text: strip tags, trim whitespace, collapse spaces
+		$text =~ s/<[^>]+>//g;
+		$text =~ s/^\s+|\s+$//g;
+		$text =~ s/\s+/ /g;
 
-        # check for bad link text (exact-ish)
-        if ($text =~ $bad_rx) {
-            $badtext++;
-        }
-    }
+		# check for bad link text (exact-ish)
+		if ($text =~ $bad_rx) {
+			$badtext++;
+		}
+	}
 
-    my $status = ($external || $badtext) ? 'warn' : ($total ? 'ok' : 'warn');
+	my $status = ($external || $badtext) ? 'warn' : ($total ? 'ok' : 'warn');
 
-    my $notes;
-    if ($total) {
-        $notes = sprintf("%d total (%d internal, %d external). %d link(s) with poor anchor text",
-                         $total, $internal, $external, $badtext);
-    } else {
-        $notes = 'no links found';
-    }
+	my $notes;
+	if ($total) {
+		$notes = sprintf("%d total (%d internal, %d external). %d link(s) with poor anchor text",
+						 $total, $internal, $external, $badtext);
+	} else {
+		$notes = 'no links found';
+	}
 
-    return {
-        name   => 'Links',
-        status => $status,
-        notes  => $notes,
-    };
+	return {
+		name   => 'Links',
+		status => $status,
+		notes  => $notes,
+	};
 }
 
 =head1 AUTHOR
