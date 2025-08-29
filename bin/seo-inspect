@@ -14,12 +14,12 @@ use SEO::Inspector;
 # -------------------------------
 my ($url, $file, $json);
 GetOptions(
-    'url|u=s'  => \$url,
-    'file|f=s' => \$file,
-    'json|j'   => \$json,
+	'url|u=s'  => \$url,
+	'file|f=s' => \$file,
+	'json|j'   => \$json,
 ) or die "Usage: $0 --url <URL> | --file <HTML file> [--json]\n";
 
-die "Specify either --url or --file\n" unless $url || $file;
+die 'Specify either --url or --file' unless $url || $file;
 
 # -------------------------------
 # Create inspector object
@@ -39,7 +39,7 @@ if ($file) {
 	$builtin_results = $inspector->run_all($html);
 } else {
 	my $all_results = $inspector->check_url($url);
-	$html            = delete $all_results->{_html}; # remove internal HTML
+	$html		= delete $all_results->{_html}; # remove internal HTML
 	$plugin_results  = { map { $_ => $all_results->{$_} } grep { exists $inspector->{plugins}{$_} } keys %$all_results };
 	$builtin_results = { map { $_ => $all_results->{$_} } grep { !exists $inspector->{plugins}{$_} } keys %$all_results };
 }
@@ -53,12 +53,11 @@ my %results = (%$plugin_results, %$builtin_results);
 # Output results
 # -------------------------------
 if ($json) {
-    print JSON::MaybeXS::encode_json(\%results), "\n";
-}
-else {
-    for my $key (sort keys %results) {
-        my $r = $results{$key};
-        next unless ref $r eq 'HASH';
-        printf "[%s] %s: %s\n", $r->{status} // 'unknown', $r->{name} // $key, $r->{notes} // '';
-    }
+	print JSON::MaybeXS::encode_json(\%results), "\n";
+} else {
+	for my $key (sort keys %results) {
+		my $r = $results{$key};
+		next unless ref $r eq 'HASH';
+		printf "[%s] %s: %s\n", $r->{status} // 'unknown', $r->{name} // $key, $r->{notes} // '';
+	}
 }

@@ -50,9 +50,10 @@ my $cli_script = "$FindBin::Bin/../bin/seo-inspect";
 my ($stdout, $stderr);
 local $ENV{PERL5LIB} = "$plugin_dir:$FindBin::Bin/../lib:$ENV{PERL5LIB}";
 
-run3 [ $cli_script, '--file', $html_file ], undef, \$stdout, \$stderr;
+# run3 [ $cli_script, '--file', $html_file ], undef, \$stdout, \$stderr;
+run3 [ $^X, "-I$plugin_dir", '-Ilib', $cli_script, '--file', $html_file ], undef, \$stdout, \$stderr;
 
-diag($stderr) if(defined($stderr));
+diag($stderr) if(defined($stderr) && length($stderr));
 
 ok(!$stderr, 'CLI did not produce errors');
 like($stdout, qr/FakeCLI/, 'CLI output includes FakeCLI plugin');
