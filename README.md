@@ -52,3 +52,7 @@ Run all loaded plugins on HTML.
 ## check\_url($url)
 
 Fetch the URL and run all plugins and built-in checks.
+
+# SEE ALSO
+
+Test coverage report: [https://nigelhorne.github.io/SEO-Inspector/coverage/](https://nigelhorne.github.io/SEO-Inspector/coverage/)

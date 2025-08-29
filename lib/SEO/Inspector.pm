@@ -68,6 +68,12 @@ sub new {
 	return $self;
 }
 
+=head2 load_plugins
+
+Automatically loads plugins from C<SEO::Inspector::Plugin> namespace.
+
+=cut
+
 # -------------------------------
 # Load plugins from SEO::Inspector::Plugin namespace
 # -------------------------------
@@ -78,21 +84,21 @@ sub load_plugins {
 		my $key = lc($plugin =~ s/.*:://r);
 		$self->{plugins}{$key} = $plugin->new();
 	}
-    if($self->{plugin_dirs}) {
-	    for my $dir (@{$self->{plugin_dirs}}) {
-		local @INC = ($dir, @INC);
+	if($self->{plugin_dirs}) {
+		for my $dir (@{$self->{plugin_dirs}}) {
+			local @INC = ($dir, @INC);
 
-		my $finder = Module::Pluggable::Object->new(
-		    search_path => ['SEO::Inspector::Plugin'],
-		    require     => 1,
-		    instantiate => 'new',
-		);
+			my $finder = Module::Pluggable::Object->new(
+				search_path => ['SEO::Inspector::Plugin'],
+				require     => 1,
+				instantiate => 'new',
+			);
 
-		for my $plugin ($finder->plugins) {
-			my $key = lc(ref($plugin) =~ s/.*:://r);
-			$self->{plugins}{$key} = $plugin;
+			for my $plugin ($finder->plugins) {
+				my $key = lc(ref($plugin) =~ s/.*:://r);
+				$self->{plugins}{$key} = $plugin;
+			}
 		}
-	    }
 	}
 }
 
@@ -136,7 +142,7 @@ sub check {
     if (exists $dispatch{$check_name}) {
         return $dispatch{$check_name}->($self, $html);
     } else {
-    	croak "Unknown check $check_name";
+	croak "Unknown check $check_name";
 	}
 
     # plugin checks
@@ -377,10 +383,6 @@ sub _check_links {
 
 __END__
 
-=head2 load_plugins
-
-Automatically loads plugins from C<SEO::Inspector::Plugin> namespace.
-
 =head2 check($check_name, $html)
 
 Run a single built-in check or plugin on provided HTML (or fetch from object URL if HTML not provided).
@@ -399,7 +401,6 @@ Fetch the URL and run all plugins and built-in checks.
 
 =head1 SEE ALSO
 
-Test coverage summary: L<https://nigelhorne.github.io/SEO-Inspector/coverage>
-Test coverage detail: L<https://nigelhorne.github.io/SEO-Inspector/coverage/blib-lib-SEO-Inspector-pm.html>
+Test coverage report: L<https://nigelhorne.github.io/SEO-Inspector/coverage/>
 
 =cut

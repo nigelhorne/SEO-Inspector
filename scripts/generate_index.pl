@@ -30,6 +30,9 @@ my $html = <<'HTML';
   </style>
 </head>
 <body>
+<a href="https://github.com/nigelhorne/SEO-Inspector">
+  <img src="https://img.shields.io/github/stars/nigelhorne/SEO-Inspector?style=social" alt="GitHub stars">
+</a>
 <h1>Coverage Report</h1>
 <table>
   <tr><th>File</th><th>Stmt</th><th>Branch</th><th>Cond</th><th>Sub</th><th>Total</th></tr>
@@ -64,6 +67,9 @@ for my $file (sort keys %{$data->{summary}}) {
 # Close HTML
 $html .= <<'HTML';
 </table>
+<footer>
+  <p>Project: <a href="https://github.com/nigelhorne/SEO-Inspector">SEO-Inspector</a></p>
+</footer>
 </body>
 </html>
 HTML
