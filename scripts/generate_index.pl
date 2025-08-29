@@ -50,21 +50,20 @@ my $html = <<"HTML";
 			opacity: 0.7;
 			cursor: pointer;
 		}
-.coverage-badge {
-  padding: 2px 6px;
-  border-radius: 4px;
-  font-weight: bold;
-  color: white;
-  font-size: 0.9em;
-}
-.badge-good { background-color: #4CAF50; }
-.badge-warn { background-color: #FFC107; }
-.badge-bad  { background-color: #F44336; }
-
-.summary-row {
-  font-weight: bold;
-  background-color: #f0f0f0;
-}
+		.coverage-badge {
+			padding: 2px 6px;
+			border-radius: 4px;
+			font-weight: bold;
+			color: white;
+			font-size: 0.9em;
+		}
+		.badge-good { background-color: #4CAF50; }
+		.badge-warn { background-color: #FFC107; }
+		.badge-bad  { background-color: #F44336; }
+		.summary-row {
+			font-weight: bold;
+			background-color: #f0f0f0;
+		}
 	</style>
 </head>
 <body>
@@ -87,62 +86,75 @@ my $github_base = "https://github.com/nigelhorne/SEO-Inspector/blob/$commit_sha/
 my ($total_files, $total_coverage, $low_coverage_count) = (0, 0, 0);
 
 for my $file (sort keys %{$data->{summary}}) {
-    next if $file eq 'Total';
+	next if $file eq 'Total';
 
-    my $info = $data->{summary}{$file};
-    my $html_file = $file;
-    $html_file =~ s|/|-|g;
-    $html_file =~ s|\.pm$|-pm|;
-    $html_file =~ s|\.pl$|-pl|;
-    $html_file .= '.html';
+	my $info = $data->{summary}{$file};
+	my $html_file = $file;
+	$html_file =~ s|/|-|g;
+	$html_file =~ s|\.pm$|-pm|;
+	$html_file =~ s|\.pl$|-pl|;
+	$html_file .= '.html';
 
-    my $total = $info->{total}{percentage} // 0;
-    $total_files++;
-    $total_coverage += $total;
-    $low_coverage_count++ if $total < 70;
+	my $total = $info->{total}{percentage} // 0;
+	$total_files++;
+	$total_coverage += $total;
+	$low_coverage_count++ if $total < 70;
 
-    my $badge_class = $total >= 90 ? 'badge-good'
-                    : $total >= 70 ? 'badge-warn'
-                    : 'badge-bad';
+	my $badge_class = $total >= 90 ? 'badge-good'
+					: $total >= 70 ? 'badge-warn'
+					: 'badge-bad';
 
-    my $tooltip = $total >= 90 ? 'Excellent coverage'
-                 : $total >= 70 ? 'Moderate coverage'
-                 : 'Needs improvement';
+	my $tooltip = $total >= 90 ? 'Excellent coverage'
+				 : $total >= 70 ? 'Moderate coverage'
+				 : 'Needs improvement';
 
-    my $badge_html = sprintf(
-        '<span class="coverage-badge %s" title="%s">%.1f%%</span>',
-        $badge_class, $tooltip, $total
-    );
+	my $row_class = $total >= 90 ? 'high'
+		      : $total >= 70 ? 'med'
+		      : 'low';
 
-    my $source_url = $github_base . $file;
-    my $has_coverage = (
-        defined $info->{statement}{percentage} ||
-        defined $info->{branch}{percentage} ||
-        defined $info->{condition}{percentage} ||
-        defined $info->{subroutine}{percentage}
-    );
+	my $badge_html = sprintf(
+		'<span class="coverage-badge %s" title="%s">%.1f%%</span>',
+		$badge_class, $tooltip, $total
+	);
 
-    my $source_link = $has_coverage
-        ? sprintf('<a href="%s" class="icon-link" title="View source on GitHub">&#128269;</a>', $source_url)
-        : '<span class="disabled-icon" title="No coverage data">&#128269;</span>';
+	my $source_url = $github_base . $file;
+	my $has_coverage = (
+		defined $info->{statement}{percentage} ||
+		defined $info->{branch}{percentage} ||
+		defined $info->{condition}{percentage} ||
+		defined $info->{subroutine}{percentage}
+	);
 
-    $html .= sprintf(
-        qq{<tr><td><a href="%s">%s</a> %s</td><td>%.1f</td><td>%.1f</td><td>%.1f</td><td>%.1f</td><td>%s</td></tr>\n},
-        $html_file, $file, $source_link,
-        $info->{statement}{percentage} // 0,
-        $info->{branch}{percentage} // 0,
-        $info->{condition}{percentage} // 0,
-        $info->{subroutine}{percentage} // 0,
-        $badge_html
-    );
+	my $source_link = $has_coverage
+		? sprintf('<a href="%s" class="icon-link" title="View source on GitHub">&#128269;</a>', $source_url)
+		: '<span class="disabled-icon" title="No coverage data">&#128269;</span>';
+
+	# $html .= sprintf(
+		# qq{<tr><td><a href="%s">%s</a> %s</td><td>%.1f</td><td>%.1f</td><td>%.1f</td><td>%.1f</td><td>%s</td></tr>\n},
+		# $html_file, $file, $source_link,
+		# $info->{statement}{percentage} // 0,
+		# $info->{branch}{percentage} // 0,
+		# $info->{condition}{percentage} // 0,
+		# $info->{subroutine}{percentage} // 0,
+		# $badge_html
+	# );
+	$html .= sprintf(
+		qq{<tr class="%s"><td><a href="%s">%s</a> %s</td><td>%.1f</td><td>%.1f</td><td>%.1f</td><td>%.1f</td><td>%s</td></tr>\n},
+		$row_class, $html_file, $file, $source_link,
+		$info->{statement}{percentage} // 0,
+		$info->{branch}{percentage} // 0,
+		$info->{condition}{percentage} // 0,
+		$info->{subroutine}{percentage} // 0,
+		$badge_html
+	);
 }
 
 # Summary row
 my $avg_coverage = $total_files ? int($total_coverage / $total_files) : 0;
 
 $html .= sprintf(
-    qq{<tr class="summary-row"><td colspan="2"><strong>Summary</strong></td><td colspan="2">%d files</td><td colspan="2">Avg: %d%%, Low: %d</td></tr>\n},
-    $total_files, $avg_coverage, $low_coverage_count
+	qq{<tr class="summary-row"><td colspan="2"><strong>Summary</strong></td><td colspan="2">%d files</td><td colspan="2">Avg: %d%%, Low: %d</td></tr>\n},
+	$total_files, $avg_coverage, $low_coverage_count
 );
 
 # Add totals row
