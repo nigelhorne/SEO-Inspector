@@ -32,7 +32,7 @@ jobs:
       - name: Install dependencies
         run: |
           cpanm --notest --installdeps .
-          cpanm --notest Devel::Cover Devel::Cover::Report::Html Devel::Cover::Report::JSON
+          cpanm --notest Devel::Cover Devel::Cover::Report::Html
 
       # Optional: run Perl::Critic static checks
       # - name: Run Perl::Critic
@@ -72,7 +72,7 @@ jobs:
         run: |
           mkdir -p cover_db
           # cover -dump > cover_db/coverage.json
-          cover -report JSON -outputdir cover_db
+          cover -report json -outputdir cover_db
           perl scripts/generate_index.pl
 
       # Deploy HTML report to GitHub Pages
