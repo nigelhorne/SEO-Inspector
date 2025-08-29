@@ -4,6 +4,8 @@ use strict;
 use warnings;
 use JSON::MaybeXS;
 use File::Slurp;
+use POSIX qw(strftime);
+use File::stat;
 
 my $cover_db = 'cover_db/cover.json';
 my $output   = 'cover_html/index.html';
@@ -95,11 +97,18 @@ if (my $total_info = $data->{summary}{Total}) {
 	);
 }
 
+my $timestamp = 'Unknown';
+if (my $stat = stat($cover_db)) {
+	$timestamp = strftime("%Y-%m-%d %H:%M:%S", localtime($stat->mtime));
+}
+
 $html .= <<'HTML';
 </table>
 <footer>
   <p>Project: <a href="https://github.com/nigelhorne/SEO-Inspector">SEO-Inspector</a></p>
+  <p><em>Last updated: $timestamp</em></p>
 </footer>
+<p><em>Last updated: $timestamp</em></p>
 </body>
 </html>
 HTML
