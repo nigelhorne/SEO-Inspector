@@ -59,7 +59,7 @@ my $html = <<"HTML";
 		}
 		.badge-good { background-color: #4CAF50; }
 		.badge-warn { background-color: #FFC107; }
-		.badge-bad  { background-color: #F44336; }
+		.badge-bad { background-color: #F44336; }
 		.summary-row {
 			font-weight: bold;
 			background-color: #f0f0f0;
@@ -109,8 +109,8 @@ for my $file (sort keys %{$data->{summary}}) {
 				 : 'Needs improvement';
 
 	my $row_class = $total >= 90 ? 'high'
-		      : $total >= 70 ? 'med'
-		      : 'low';
+			: $total >= 70 ? 'med'
+			: 'low';
 
 	my $badge_html = sprintf(
 		'<span class="coverage-badge %s" title="%s">%.1f%%</span>',
@@ -129,17 +129,8 @@ for my $file (sort keys %{$data->{summary}}) {
 		? sprintf('<a href="%s" class="icon-link" title="View source on GitHub">&#128269;</a>', $source_url)
 		: '<span class="disabled-icon" title="No coverage data">&#128269;</span>';
 
-	# $html .= sprintf(
-		# qq{<tr><td><a href="%s">%s</a> %s</td><td>%.1f</td><td>%.1f</td><td>%.1f</td><td>%.1f</td><td>%s</td></tr>\n},
-		# $html_file, $file, $source_link,
-		# $info->{statement}{percentage} // 0,
-		# $info->{branch}{percentage} // 0,
-		# $info->{condition}{percentage} // 0,
-		# $info->{subroutine}{percentage} // 0,
-		# $badge_html
-	# );
 	$html .= sprintf(
-		qq{<tr class="%s"><td><a href="%s">%s</a> %s</td><td>%.1f</td><td>%.1f</td><td>%.1f</td><td>%.1f</td><td>%s</td></tr>\n},
+		qq{<tr class="%s"><td><a href="%s" title="View coverage line by line">%s</a> %s</td><td>%.1f</td><td>%.1f</td><td>%.1f</td><td>%.1f</td><td>%s</td></tr>\n},
 		$row_class, $html_file, $file, $source_link,
 		$info->{statement}{percentage} // 0,
 		$info->{branch}{percentage} // 0,
