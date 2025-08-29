@@ -2,7 +2,7 @@
 
 use strict;
 use warnings;
-use JSON;
+use JSON::MaybeXS;
 use File::Slurp;
 
 my $cover_db = 'cover_db/cover.json';
@@ -40,31 +40,46 @@ HTML
 
 # Add rows
 for my $file (sort keys %{$data->{summary}}) {
-    next if $file eq 'Total';  # Skip the aggregate row
+	next if $file eq 'Total';  # Skip the aggregate row
 
-    my $info = $data->{summary}{$file};
-    my $html_file = $file;
+	my $info = $data->{summary}{$file};
+	my $html_file = $file;
 	$html_file =~ s|/|-|g;         # Convert path separators to hyphens
 	$html_file =~ s|\.pm$|-pm|;    # Replace .pm with -pm
 	$html_file =~ s|\.pl$|-pl|;    # Optional: handle .pl files too
 
-    $html_file .= '.html';
+	$html_file .= '.html';
 
-    my $total = $info->{total}{percentage} // 0;
-    my $class = $total > 80 ? 'high' : $total > 50 ? 'med' : 'low';
+	my $total = $info->{total}{percentage} // 0;
+	my $class = $total > 80 ? 'high' : $total > 50 ? 'med' : 'low';
 
-    $html .= sprintf(
-        qq{<tr class="%s"><td><a href="%s">%s</a></td><td>%.1f</td><td>%.1f</td><td>%.1f</td><td>%.1f</td><td>%.1f</td></tr>\n},
-        $class, $html_file, $file,
-        $info->{statement}{percentage} // 0,
-        $info->{branch}{percentage}    // 0,
-        $info->{condition}{percentage} // 0,
-        $info->{subroutine}{percentage} // 0,
-        $total
-    );
+	$html .= sprintf(
+		qq{<tr class="%s"><td><a href="%s">%s</a></td><td>%.1f</td><td>%.1f</td><td>%.1f</td><td>%.1f</td><td>%.1f</td></tr>\n},
+		$class, $html_file, $file,
+		$info->{statement}{percentage} // 0,
+		$info->{branch}{percentage}    // 0,
+		$info->{condition}{percentage} // 0,
+		$info->{subroutine}{percentage} // 0,
+		$total
+	);
 }
 
-# Close HTML
+# Add totals row
+if (my $total_info = $data->{summary}{Total}) {
+	my $total_pct = $total_info->{total}{percentage} // 0;
+	my $class = $total_pct > 80 ? 'high' : $total_pct > 50 ? 'med' : 'low';
+
+	$html .= sprintf(
+		qq{<tr class="%s"><td><strong>Total</strong></td><td>%.1f</td><td>%.1f</td><td>%.1f</td><td>%.1f</td><td><strong>%.1f</strong></td></tr>\n},
+		$class,
+		$total_info->{statement}{percentage} // 0,
+		$total_info->{branch}{percentage}    // 0,
+		$total_info->{condition}{percentage} // 0,
+		$total_info->{subroutine}{percentage} // 0,
+		$total_pct
+	);
+}
+
 $html .= <<'HTML';
 </table>
 <footer>
