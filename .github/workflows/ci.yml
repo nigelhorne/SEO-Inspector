@@ -72,7 +72,7 @@ jobs:
         run: |
           mkdir -p cover_db
           cover -dump > cover_db/coverage.json
-	  perl scripts/generate_index.pl
+          perl scripts/generate_index.pl
 
       # Deploy HTML report to GitHub Pages
       - name: Publish coverage report
