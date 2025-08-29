@@ -12,8 +12,13 @@ my $output   = 'cover_html/index.html';
 my $json_text = read_file($cover_db);
 my $data = decode_json($json_text);
 
+my $coverage_pct = 0;
+if (my $total_info = $data->{summary}{Total}) {
+    $coverage_pct = int($total_info->{total}{percentage} // 0);
+}
+
 # Start HTML
-my $html = <<'HTML';
+my $html = <<"HTML";
 <!DOCTYPE html>
 <html>
 <head>
@@ -27,12 +32,16 @@ my $html = <<'HTML';
     .low { background-color: #fdd; }
     .med { background-color: #ffd; }
     .high { background-color: #dfd; }
+    .badges img { margin-right: 10px; }
   </style>
 </head>
 <body>
-<a href="https://github.com/nigelhorne/SEO-Inspector">
-  <img src="https://img.shields.io/github/stars/nigelhorne/SEO-Inspector?style=social" alt="GitHub stars">
-</a>
+<div class="badges">
+  <a href="https://github.com/nigelhorne/SEO-Inspector">
+    <img src="https://img.shields.io/github/stars/nigelhorne/SEO-Inspector?style=social" alt="GitHub stars">
+  </a>
+  <img src="https://img.shields.io/badge/coverage-${coverage_pct}%25-${coverage_pct > 80 ? 'brightgreen' : $coverage_pct > 50 ? 'yellow' : 'red'}" alt="Coverage badge">
+</div>
 <h1>Coverage Report</h1>
 <table>
   <tr><th>File</th><th>Stmt</th><th>Branch</th><th>Cond</th><th>Sub</th><th>Total</th></tr>
