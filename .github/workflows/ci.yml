@@ -42,7 +42,7 @@ jobs:
 
       - name: Run tests manually
         run: |
-          prove -v t
+          prove -l -b -v t
 
       # Run the tests with Devel::Cover for coverage
       - name: Run tests with coverage
