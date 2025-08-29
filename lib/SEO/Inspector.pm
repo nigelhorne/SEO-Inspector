@@ -45,7 +45,7 @@ SEO::Inspector provides:
 
 =head2 new(%args)
 
-Create a new inspector object. Accepts optional C<url> argument.
+Create a new inspector object. Accepts optional C<url> and C<plugin_dirs> arguments.
 
 =cut
 
@@ -56,11 +56,10 @@ our $VERSION = '0.01';
 # -------------------------------
 sub new {
 	my ($class, %args) = @_;
-	my $self = bless {}, $class;
+	my $self = bless { %args }, $class;
 
-	$self->{url} = $args{url};                # optional default URL
-	$self->{ua}  = Mojo::UserAgent->new();
-	$self->{plugins} = {};
+	$self->{ua} ||= Mojo::UserAgent->new();
+	$self->{plugins} ||= {};
 
 	$self->load_plugins();
 
@@ -76,6 +75,22 @@ sub load_plugins {
 	for my $plugin ($self->plugins()) {
 		my $key = lc($plugin =~ s/.*:://r);
 		$self->{plugins}{$key} = $plugin->new();
+	}
+    if($self->{plugin_dirs}) {
+	    for my $dir (@{$self->{plugin_dirs}}) {
+		local @INC = ($dir, @INC);
+
+		my $finder = Module::Pluggable::Object->new(
+		    search_path => ['SEO::Inspector::Plugin'],
+		    require     => 1,
+		    instantiate => 'new',
+		);
+
+		for my $plugin ($finder->plugins) {
+			my $key = lc(ref($plugin) =~ s/.*:://r);
+			$self->{plugins}{$key} = $plugin;
+		}
+	    }
 	}
 }
 

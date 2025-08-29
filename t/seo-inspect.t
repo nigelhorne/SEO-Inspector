@@ -3,7 +3,7 @@ use warnings;
 use autodie qw(:all);
 
 use File::Temp qw(tempfile tempdir);
-use FindBin;
+use FindBin qw($Bin);
 use IPC::Run3;
 use JSON::MaybeXS;
 use Test::Most;
@@ -28,6 +28,7 @@ use strict;
 use warnings;
 sub new { bless {}, shift }
 sub run { return { name => 'FakeCLI', status => 'ok', notes => 'plugin ran' }; }
+sub name { 'FakeCLI' }
 1;
 END
 close $fh;
@@ -50,7 +51,22 @@ my $cli_script = "$FindBin::Bin/../bin/seo-inspect";
 my ($stdout, $stderr);
 local $ENV{PERL5LIB} = "$plugin_dir:$FindBin::Bin/../lib:$ENV{PERL5LIB}";
 
-run3 [ $cli_script, '--file', $html_file ], undef, \$stdout, \$stderr;
+# run3 [ $cli_script, '--file', $html_file ], undef, \$stdout, \$stderr;
+
+# Build a perl command that always includes both real lib and test lib
+my @perl = (
+    $^X,
+    '-I' . File::Spec->catdir($Bin, '..', 'lib'),  # project lib
+    '-I' . File::Spec->catdir($Bin, 'lib'),        # test lib (FakeCLI.pm)
+);
+
+my $cmd = [
+    @perl,
+    $cli_script,
+    '--file', $html_file,
+];
+
+run3 $cmd, undef, \$stdout, \$stderr;
 
 diag($stderr) if(defined($stderr) && length($stderr));
 
