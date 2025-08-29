@@ -71,7 +71,8 @@ jobs:
       - name: Generate custom coverage index
         run: |
           mkdir -p cover_db
-          cover -dump > cover_db/coverage.json
+          # cover -dump > cover_db/coverage.json
+          cover -report JSON -outputdir cover_db
           perl scripts/generate_index.pl
 
       # Deploy HTML report to GitHub Pages
