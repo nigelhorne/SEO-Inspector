@@ -46,6 +46,7 @@ SEO::Inspector provides:
 =head2 new(%args)
 
 Create a new inspector object. Accepts optional C<url> and C<plugin_dirs> arguments.
+If C<plugin_dirs> isn't given, it tries hard to find the right place.
 
 =cut
 
