@@ -17,7 +17,7 @@ my $data = decode_json($json_text);
 my $coverage_pct = 0;
 my $badge_color = 'red';
 
-if (my $total_info = $data->{summary}{Total}) {
+if(my $total_info = $data->{summary}{Total}) {
 	$coverage_pct = int($total_info->{total}{percentage} // 0);
 	$badge_color = $coverage_pct > 80 ? 'brightgreen' : $coverage_pct > 50 ? 'yellow' : 'red';
 }
@@ -44,15 +44,19 @@ my $html = <<"HTML";
 </head>
 <body>
 <div class="badges">
-  <a href="https://github.com/nigelhorne/SEO-Inspector">
-    <img src="https://img.shields.io/github/stars/nigelhorne/SEO-Inspector?style=social" alt="GitHub stars">
-  </a>
-  <img src="$coverage_badge_url" alt="Coverage badge">
+	<a href="https://github.com/nigelhorne/SEO-Inspector">
+		<img src="https://img.shields.io/github/stars/nigelhorne/SEO-Inspector?style=social" alt="GitHub stars">
+	</a>
+	<img src="$coverage_badge_url" alt="Coverage badge">
 </div>
 <h1>SEO::Inspector Coverage Report</h1>
 <table>
   <tr><th>File</th><th>Stmt</th><th>Branch</th><th>Cond</th><th>Sub</th><th>Total</th></tr>
 HTML
+
+my $commit_sha = `git rev-parse HEAD`;
+chomp $commit_sha;
+my $github_base = "https://github.com/nigelhorne/SEO-Inspector/blob/$commit_sha/";
 
 # Add rows
 for my $file (sort keys %{$data->{summary}}) {
@@ -68,12 +72,13 @@ for my $file (sort keys %{$data->{summary}}) {
 
 	my $total = $info->{total}{percentage} // 0;
 	my $class = $total > 80 ? 'high' : $total > 50 ? 'med' : 'low';
+	my $source_url = $github_base . $file;
 
 	$html .= sprintf(
-		qq{<tr class="%s"><td><a href="%s">%s</a></td><td>%.1f</td><td>%.1f</td><td>%.1f</td><td>%.1f</td><td>%.1f</td></tr>\n},
-		$class, $html_file, $file,
+		qq{<tr class="%s"><td><a href="%s">%s</a><br><small><a href="%s">View source</a></small></td><td>%.1f</td><td>%.1f</td><td>%.1f</td><td>%.1f</td><td>%.1f</td></tr>\n},
+		$class, $html_file, $file, $source_url,
 		$info->{statement}{percentage} // 0,
-		$info->{branch}{percentage} // 0,
+		$info->{branch}{percentage}    // 0,
 		$info->{condition}{percentage} // 0,
 		$info->{subroutine}{percentage} // 0,
 		$total
@@ -101,8 +106,6 @@ if (my $stat = stat($cover_db)) {
 	$timestamp = strftime("%Y-%m-%d %H:%M:%S", localtime($stat->mtime));
 }
 
-my $commit_sha = `git rev-parse HEAD`;
-chomp $commit_sha;
 my $commit_url = "https://github.com/nigelhorne/SEO-Inspector/commit/$commit_sha";
 my $short_sha = substr($commit_sha, 0, 7);
 
@@ -110,7 +113,7 @@ $html .= <<"HTML";
 </table>
 <footer>
 	<p>Project: <a href="https://github.com/nigelhorne/SEO-Inspector">SEO-Inspector</a></p>
-	<p><em>Last updated: $timestamp — <a href="$commit_url">commit <code>$short_sha</code></a></em></p>
+	<p><em>Last updated: $timestamp - <a href="$commit_url">commit <code>$short_sha</code></a></em></p>
 </footer>
 </body>
 </html>
