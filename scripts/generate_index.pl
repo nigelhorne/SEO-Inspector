@@ -326,7 +326,6 @@ const chart = new Chart(ctx, {
     datasets: [{
       label: 'Total Coverage (%)',
       data: dataPoints,
-      parsing: false,
       borderColor: 'green',
       backgroundColor: 'rgba(0,128,0,0.1)',
       pointRadius: 5,
