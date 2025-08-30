@@ -243,21 +243,21 @@ while (<$log>) {
 my @data_points;
 my $prev_pct;
 foreach my $file (sort @history_files) {
-    my $json = eval { decode_json(read_file($file)) };
-    next unless $json && $json->{summary}{Total};
+	my $json = eval { decode_json(read_file($file)) };
+	next unless $json && $json->{summary}{Total};
 
-    my ($sha) = $file =~ /-(\w{7})\.json$/;
-    my $timestamp = $commit_times{$sha} // strftime("%Y-%m-%dT%H:%M:%S", localtime((stat($file))->mtime));
-$timestamp =~ s/ /T/;
-$timestamp =~ s/\s+([+-]\d{2}):?(\d{2})$/$1:$2/;	# Fix space before timezone
-$timestamp =~ s/ //g;  # Remove any remaining spaces
+	my ($sha) = $file =~ /-(\w{7})\.json$/;
+	my $timestamp = $commit_times{$sha} // strftime("%Y-%m-%dT%H:%M:%S", localtime((stat($file))->mtime));
+	$timestamp =~ s/ /T/;
+	$timestamp =~ s/\s+([+-]\d{2}):?(\d{2})$/$1:$2/;	# Fix space before timezone
+	$timestamp =~ s/ //g;	# Remove any remaining spaces
 
-    my $pct = $json->{summary}{Total}{total}{percentage} // 0;
-    my $delta = defined $prev_pct ? sprintf('%.1f', $pct - $prev_pct) : 0;
-    $prev_pct = $pct;
+	my $pct = $json->{summary}{Total}{total}{percentage} // 0;
+	my $delta = defined $prev_pct ? sprintf('%.1f', $pct - $prev_pct) : 0;
+	$prev_pct = $pct;
 
-    my $color = $delta > 0 ? 'green' : $delta < 0 ? 'red' : 'gray';
-    my $url = "https://github.com/nigelhorne/SEO-Inspector/commit/$sha";
+	my $color = $delta > 0 ? 'green' : $delta < 0 ? 'red' : 'gray';
+	my $url = "https://github.com/nigelhorne/SEO-Inspector/commit/$sha";
 
 	push @data_points, qq{{ x: "$timestamp", y: $pct, delta: $delta, url: "$url", label: "$timestamp", pointBackgroundColor: "$color" }};
 }
@@ -269,6 +269,27 @@ $html .= <<"HTML";
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-date-fns"></script>
 <script>
+function linearRegression(data) {
+  const xs = data.map(p => new Date(p.x).getTime());
+  const ys = data.map(p => p.y);
+  const n = xs.length;
+
+  const sumX = xs.reduce((a, b) => a + b, 0);
+  const sumY = ys.reduce((a, b) => a + b, 0);
+  const sumXY = xs.reduce((acc, val, i) => acc + val * ys[i], 0);
+  const sumX2 = xs.reduce((acc, val) => acc + val * val, 0);
+
+  const slope = (n * sumXY - sumX * sumY) / (n * sumX2 - sumX * sumX);
+  const intercept = (sumY - slope * sumX) / n;
+
+  return xs.map(x => ({
+    x: new Date(x).toISOString(),
+    y: slope * x + intercept
+  }));
+}
+
+const regressionPoints = linearRegression(dataPoints);
+
 const dataPoints = [
 $js_data
 ];
@@ -277,9 +298,11 @@ HTML
 $html .= <<'HTML';
 const ctx = document.getElementById('coverageTrend').getContext('2d');
 const chart = new Chart(ctx, {
-  type: 'line',
+	type: 'line',
 data: {
   datasets: [{
+datasets: [
+  {
     label: 'Total Coverage (%)',
     data: dataPoints,
     borderColor: 'green',
@@ -289,9 +312,19 @@ data: {
     pointStyle: 'circle',
     fill: false,
     tension: 0.3,
-pointBackgroundColor: function(context) {
-  return context.raw.pointBackgroundColor || 'gray';
-}
+    pointBackgroundColor: function(context) {
+      return context.raw.pointBackgroundColor || 'gray';
+    }
+  }, {
+    label: 'Regression Line',
+    data: regressionPoints,
+    borderColor: 'blue',
+    borderDash: [5, 5],
+    pointRadius: 0,
+    fill: false,
+    tension: 0.0
+  }
+]
   }]
 },
   options: {
@@ -338,7 +371,7 @@ tooltip: {
         window.open(url, '_blank');
       }
     }
-  }
+	}
 });
 </script>
 HTML
