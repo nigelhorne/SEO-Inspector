@@ -232,44 +232,6 @@ foreach my $file (sort @history_files) {
 }
 
 # Inject chart if we have data
-# if (@trend_points >= 2) {
-if(0) {
-	my $labels = join(',', map { qq{"$_->{date}"} } @trend_points);
-	my $values = join(',', map { $_->{coverage} } @trend_points);
-
-	$html .= <<"HTML";
-
-<h2>Coverage Trend</h2>
-<canvas id="coverageTrend" width="600" height="300"></canvas>
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-<script>
-const ctx = document.getElementById('coverageTrend').getContext('2d');
-const chart = new Chart(ctx, {
-	type: 'line',
-	data: {
-		labels: [$labels],
-		datasets: [{
-			label: 'Total Coverage (%)',
-			data: [$values],
-			borderColor: 'green',
-			backgroundColor: 'rgba(0,128,0,0.1)',
-			fill: true,
-			tension: 0.3,
-			pointRadius: 3
-		}]
-	}, options: {
-		scales: {
-			y: {
-				beginAtZero: true,
-				max: 100
-			}
-		}
-	}
-});
-</script>
-HTML
-}
-
 my %commit_times;
 open(my $log, '-|', 'git log --all --pretty=format:"%H %h %ci"') or die "Can't run git log: $!";
 while (<$log>) {
@@ -295,7 +257,7 @@ foreach my $file (sort @history_files) {
     my $color = $delta > 0 ? 'green' : $delta < 0 ? 'red' : 'gray';
     my $url = "https://github.com/nigelhorne/SEO-Inspector/commit/$sha";
 
-    push @data_points, qq{{ x: "$timestamp", y: $pct, url: "$url", label: "$timestamp", pointBackgroundColor: "$color" }};
+	push @data_points, qq{{ x: "$timestamp", y: $pct, delta: $delta, url: "$url", label: "$timestamp" }};
 }
 
 my $js_data = join(",\n", @data_points);
@@ -326,7 +288,13 @@ data: {
     fill: false,
     tension: 0.3,
     parsing: false,  // Important for custom keys
-    pointBackgroundColor: dataPoints.map(p => p.pointBackgroundColor)
+pointBackgroundColor: function(context) {
+  const delta = context.raw.delta;
+  if (delta > 0) return 'green';
+  if (delta < 0) return 'red';
+  return 'gray';
+}
+    
   }]
 },
   options: {
