@@ -291,9 +291,8 @@ unless ($timestamp) {
     $timestamp = strftime("%Y-%m-%d %H:%M:%S", localtime((stat($file))->mtime));
 }
 # Original format: "2025-08-30 09:26:58 -0400"
-$timestamp =~ s/ /T/;                  # "2025-08-30T09:26:58 -0400"
-$timestamp =~ s/ (\-\d{4})$/:$1/;      # "2025-08-30T09:26:58-04:00"
-
+$timestamp =~ s/ /T/;
+$timestamp =~ s/([+-]\d{2})(\d{2})$/$1:$2/;
 
 	my $pct = $json->{summary}{Total}{total}{percentage} // 0;
 	# my $timestamp = strftime("%Y-%m-%d %H:%M:%S", localtime((stat($file))->mtime));
@@ -342,7 +341,6 @@ scales: {
   x: {
     type: 'time',
     time: {
-      parser: 'YYYY-MM-DD HH:mm:ss',
       tooltipFormat: 'MMM D, YYYY HH:mm:ss',
       unit: 'minute'
     },
