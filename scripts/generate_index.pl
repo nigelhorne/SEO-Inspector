@@ -239,6 +239,16 @@ while (<$log>) {
 	my ($full_sha, $short_sha, $datetime) = split ' ', $_, 3;
 	$commit_times{$short_sha} = $datetime;
 }
+close $log;
+
+my %commit_messages;
+open($log, '-|', 'git log --pretty=format:"%h %s"') or die "Can't run git log: $!";
+while (<$log>) {
+	chomp;
+	my ($short_sha, $message) = /^(\w+)\s+(.*)$/;
+	$commit_messages{$short_sha} = $message;
+}
+close $log;
 
 my @data_points;
 my $prev_pct;
@@ -259,7 +269,8 @@ foreach my $file (sort @history_files) {
 	my $color = $delta > 0 ? 'green' : $delta < 0 ? 'red' : 'gray';
 	my $url = "https://github.com/nigelhorne/SEO-Inspector/commit/$sha";
 
-	push @data_points, qq{{ x: "$timestamp", y: $pct, delta: $delta, url: "$url", label: "$timestamp", pointBackgroundColor: "$color" }};
+	my $comment = $commit_messages{$sha} // '';
+	push @data_points, qq{{ x: "$timestamp", y: $pct, delta: $delta, url: "$url", label: "$timestamp", pointBackgroundColor: "$color", comment: "$comment" }};
 }
 
 my $js_data = join(",\n", @data_points);
