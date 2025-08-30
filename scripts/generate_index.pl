@@ -289,10 +289,7 @@ data: {
     tension: 0.3,
     parsing: false,  // Important for custom keys
 pointBackgroundColor: function(context) {
-  const delta = context.raw.delta;
-  if (delta > 0) return 'green';
-  if (delta < 0) return 'red';
-  return 'gray';
+  return context.raw.pointBackgroundColor || 'gray';
 }
     
   }]
