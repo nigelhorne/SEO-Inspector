@@ -294,13 +294,12 @@ $js_data
 HTML
 
 $html .= <<'HTML';
-const regressionPoints = linearRegression(dataPoints);
-const ctx = document.getElementById('coverageTrend').getContext('2d');
-const chart = new Chart(ctx, {
+	const regressionPoints = linearRegression(dataPoints);
+	const ctx = document.getElementById('coverageTrend').getContext('2d');
+	const chart = new Chart(ctx, {
 	type: 'line',
 data: {
-	datasets: [
-  {
+	datasets: [{
     label: 'Total Coverage (%)',
     data: dataPoints,
     borderColor: 'green',
@@ -321,9 +320,7 @@ data: {
     pointRadius: 0,
     fill: false,
     tension: 0.0
-  }
-]
-  }
+  }]
 },
   options: {
 scales: {
