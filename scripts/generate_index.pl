@@ -258,7 +258,7 @@ foreach my $file (sort @history_files) {
     my $color = $delta > 0 ? 'green' : $delta < 0 ? 'red' : 'gray';
     my $url = "https://github.com/nigelhorne/SEO-Inspector/commit/$sha";
 
-	push @data_points, qq{{ x: "$timestamp", y: $pct, delta: $delta, url: "$url", label: "$timestamp" }};
+	push @data_points, qq{{ x: "$timestamp", y: $pct, delta: $delta, url: "$url", label: "$timestamp", pointBackgroundColor: "$color" }};
 }
 
 my $js_data = join(",\n", @data_points);
@@ -292,7 +292,7 @@ data: {
 pointBackgroundColor: function(context) {
   return context.raw.pointBackgroundColor || 'gray';
 }
-    
+
   }]
 },
   options: {
