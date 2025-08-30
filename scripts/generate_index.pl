@@ -265,10 +265,12 @@ foreach my $file (sort @history_files) {
 my $js_data = join(",\n", @data_points);
 
 $html .= <<"HTML";
-<label>
-	<input type="checkbox" id="toggleTrend" checked>
-	Show regression trend
-</label>
+<p>
+	<label>
+		<input type="checkbox" id="toggleTrend" checked>
+		Show regression trend
+	</label>
+</p>
 <canvas id="coverageTrend" width="600" height="300"></canvas>
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-date-fns"></script>
@@ -349,11 +351,12 @@ const chart = new Chart(ctx, {
 			}, tooltip: {
 				callbacks: {
 					label: function(context) {
-						const label = context.raw.label;
-						const coverage = context.raw.y.toFixed(1);
-						const delta = context.raw.delta?.toFixed(1) ?? '0.0';
+						const raw = context.raw;
+						const coverage = raw.y.toFixed(1);
+						const delta = raw.delta?.toFixed(1) ?? '0.0';
 						const sign = delta > 0 ? '+' : delta < 0 ? '-' : '±';
-						return `${label}: ${coverage}% (${sign}${Math.abs(delta)}%)`;
+						const comment = raw.comment ? `\n${raw.comment}` : '';
+						return `${raw.label}: ${coverage}% (${sign}${Math.abs(delta)}%)${comment}`;
 					}
 				}
 			}
