@@ -364,7 +364,7 @@ const chart = new Chart(ctx, {
 				window.open(url, '_blank');
 			}
 		}
-	}
+	};
 	document.getElementById('toggleTrend').addEventListener('change', function(e) {
 		const show = e.target.checked;
 		const trendDataset = chart.data.datasets.find(ds => ds.label === 'Regression Line');
