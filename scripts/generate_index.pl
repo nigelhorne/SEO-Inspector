@@ -330,7 +330,7 @@ tooltip: {
     }
   }
 }
-}
+},
     onClick: (e) => {
       const points = chart.getElementsAtEventForMode(e, 'nearest', { intersect: true }, true);
       if (points.length) {
