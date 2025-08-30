@@ -366,8 +366,9 @@ const chart = new Chart(ctx, {
 						const coverage = raw.y.toFixed(1);
 						const delta = raw.delta?.toFixed(1) ?? '0.0';
 						const sign = delta > 0 ? '+' : delta < 0 ? '-' : '±';
-						const comment = raw.comment ? `\n${raw.comment}` : '';
-						return `${raw.label}: ${coverage}% (${sign}${Math.abs(delta)}%)${comment}`;
+						const baseLine = `${raw.label}: ${coverage}% (${sign}${Math.abs(delta)}%)`;
+						const commentLine = raw.comment ? raw.comment : null;
+						return commentLine ? [baseLine, commentLine] : [baseLine];
 					}
 				}
 			}
