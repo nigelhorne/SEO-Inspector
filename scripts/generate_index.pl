@@ -332,7 +332,7 @@ const chart = new Chart(ctx, {
       pointRadius: 5,
       pointHoverRadius: 7,
       pointStyle: 'circle',
-      fill: true,
+      fill: false,
       tension: 0.3
     }]
   },
