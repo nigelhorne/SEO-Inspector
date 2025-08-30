@@ -290,7 +290,10 @@ unless ($timestamp) {
     warn "SHA $sha not found in git log — using file mtime";
     $timestamp = strftime("%Y-%m-%d %H:%M:%S", localtime((stat($file))->mtime));
 }
-$timestamp =~ s/ /T/;
+# Original format: "2025-08-30 09:26:58 -0400"
+$timestamp =~ s/ /T/;                  # "2025-08-30T09:26:58 -0400"
+$timestamp =~ s/ (\-\d{4})$/:$1/;      # "2025-08-30T09:26:58-04:00"
+
 
 	my $pct = $json->{summary}{Total}{total}{percentage} // 0;
 	# my $timestamp = strftime("%Y-%m-%d %H:%M:%S", localtime((stat($file))->mtime));
