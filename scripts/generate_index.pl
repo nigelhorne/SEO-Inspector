@@ -271,12 +271,11 @@ HTML
 }
 
 my %commit_times;
-open(my $log, '-|', 'git log --pretty=format:"%H %h %ci"') or die "Can't run git log: $!";
+open(my $log, '-|', 'git log --all --pretty=format:"%H %h %ci"') or die "Can't run git log: $!";
 while (<$log>) {
     my ($full_sha, $short_sha, $datetime) = split ' ', $_, 3;
     $commit_times{$short_sha} = $datetime;
 }
-
 
 my @data_points;
 foreach my $file (sort @history_files) {
