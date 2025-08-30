@@ -248,8 +248,9 @@ foreach my $file (sort @history_files) {
 
     my ($sha) = $file =~ /-(\w{7})\.json$/;
     my $timestamp = $commit_times{$sha} // strftime("%Y-%m-%dT%H:%M:%S", localtime((stat($file))->mtime));
-    $timestamp =~ s/([+-]\d{2})(\d{2})$/$1:$2/;
-	$timestamp =~ s/ /T/;
+$timestamp =~ s/ /T/;
+$timestamp =~ s/\s+([+-]\d{2}):?(\d{2})$/$1:$2/;	# Fix space before timezone
+$timestamp =~ s/ //g;  # Remove any remaining spaces
 
     my $pct = $json->{summary}{Total}{total}{percentage} // 0;
     my $delta = defined $prev_pct ? sprintf('%.1f', $pct - $prev_pct) : 0;
