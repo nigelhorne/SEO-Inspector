@@ -319,15 +319,18 @@ plugins: {
       }
     }
   },
-  tooltip: {
-    callbacks: {
-      label: function(context) {
-        return `${context.raw.label}: ${context.raw.y}%`;
-      }
+tooltip: {
+  callbacks: {
+    label: function(context) {
+      const label = context.raw.label;
+      const coverage = context.raw.y.toFixed(1);
+      const delta = context.raw.delta?.toFixed(1) ?? '0.0';
+      const sign = delta > 0 ? '+' : delta < 0 ? '-' : '±';
+      return `${label}: ${coverage}% (${sign}${Math.abs(delta)}%)`;
     }
   }
 }
-    
+}
     onClick: (e) => {
       const points = chart.getElementsAtEventForMode(e, 'nearest', { intersect: true }, true);
       if (points.length) {
