@@ -271,21 +271,22 @@ HTML
 }
 
 my %commit_times;
-open(my $log, '-|', 'git log --pretty=format:"%h %ci"') or die "Can't run git log: $!";
+open(my $log, '-|', 'git log --pretty=format:"%H %ci"') or die "Can't run git log: $!";
 while (<$log>) {
-    my ($short_sha, $datetime) = split ' ', $_, 2;
-    $commit_times{$short_sha} = $datetime;
+    my ($full_sha, $datetime) = split ' ', $_, 2;
+    $commit_times{$full_sha} = $datetime;
 }
 close $log;
+
 
 my @data_points;
 foreach my $file (sort @history_files) {
 	my $json = eval { decode_json(read_file($file)) };
 	next unless $json && $json->{summary}{Total};
 
-my ($sha) = $file =~ /([a-f0-9]{7,})/;
+my ($sha) = $file =~ /-(\w{7,40})\.json$/;
+warn "SHA $sha not found in git log — using file mtime" unless exists $commit_times{$sha};
 my $timestamp = $commit_times{$sha} // strftime("%Y-%m-%d %H:%M:%S", localtime((stat($file))->mtime));
-	
 
 	my $pct = $json->{summary}{Total}{total}{percentage} // 0;
 	# my $timestamp = strftime("%Y-%m-%d %H:%M:%S", localtime((stat($file))->mtime));
