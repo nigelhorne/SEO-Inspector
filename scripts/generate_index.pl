@@ -299,8 +299,7 @@ const ctx = document.getElementById('coverageTrend').getContext('2d');
 const chart = new Chart(ctx, {
 	type: 'line',
 data: {
-  datasets: [{
-datasets: [
+	datasets: [
   {
     label: 'Total Coverage (%)',
     data: dataPoints,
@@ -369,7 +368,7 @@ tooltip: {
         const url = chart.data.datasets[0].data[points[0].index].url;
         window.open(url, '_blank');
       }
-    }
+		}
 	}
 });
 </script>
