@@ -232,7 +232,8 @@ foreach my $file (sort @history_files) {
 }
 
 # Inject chart if we have data
-if (@trend_points >= 2) {
+# if (@trend_points >= 2) {
+if(0) {
 	my $labels = join(',', map { qq{"$_->{date}"} } @trend_points);
 	my $values = join(',', map { $_->{coverage} } @trend_points);
 
@@ -294,8 +295,8 @@ $js_data
 HTML
 
 $html .= <<'HTML';
-const ctx2 = document.getElementById('coverageTrend').getContext('2d');
-const chart2 = new Chart(ctx2, {
+const ctx = document.getElementById('coverageTrend').getContext('2d');
+const chart = new Chart(ctx, {
   type: 'line',
   data: {
     datasets: [{
@@ -326,9 +327,9 @@ const chart2 = new Chart(ctx2, {
       }
     },
     onClick: (e) => {
-      const points = chart2.getElementsAtEventForMode(e, 'nearest', { intersect: true }, true);
+      const points = chart.getElementsAtEventForMode(e, 'nearest', { intersect: true }, true);
       if (points.length) {
-        const url = chart2.data.datasets[0].data[points[0].index].url;
+        const url = chart.data.datasets[0].data[points[0].index].url;
         window.open(url, '_blank');
       }
     }
