@@ -289,11 +289,9 @@ data: {
     pointStyle: 'circle',
     fill: false,
     tension: 0.3,
-    parsing: false,  // Important for custom keys
 pointBackgroundColor: function(context) {
   return context.raw.pointBackgroundColor || 'gray';
 }
-
   }]
 },
   options: {
