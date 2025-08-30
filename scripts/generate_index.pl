@@ -276,18 +276,19 @@ foreach my $file (sort @history_files) {
 	next unless $json && $json->{summary}{Total};
 
 	my $pct = $json->{summary}{Total}{total}{percentage} // 0;
-	my ($date) = $file =~ /(\d{4}-\d{2}-\d{2})/;
+	my $timestamp = strftime("%Y-%m-%d %H:%M:%S", localtime((stat($file))->mtime));
 	my ($sha) = $file =~ /([a-f0-9]{7,})/;
 	my $time = strftime("%Y-%m-%d %H:%M:%S", localtime((stat($file))->mtime));
 	my $url = "https://github.com/nigelhorne/SEO-Inspector/commit/$sha";
 
-	push @data_points, qq{{ x: "$date", y: $pct, url: "$url", label: "$time" }};
+	push @data_points, qq{{ x: "$timestamp", y: $pct, url: "$url", label: "$timestamp" }};
 }
 my $js_data = join(",\n", @data_points);
 
 $html .= <<"HTML";
 <canvas id="coverageTrend" width="600" height="300"></canvas>
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-date-fns"></script>
 <script>
 const dataPoints = [
 $js_data
@@ -313,8 +314,16 @@ const chart = new Chart(ctx, {
     }]
   },
   options: {
-    scales: {
-      x: { type: 'category', title: { display: true, text: 'Date' } },
+scales: {
+  x: {
+    type: 'time',
+    time: {
+      parser: 'YYYY-MM-DD HH:mm:ss',
+      tooltipFormat: 'MMM D, YYYY HH:mm:ss',
+      unit: 'minute'
+    },
+    title: { display: true, text: 'Timestamp' }
+  },
       y: { beginAtZero: true, max: 100, title: { display: true, text: 'Coverage (%)' } }
     },
     plugins: {
