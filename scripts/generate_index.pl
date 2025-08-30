@@ -343,7 +343,7 @@ scales: {
 time: {
   tooltipFormat: 'MMM d, yyyy HH:mm:ss',
   unit: 'minute'
-}
+},
     title: { display: true, text: 'Timestamp' }
   },
       y: { beginAtZero: true, max: 100, title: { display: true, text: 'Coverage (%)' } }
