@@ -275,13 +275,19 @@ foreach my $file (sort @history_files) {
 	my $json = eval { decode_json(read_file($file)) };
 	next unless $json && $json->{summary}{Total};
 
-	my $pct = $json->{summary}{Total}{total}{percentage} // 0;
-	my $timestamp = strftime("%Y-%m-%d %H:%M:%S", localtime((stat($file))->mtime));
 	my ($sha) = $file =~ /([a-f0-9]{7,})/;
-	my $time = strftime("%Y-%m-%d %H:%M:%S", localtime((stat($file))->mtime));
+
+	my $pct = $json->{summary}{Total}{total}{percentage} // 0;
+	# my $timestamp = strftime("%Y-%m-%d %H:%M:%S", localtime((stat($file))->mtime));
+	my $timestamp = `git show -s --format=%ci $sha`;
+	chomp $timestamp;
+	$timestamp =~ s/ /T/;  # Optional: convert to ISO format
+	
 	my $url = "https://github.com/nigelhorne/SEO-Inspector/commit/$sha";
 
 	push @data_points, qq{{ x: "$timestamp", y: $pct, url: "$url", label: "$timestamp" }};
+
+	print "$sha => $timestamp => $pct\n";
 }
 my $js_data = join(",\n", @data_points);
 
