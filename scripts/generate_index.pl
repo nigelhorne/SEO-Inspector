@@ -278,7 +278,7 @@ foreach my $file (sort @history_files) {
 	my ($date) = $file =~ /(\d{4}-\d{2}-\d{2})/;
 	my ($sha) = $file =~ /([a-f0-9]{7,})/;
 	my $time = strftime("%Y-%m-%d %H:%M:%S", localtime((stat($file))->mtime));
-	my $url = "https://github.com/nigelhorne/CGI-Info/commit/$sha";
+	my $url = "https://github.com/nigelhorne/SEO-Inspector/commit/$sha";
 
 	push @data_points, qq{{ x: "$date", y: $pct, url: "$url", label: "$time" }};
 }
@@ -286,7 +286,7 @@ my $js_data = join(",\n", @data_points);
 
 $html .= <<"HTML";
 <canvas id="coverageTrend" width="600" height="300"></canvas>
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<!-- <script src="https://cdn.jsdelivr.net/npm/chart.js"></script> -->
 <script>
 const dataPoints = [
 $js_data
@@ -294,8 +294,8 @@ $js_data
 HTML
 
 $html .= <<'HTML';
-const ctx = document.getElementById('coverageTrend').getContext('2d');
-const chart = new Chart(ctx, {
+const ctx2 = document.getElementById('coverageTrend').getContext('2d');
+const chart2 = new Chart(ctx2, {
   type: 'line',
   data: {
     datasets: [{
@@ -326,9 +326,9 @@ const chart = new Chart(ctx, {
       }
     },
     onClick: (e) => {
-      const points = chart.getElementsAtEventForMode(e, 'nearest', { intersect: true }, true);
+      const points = chart2.getElementsAtEventForMode(e, 'nearest', { intersect: true }, true);
       if (points.length) {
-        const url = chart.data.datasets[0].data[points[0].index].url;
+        const url = chart2.data.datasets[0].data[points[0].index].url;
         window.open(url, '_blank');
       }
     }
