@@ -270,9 +270,9 @@ $html .= <<"HTML";
 <script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-date-fns"></script>
 <script>
 function linearRegression(data) {
-  const xs = data.map(p => new Date(p.x).getTime());
-  const ys = data.map(p => p.y);
-  const n = xs.length;
+	const xs = data.map(p => new Date(p.x).getTime());
+	const ys = data.map(p => p.y);
+	const n = xs.length;
 
   const sumX = xs.reduce((a, b) => a + b, 0);
   const sumY = ys.reduce((a, b) => a + b, 0);
@@ -323,7 +323,7 @@ data: {
     tension: 0.0
   }
 ]
-  }]
+  }
 },
   options: {
 scales: {
