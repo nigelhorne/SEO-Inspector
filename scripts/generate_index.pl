@@ -288,14 +288,13 @@ function linearRegression(data) {
   }));
 }
 
-const regressionPoints = linearRegression(dataPoints);
-
 const dataPoints = [
 $js_data
 ];
 HTML
 
 $html .= <<'HTML';
+const regressionPoints = linearRegression(dataPoints);
 const ctx = document.getElementById('coverageTrend').getContext('2d');
 const chart = new Chart(ctx, {
 	type: 'line',
