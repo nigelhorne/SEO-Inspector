@@ -269,6 +269,75 @@ const chart = new Chart(ctx, {
 HTML
 }
 
+my @data_points;
+foreach my $file (sort @history_files) {
+	my $json = eval { decode_json(read_file($file)) };
+	next unless $json && $json->{summary}{Total};
+
+	my $pct = $json->{summary}{Total}{total}{percentage} // 0;
+	my ($date) = $file =~ /(\d{4}-\d{2}-\d{2})/;
+	my ($sha) = $file =~ /([a-f0-9]{7,})/;
+	my $time = strftime("%Y-%m-%d %H:%M:%S", localtime((stat($file))->mtime));
+	my $url = "https://github.com/nigelhorne/CGI-Info/commit/$sha";
+
+	push @data_points, qq{{ x: "$date", y: $pct, url: "$url", label: "$time" }};
+}
+my $js_data = join(",\n", @data_points);
+
+$html .= <<"HTML";
+<canvas id="coverageTrend" width="600" height="300"></canvas>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+const dataPoints = [
+$js_data
+];
+HTML
+
+$html .= <<'HTML';
+const ctx = document.getElementById('coverageTrend').getContext('2d');
+const chart = new Chart(ctx, {
+  type: 'line',
+  data: {
+    datasets: [{
+      label: 'Total Coverage (%)',
+      data: dataPoints,
+      parsing: false,
+      borderColor: 'green',
+      backgroundColor: 'rgba(0,128,0,0.1)',
+      pointRadius: 5,
+      pointHoverRadius: 7,
+      pointStyle: 'circle',
+      fill: true,
+      tension: 0.3
+    }]
+  },
+  options: {
+    scales: {
+      x: { type: 'category', title: { display: true, text: 'Date' } },
+      y: { beginAtZero: true, max: 100, title: { display: true, text: 'Coverage (%)' } }
+    },
+    plugins: {
+      tooltip: {
+        callbacks: {
+          label: function(context) {
+            return `${context.raw.label}: ${context.raw.y}%`;
+          }
+        }
+      }
+    },
+    onClick: (e) => {
+      const points = chart.getElementsAtEventForMode(e, 'nearest', { intersect: true }, true);
+      if (points.length) {
+        const url = chart.data.datasets[0].data[points[0].index].url;
+        window.open(url, '_blank');
+      }
+    }
+  }
+});
+</script>
+HTML
+
+
 $html .= <<"HTML";
 <footer>
 	<p>Project: <a href="https://github.com/nigelhorne/SEO-Inspector">SEO-Inspector</a></p>
