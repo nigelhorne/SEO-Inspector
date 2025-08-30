@@ -306,15 +306,28 @@ time: {
   },
       y: { beginAtZero: true, max: 100, title: { display: true, text: 'Coverage (%)' } }
     },
-    plugins: {
-      tooltip: {
-        callbacks: {
-          label: function(context) {
-            return `${context.raw.label}: ${context.raw.y}%`;
-          }
-        }
+plugins: {
+  legend: {
+    display: true,
+    position: 'top', // You can also use 'bottom', 'left', or 'right'
+    labels: {
+      boxWidth: 12,
+      padding: 10,
+      font: {
+        size: 12,
+        weight: 'bold'
       }
-    },
+    }
+  },
+  tooltip: {
+    callbacks: {
+      label: function(context) {
+        return `${context.raw.label}: ${context.raw.y}%`;
+      }
+    }
+  }
+}
+    
     onClick: (e) => {
       const points = chart.getElementsAtEventForMode(e, 'nearest', { intersect: true }, true);
       if (points.length) {
