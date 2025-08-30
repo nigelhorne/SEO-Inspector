@@ -270,17 +270,27 @@ const chart = new Chart(ctx, {
 HTML
 }
 
+my %commit_times;
+open(my $log, '-|', 'git log --pretty=format:"%h %ci"') or die "Can't run git log: $!";
+while (<$log>) {
+    my ($short_sha, $datetime) = split ' ', $_, 2;
+    $commit_times{$short_sha} = $datetime;
+}
+close $log;
+
 my @data_points;
 foreach my $file (sort @history_files) {
 	my $json = eval { decode_json(read_file($file)) };
 	next unless $json && $json->{summary}{Total};
 
-	my ($sha) = $file =~ /([a-f0-9]{7,})/;
+my ($sha) = $file =~ /([a-f0-9]{7,})/;
+my $timestamp = $commit_times{$sha} // strftime("%Y-%m-%d %H:%M:%S", localtime((stat($file))->mtime));
+	
 
 	my $pct = $json->{summary}{Total}{total}{percentage} // 0;
 	# my $timestamp = strftime("%Y-%m-%d %H:%M:%S", localtime((stat($file))->mtime));
-	my $timestamp = `git show -s --format=%ci $sha`;
-	chomp $timestamp;
+	# my $timestamp = `git show -s --format=%ci $sha`;
+	# chomp $timestamp;
 	$timestamp =~ s/ /T/;  # Optional: convert to ISO format
 	
 	my $url = "https://github.com/nigelhorne/SEO-Inspector/commit/$sha";
