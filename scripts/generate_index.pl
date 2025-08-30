@@ -287,7 +287,7 @@ my $js_data = join(",\n", @data_points);
 
 $html .= <<"HTML";
 <canvas id="coverageTrend" width="600" height="300"></canvas>
-<!-- <script src="https://cdn.jsdelivr.net/npm/chart.js"></script> -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script>
 const dataPoints = [
 $js_data
