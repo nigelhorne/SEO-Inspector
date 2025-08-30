@@ -279,34 +279,25 @@ while (<$log>) {
 }
 
 my @data_points;
+my $prev_pct;
 foreach my $file (sort @history_files) {
-	my $json = eval { decode_json(read_file($file)) };
-	next unless $json && $json->{summary}{Total};
+    my $json = eval { decode_json(read_file($file)) };
+    next unless $json && $json->{summary}{Total};
 
-my ($sha) = $file =~ /-(\w{7})\.json$/;
+    my ($sha) = $file =~ /-(\w{7})\.json$/;
+    my $timestamp = $commit_times{$sha} // strftime("%Y-%m-%dT%H:%M:%S", localtime((stat($file))->mtime));
+    $timestamp =~ s/([+-]\d{2})(\d{2})$/$1:$2/;
 
-my $timestamp = $commit_times{$sha};
-unless ($timestamp) {
-    warn "SHA $sha not found in git log — using file mtime";
-    $timestamp = strftime("%Y-%m-%d %H:%M:%S", localtime((stat($file))->mtime));
+    my $pct = $json->{summary}{Total}{total}{percentage} // 0;
+    my $delta = defined $prev_pct ? sprintf('%.1f', $pct - $prev_pct) : 0;
+    $prev_pct = $pct;
+
+    my $color = $delta > 0 ? 'green' : $delta < 0 ? 'red' : 'gray';
+    my $url = "https://github.com/nigelhorne/SEO-Inspector/commit/$sha";
+
+    push @data_points, qq{{ x: "$timestamp", y: $pct, url: "$url", label: "$timestamp", pointBackgroundColor: "$color" }};
 }
-# Original format: "2025-08-30 09:26:58 -0400"
-$timestamp =~ s/^(\d{4}-\d{2}-\d{2}) (\d{2}:\d{2}:\d{2}) ([+-]\d{4})$/$1T$2$3/;
-$timestamp =~ s/([+-]\d{2})(\d{2})$/$1:$2/;
 
-
-	my $pct = $json->{summary}{Total}{total}{percentage} // 0;
-	# my $timestamp = strftime("%Y-%m-%d %H:%M:%S", localtime((stat($file))->mtime));
-	# my $timestamp = `git show -s --format=%ci $sha`;
-	# chomp $timestamp;
-	$timestamp =~ s/ /T/;  # Optional: convert to ISO format
-	
-	my $url = "https://github.com/nigelhorne/SEO-Inspector/commit/$sha";
-
-	push @data_points, qq{{ x: "$timestamp", y: $pct, url: "$url", label: "$timestamp" }};
-
-	print "$sha => $timestamp => $pct\n";
-}
 my $js_data = join(",\n", @data_points);
 
 $html .= <<"HTML";
@@ -323,19 +314,21 @@ $html .= <<'HTML';
 const ctx = document.getElementById('coverageTrend').getContext('2d');
 const chart = new Chart(ctx, {
   type: 'line',
-  data: {
-    datasets: [{
-      label: 'Total Coverage (%)',
-      data: dataPoints,
-      borderColor: 'green',
-      backgroundColor: 'rgba(0,128,0,0.1)',
-      pointRadius: 5,
-      pointHoverRadius: 7,
-      pointStyle: 'circle',
-      fill: false,
-      tension: 0.3
-    }]
-  },
+data: {
+  datasets: [{
+    label: 'Total Coverage (%)',
+    data: dataPoints,
+    borderColor: 'green',
+    backgroundColor: 'rgba(0,128,0,0.1)',
+    pointRadius: 5,
+    pointHoverRadius: 7,
+    pointStyle: 'circle',
+    fill: false,
+    tension: 0.3,
+    parsing: false,  // Important for custom keys
+    pointBackgroundColor: dataPoints.map(p => p.pointBackgroundColor)
+  }]
+},
   options: {
 scales: {
   x: {
