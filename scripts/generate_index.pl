@@ -157,7 +157,6 @@ if (exists $deltas{$file}) {
 } else {
 	$delta_html = '<td class="neutral" title="No previous data">&#9679;</td>';
 }
-
 	my $source_url = $github_base . $file;
 	my $has_coverage = (
 		defined $info->{statement}{percentage} ||
@@ -252,7 +251,11 @@ close $log;
 
 my @data_points;
 my $prev_pct;
-foreach my $file (sort @history_files) {
+
+# Only display the last 10 commits
+@history_files = splice(sort @history_files), 0, $#array - 9);
+
+foreach my $file (@history_files) {
 	my $json = eval { decode_json(read_file($file)) };
 	next unless $json && $json->{summary}{Total};
 
