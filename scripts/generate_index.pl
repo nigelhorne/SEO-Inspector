@@ -249,12 +249,18 @@ while (<$log>) {
 }
 close $log;
 
+# Only display the last 10 commits
+my $elements_to_keep = 10;
+
+# Calculate the number of elements to remove from the beginning
+my $elements_to_remove = scalar(@history_files) - $elements_to_keep;
+
+# Use splice to remove elements from the beginning of the array
+@history_files = sort(@history_files);
+@history_files = splice @history_files, 0, $elements_to_remove;
+
 my @data_points;
 my $prev_pct;
-
-# Only display the last 10 commits
-@history_files = sort(@history_files);
-@history_files = @history_files[0 .. $#history_files - 10];
 
 foreach my $file (@history_files) {
 	my $json = eval { decode_json(read_file($file)) };
