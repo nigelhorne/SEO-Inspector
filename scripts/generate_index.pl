@@ -286,13 +286,18 @@ foreach my $file (@history_files) {
 
 my $js_data = join(",\n", @data_points);
 
-$html .= <<"HTML";
+if(scalar(@data_points)) {
+	$html .= <<'HTML';
 <p>
 	<label>
 		<input type="checkbox" id="toggleTrend" checked>
 		Show regression trend
 	</label>
 </p>
+HTML
+}
+
+$html .= <<"HTML";
 <canvas id="coverageTrend" width="600" height="300"></canvas>
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-date-fns"></script>
