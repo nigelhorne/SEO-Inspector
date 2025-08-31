@@ -253,7 +253,7 @@ my @data_points;
 my $prev_pct;
 
 # Only display the last 10 commits
-@history_files = splice(sort @history_files), 0, $#array - 9);
+@history_files = splice(sort @history_files), 0, $#history_files - 9);
 
 foreach my $file (@history_files) {
 	my $json = eval { decode_json(read_file($file)) };
