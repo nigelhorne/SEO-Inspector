@@ -257,7 +257,7 @@ my $elements_to_remove = scalar(@history_files) - $elements_to_keep;
 
 # Use splice to remove elements from the beginning of the array
 @history_files = sort(@history_files);
-@history_files = splice @history_files, 0, $elements_to_remove;
+splice(@history_files, 0, $elements_to_remove);
 
 my @data_points;
 my $prev_pct;
@@ -267,7 +267,7 @@ foreach my $file (@history_files) {
 	next unless $json && $json->{summary}{Total};
 
 	my ($sha) = $file =~ /-(\w{7})\.json$/;
-	my $timestamp = $commit_times{$sha} // strftime("%Y-%m-%dT%H:%M:%S", localtime((stat($file))->mtime));
+	my $timestamp = $commit_times{$sha} // strftime('%Y-%m-%dT%H:%M:%S', localtime((stat($file))->mtime));
 	$timestamp =~ s/ /T/;
 	$timestamp =~ s/\s+([+-]\d{2}):?(\d{2})$/$1:$2/;	# Fix space before timezone
 	$timestamp =~ s/ //g;	# Remove any remaining spaces
