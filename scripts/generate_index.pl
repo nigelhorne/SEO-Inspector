@@ -143,20 +143,21 @@ for my $file (sort keys %{$data->{summary}}) {
 		$badge_class, $tooltip, $total
 	);
 
-my $delta_html = '';
-if (exists $deltas{$file}) {
-	my $delta = $deltas{$file};
-	my $delta_class = $delta > 0 ? 'positive' : $delta < 0 ? 'negative' : 'neutral';
-	my $delta_icon = $delta > 0 ? '&#9650;' : $delta < 0 ? '&#9660;' : '&#9679;';
-	my $prev_pct = $prev_data->{summary}{$file}{total}{percentage} // 0;
+	my $delta_html = '';
+	if (exists $deltas{$file}) {
+		my $delta = $deltas{$file};
+		my $delta_class = $delta > 0 ? 'positive' : $delta < 0 ? 'negative' : 'neutral';
+		my $delta_icon = $delta > 0 ? '&#9650;' : $delta < 0 ? '&#9660;' : '&#9679;';
+		my $prev_pct = $prev_data->{summary}{$file}{total}{percentage} // 0;
 
-	$delta_html = sprintf(
-		'<td class="%s" title="Previous: %.1f%%">%s %.1f%%</td>',
-		$delta_class, $prev_pct, $delta_icon, abs($delta)
-	);
-} else {
-	$delta_html = '<td class="neutral" title="No previous data">&#9679;</td>';
-}
+		$delta_html = sprintf(
+			'<td class="%s" title="Previous: %.1f%%">%s %.1f%%</td>',
+			$delta_class, $prev_pct, $delta_icon, abs($delta)
+		);
+	} else {
+		$delta_html = '<td class="neutral" title="No previous data">&#9679;</td>';
+	}
+
 	my $source_url = $github_base . $file;
 	my $has_coverage = (
 		defined $info->{statement}{percentage} ||
