@@ -617,9 +617,9 @@ Nigel Horne, C<< <njh at nigelhorne.com> >>
 
 =head1 SEE ALSO
 
-Test coverage report: L<https://nigelhorne.github.io/SEO-Inspector/coverage/>
-
 =over 4
+
+=item * Test coverage report: L<https://nigelhorne.github.io/SEO-Inspector/coverage/>
 
 =item * L<https://github.com/nigelhorne/SEO-Checker>
 
