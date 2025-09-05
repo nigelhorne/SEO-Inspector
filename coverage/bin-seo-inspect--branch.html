@@ -20,18 +20,21 @@ https://pjcj.net
 <h1>Branch Coverage</h1>
 <table>
 <tr><td class="h" align="right">File:</td><td align="left">bin/seo-inspect</td></tr>
-<tr><td class="h" align="right">Coverage:</td><td align="left" class="c0">64.3%</td></tr>
+<tr><td class="h" align="right">Coverage:</td><td align="left" class="c0">65.0%</td></tr>
 </table>
 <div><br/></div>
 <table>
 <tr><th>line</th><th>%</th><th colspan="2">coverage</th><th>branch</th></tr>
-<tr><td class="h"><a id="L17">17</a></td><td class="c0">50</td><td class="c0">T</td><td class="c3">F</td><td class="s">unless &amp;GetOptions(&quot;url|u=s&quot;, \$url, &quot;file|f=s&quot;, \$file, &quot;json|j&quot;, \$json)</td></tr>
-<tr><td class="h"><a id="L23">23</a></td><td class="c0">50</td><td class="c0">T</td><td class="c3">F</td><td class="s">unless $url or $file</td></tr>
-<tr><td class="h"><a id="L38">38</a></td><td class="c0">50</td><td class="c3">T</td><td class="c0">F</td><td class="s">if ($file) { }</td></tr>
-<tr><td class="h"><a id="L40">40</a></td><td class="c0">50</td><td class="c0">T</td><td class="c3">F</td><td class="s">unless $html</td></tr>
-<tr><td class="h"><a id="L59">59</a></td><td class="c3">100</td><td class="c3">T</td><td class="c3">F</td><td class="s">if ($json) { }</td></tr>
-<tr><td class="h"><a id="L64">64</a></td><td class="c0">50</td><td class="c0">T</td><td class="c3">F</td><td class="s">unless ref $r eq &quot;HASH&quot;</td></tr>
-<tr><td class="h"><a id="L66">66</a></td><td class="c3">100</td><td class="c3">T</td><td class="c3">F</td><td class="s">if ($$r{&quot;resolution&quot;} and length $$r{&quot;resolution&quot;})</td></tr>
+<tr><td class="h"><a id="L18">18</a></td><td class="c0">50</td><td class="c0">T</td><td class="c3">F</td><td class="s">unless &amp;GetOptions(&quot;url|u=s&quot;, \$url, &quot;file|f=s&quot;, \$file, &quot;json|j&quot;, \$json, &quot;no-colour|n&quot;, \$no_colour, &quot;no-color&quot;, \$no_colour)</td></tr>
+<tr><td class="h"><a id="L26">26</a></td><td class="c0">50</td><td class="c0">T</td><td class="c3">F</td><td class="s">unless $url or $file</td></tr>
+<tr><td class="h"><a id="L41">41</a></td><td class="c0">50</td><td class="c3">T</td><td class="c0">F</td><td class="s">if ($file) { }</td></tr>
+<tr><td class="h"><a id="L43">43</a></td><td class="c0">50</td><td class="c0">T</td><td class="c3">F</td><td class="s">unless $html</td></tr>
+<tr><td class="h"><a id="L62">62</a></td><td class="c3">100</td><td class="c3">T</td><td class="c3">F</td><td class="s">if ($json) { }</td></tr>
+<tr><td class="h"><a id="L67">67</a></td><td class="c0">50</td><td class="c0">T</td><td class="c3">F</td><td class="s">unless ref $r eq &quot;HASH&quot;</td></tr>
+<tr><td class="h"><a id="L69">69</a></td><td class="c0">50</td><td class="c0">T</td><td class="c3">F</td><td class="s">if ($no_colour) { }</td></tr>
+<tr><td class="h"><a id="L73">73</a></td><td class="c0">50</td><td class="c0">T</td><td class="c3">F</td><td class="s">$status eq &#39;error&#39; ? :</td></tr>
+<tr><td class="h"></td><td class="c3">100</td><td class="c3">T</td><td class="c3">F</td><td class="s">$status eq &#39;ok&#39; ? :</td></tr>
+<tr><td class="h"><a id="L89">89</a></td><td class="c3">100</td><td class="c3">T</td><td class="c3">F</td><td class="s">if ($$r{&quot;resolution&quot;} and length $$r{&quot;resolution&quot;})</td></tr>
 </table>
 </body>
 </html>
