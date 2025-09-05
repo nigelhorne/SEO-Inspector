@@ -392,12 +392,18 @@ sub _check_meta_description {
 	return { name => 'Meta Description', status => 'warn', notes => 'missing meta description' };
 }
 
-sub _check_canonical {
+sub _check_canonical
+{
 	my ($self, $html) = @_;
 	if ($html =~ /<link\s+rel=["']canonical["']\s+href=["'](.*?)["']/is) {
 		return { name => 'Canonical', status => 'ok', notes => 'canonical link present' };
 	}
-	return { name => 'Canonical', status => 'warn', notes => 'missing canonical link' };
+	return { 
+		name => 'Canonical', 
+		status => 'warn', 
+		notes => 'missing canonical link',
+		resolution => 'Add canonical link to <head>: <link rel="canonical" href="https://your-domain.com/this-page-url"> - use the preferred URL for this page to prevent duplicate content issues'
+	};
 }
 
 sub _check_robots_meta {
@@ -405,7 +411,12 @@ sub _check_robots_meta {
 	if ($html =~ /<meta\s+name=["']robots["']\s+content=["'](.*?)["']/is) {
 		return { name => 'Robots Meta', status => 'ok', notes => 'robots meta present' };
 	}
-	return { name => 'Robots Meta', status => 'warn', notes => 'missing robots meta' };
+	return { 
+		name => 'Robots Meta', 
+		status => 'warn', 
+		notes => 'missing robots meta',
+		resolution => 'Add robots meta tag to <head>: <meta name="robots" content="index, follow"> for normal indexing, or <meta name="robots" content="noindex, nofollow"> to prevent indexing - controls how search engines crawl and index this page'
+	};
 }
 
 sub _check_viewport {
@@ -413,7 +424,12 @@ sub _check_viewport {
 	if ($html =~ /<meta\s+name=["']viewport["']\s+content=["'](.*?)["']/is) {
 		return { name => 'Viewport', status => 'ok', notes => 'viewport meta present' };
 	}
-	return { name => 'Viewport', status => 'warn', notes => 'missing viewport meta' };
+	return { 
+		name => 'Viewport', 
+		status => 'warn', 
+		notes => 'missing viewport meta',
+		resolution => 'Add viewport meta tag to <head>: <meta name="viewport" content="width=device-width, initial-scale=1.0"> - essential for mobile responsiveness and Google mobile-first indexing'
+	};
 }
 
 sub _check_h1_presence {
@@ -439,7 +455,20 @@ sub _check_links_alt_text {
 		my $attr = $1;
 		push @missing, $1 unless $attr =~ /alt=/i;
 	}
-	return { name => 'Links Alt Text', status => @missing ? 'warn' : 'ok', notes => @missing ? scalar(@missing) . " images missing alt" : 'all images have alt' };
+	if(scalar(@missing)) {
+		return { 
+			name => 'Links Alt Text', 
+			status => 'warn', 
+			notes => scalar(@missing) . ' images missing alt',
+			resolution => 'Add alt attributes to all images: <img src="image.jpg" alt="Descriptive text"> - describe the image content for screen readers and SEO. Use alt="" for decorative images that don\'t add meaning'
+		};
+	}
+	
+	return { 
+		name => 'Links Alt Text', 
+		status => 'ok', 
+		notes => 'all images have alt'
+	};
 }
 
 sub _check_structured_data {
@@ -447,11 +476,20 @@ sub _check_structured_data {
 
 	my @jsonld = ($html =~ /<script\b[^>]*type=["']application\/ld\+json["'][^>]*>(.*?)<\/script>/gis);
 
+	if(scalar(@jsonld)) {
+		return {
+			name => 'Structured Data',
+			status => 'ok',
+			notes => scalar(@jsonld) . ' JSON-LD block(s) found'
+		};
+	}
+	
 	return {
 		name => 'Structured Data',
-		status => @jsonld ? 'ok' : 'warn',
-		notes => @jsonld ? scalar(@jsonld) . " JSON-LD block(s) found" : 'no structured data found',
-	};
+		status => 'warn',
+		notes => 'no structured data found',
+		resolution => 'Add JSON-LD structured data to <head>: <script type="application/ld+json">{"@context": "https://schema.org", "@type": "WebPage", "name": "Page Title", "description": "Page description"}</script> - helps search engines understand your content better and enables rich snippets'
+	}
 }
 
 # _check_headings

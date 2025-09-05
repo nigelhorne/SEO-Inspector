@@ -7,6 +7,7 @@ use FindBin qw($Bin);
 use Getopt::Long qw(GetOptions);
 use File::Slurp qw(read_file);
 use JSON::MaybeXS;
+use Term::ANSIColor;
 
 use SEO::Inspector;
 
@@ -15,9 +16,9 @@ use SEO::Inspector;
 # -------------------------------
 my ($url, $file, $json);
 GetOptions(
-	'url|u=s'  => \$url,
+	'url|u=s' => \$url,
 	'file|f=s' => \$file,
-	'json|j'   => \$json,
+	'json|j' => \$json,
 ) or die "Usage: $0 --url <URL> | --file <HTML file> [--json]\n";
 
 die 'Specify either --url or --file' unless $url || $file;
@@ -39,12 +40,12 @@ if ($file) {
 	$html = read_file($file);
 	die 'File is empty' unless $html;
 
-	$plugin_results  = $inspector->check_html($html);
+	$plugin_results = $inspector->check_html($html);
 	$builtin_results = $inspector->run_all($html);
 } else {
 	my $all_results = $inspector->check_url($url);
 	$html		= delete $all_results->{_html}; # remove internal HTML
-	$plugin_results  = { map { $_ => $all_results->{$_} } grep { exists $inspector->{plugins}{$_} } keys %$all_results };
+	$plugin_results = { map { $_ => $all_results->{$_} } grep { exists $inspector->{plugins}{$_} } keys %$all_results };
 	$builtin_results = { map { $_ => $all_results->{$_} } grep { !exists $inspector->{plugins}{$_} } keys %$all_results };
 }
 
@@ -62,8 +63,24 @@ if ($json) {
 	for my $key (sort keys %results) {
 		my $r = $results{$key};
 		next unless ref($r) eq 'HASH';
-		printf "[%s] %s: %s\n", $r->{status} // 'unknown', $r->{name} // $key, $r->{notes} // '';
-		if($r->{'resolution'} && length($r->{'resolution'})) {
+
+		my $status = $r->{status} // 'unknown';
+		my $color =
+			$status eq 'ok'      ? 'green'  :
+			$status eq 'error'   ? 'red'    :
+			# $status eq 'warn'    ? 'yellow' :
+			# $status eq 'unknown' ? 'yellow' :
+			'yellow';	# fallback for anything else
+
+		print color('bold');
+		print color($color);
+		print "[$status] ";
+		print color('reset');
+		print color('bold');
+		printf "%s: %s\n", $r->{name} // $key, $r->{notes} // '';
+		print color('reset');
+
+		if ($r->{'resolution'} && length($r->{'resolution'})) {
 			print "\t", $r->{'resolution'}, "\n";
 		}
 	}
