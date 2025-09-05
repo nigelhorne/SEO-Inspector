@@ -254,15 +254,11 @@ while (<$log>) {
 }
 close $log;
 
-# Only display the last 10 commits
-my $elements_to_keep = 10;
+# Only display the last 15 commits
+my $elements_to_keep = 15;
 
 # Calculate the number of elements to remove from the beginning
 my $elements_to_remove = scalar(@history_files) - $elements_to_keep;
-
-use Data::Dumper;
-warn Data::Dumper->new([\@history_files])->Dump();
-warn Data::Dumper->new([\%commit_messages])->Dump();
 
 # Use splice to remove elements from the beginning of the array
 @history_files = sort(@history_files);
