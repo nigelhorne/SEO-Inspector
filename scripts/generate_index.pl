@@ -233,7 +233,7 @@ foreach my $file (sort @history_files) {
 
 # Inject chart if we have data
 my %commit_times;
-open(my $log, '-|', 'git log main master --pretty=format:"%H %h %ci"') or die "Can't run git log: $!";
+open(my $log, '-|', 'git log --all --pretty=format:"%H %h %ci"') or die "Can't run git log: $!";
 while (<$log>) {
 	chomp;
 	my ($full_sha, $short_sha, $datetime) = split ' ', $_, 3;
@@ -242,7 +242,7 @@ while (<$log>) {
 close $log;
 
 my %commit_messages;
-open($log, '-|', 'git log main master --pretty=format:"%h %s"') or die "Can't run git log: $!";
+open($log, '-|', 'git log --pretty=format:"%h %s"') or die "Can't run git log: $!";
 while (<$log>) {
 	chomp;
 	my ($short_sha, $message) = /^(\w+)\s+(.*)$/;
@@ -255,6 +255,9 @@ my $elements_to_keep = 10;
 
 # Calculate the number of elements to remove from the beginning
 my $elements_to_remove = scalar(@history_files) - $elements_to_keep;
+
+use Data::Dumper;
+warn Data::Dumper->new([\@history_files])->Dump();
 
 # Use splice to remove elements from the beginning of the array
 @history_files = sort(@history_files);
