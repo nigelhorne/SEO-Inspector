@@ -14,12 +14,14 @@ use SEO::Inspector;
 # -------------------------------
 # Command line options
 # -------------------------------
-my ($url, $file, $json);
+my ($url, $file, $json, $no_colour);
 GetOptions(
 	'url|u=s' => \$url,
 	'file|f=s' => \$file,
 	'json|j' => \$json,
-) or die "Usage: $0 --url <URL> | --file <HTML file> [--json]\n";
+	'no-colour|n' => \$no_colour,
+	'no-color' => \$no_colour,
+) or die "Usage: $0 --url <URL> | --file <HTML file> [--json] [--no-colour]\n";
 
 die 'Specify either --url or --file' unless $url || $file;
 
@@ -64,21 +66,25 @@ if ($json) {
 		my $r = $results{$key};
 		next unless ref($r) eq 'HASH';
 
-		my $status = $r->{status} // 'unknown';
-		my $color =
-			$status eq 'ok'      ? 'green'  :
-			$status eq 'error'   ? 'red'    :
-			# $status eq 'warn'    ? 'yellow' :
-			# $status eq 'unknown' ? 'yellow' :
-			'yellow';	# fallback for anything else
+		if($no_colour) {
+			printf "[%s] %s: %s\n", $r->{status} // 'unknown', $r->{name} // $key, $r->{notes} // '';
+		} else {
+			my $status = $r->{status} // 'unknown';
+			my $color =
+				$status eq 'ok'      ? 'green'  :
+				$status eq 'error'   ? 'red'    :
+				# $status eq 'warn'  ? 'yellow' :
+				# $status eq 'unknown' ? 'yellow' :
+				'yellow';	# fallback for anything else
 
-		print color('bold');
-		print color($color);
-		print "[$status] ";
-		print color('reset');
-		print color('bold');
-		printf "%s: %s\n", $r->{name} // $key, $r->{notes} // '';
-		print color('reset');
+			print color('bold');
+			print color($color);
+			print "[$status] ";
+			print color('reset');
+			print color('bold');
+			printf "%s: %s\n", $r->{name} // $key, $r->{notes} // '';
+			print color('reset');
+		}
 
 		if ($r->{'resolution'} && length($r->{'resolution'})) {
 			print "\t", $r->{'resolution'}, "\n";
