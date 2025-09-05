@@ -91,6 +91,7 @@ The hashref should have at least these keys:
     name   => 'My Check',
     status => 'ok' | 'warn' | 'error',
     notes  => 'human-readable message',
+    resolution => 'how to resolve'
   }
 
 =back
@@ -123,10 +124,10 @@ the string "Hello":
 
 	sub run {
 		my ($self, $html) = @_;
-		if ($html =~ /Hello/) {
+		if($html =~ /Hello/) {
 			return { name => 'Hello Check', status => 'ok', notes => 'found Hello' };
 		} else {
-			return { name => 'Hello Check', status => 'warn', notes => 'no Hello' };
+			return { name => 'Hello Check', status => 'warn', notes => 'no Hello', resolution => 'add a hello field' };
 		}
 	}
 
@@ -331,7 +332,7 @@ sub check_url {
 
 	$url //= $self->{url};
 
-	croak "URL missing" unless $url;
+	croak('URL missing') unless $url;
 
 	my $html = $self->_fetch_html($url);
 
@@ -651,6 +652,7 @@ sub _check_open_graph {
 		name => 'Open Graph',
 		status => $status,
 		notes => $notes,
+		resolution => 'Add missing tags to <head>: <meta property="og:title" content="Your Page Title">, <meta property="og:description" content="Brief page description">'
 	};
 }
 
@@ -685,6 +687,7 @@ sub _check_twitter_cards {
 		name => 'Twitter Cards',
 		status => $status,
 		notes => $notes,
+		resolution => 'Add missing tags to <head>: <meta name="twitter:card" content="summary">, <meta name="twitter:title" content="Your Page Title">'
 	};
 }
 
@@ -697,10 +700,12 @@ sub _check_page_size {
 
 	my $status = 'ok';
 	my $notes = "${size_kb}KB HTML size";
+	my $resolution = '';
 
 	if ($size_bytes > 1_048_576) {	# > 1MB
 		$status = 'error';
 		$notes .= ' (too large, over 1MB)';
+		$resolution = 'Consider optimizing: minify CSS/JS, compress images, remove unused elements, enable server compression';
 	} elsif ($size_bytes > 102_400) {	# > 100KB
 		$status = 'warn';
 		$notes .= ' (large, consider optimization)';
@@ -715,6 +720,7 @@ sub _check_page_size {
 		name => 'Page Size',
 		status => $status,
 		notes => $notes,
+		resolution => $resolution
 	};
 }
 
@@ -734,6 +740,7 @@ sub _check_readability {
 		name => 'Readability',
 		status => 'warn',
 		notes => 'insufficient text for analysis',
+		resolution => 'Add more content to the page - aim for at least 300 words of meaningful text',
 	} if length($text) < 100;
 
 	# Count sentences (approximate)
@@ -748,6 +755,7 @@ sub _check_readability {
 		name => 'Readability',
 		status => 'warn',
 		notes => 'insufficient content for analysis',
+		resolution => 'Add more substantial content - aim for at least 300 words for proper SEO value',
 	} if $word_count < 50;
 
 	# Count syllables (very basic approximation)
@@ -772,6 +780,7 @@ sub _check_readability {
 	my $status = 'ok';
 	my $level;
 	my $notes;
+	my $resolution = '';
 
 	if ($flesch_score >= 90) {
 		$level = 'very easy';
@@ -784,12 +793,15 @@ sub _check_readability {
 	} elsif ($flesch_score >= 50) {
 		$level = 'fairly difficult';
 		$status = 'warn';
+		$resolution = 'Consider simplifying: use shorter sentences (aim for 15-20 words), choose simpler words, break up long paragraphs, add bullet points or lists';
 	} elsif ($flesch_score >= 30) {
 		$level = 'difficult';
 		$status = 'warn';
+		$resolution = 'Improve readability: use much shorter sentences (10-15 words), replace complex words with simpler alternatives, add more paragraph breaks, use active voice';
 	} else {
 		$level = 'very difficult';
 		$status = 'warn';
+		$resolution = 'Significantly simplify content: break long sentences into multiple short ones, replace jargon with plain language, add explanations for technical terms, use more white space and formatting';
 	}
 
 	$notes = sprintf('Flesch score: %.1f (%s) - %d words, %d sentences',
@@ -799,6 +811,7 @@ sub _check_readability {
 		name => 'Readability',
 		status => $status,
 		notes => $notes,
+		resolution => $resolution,
 	};
 }
 

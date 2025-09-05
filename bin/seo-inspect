@@ -61,7 +61,10 @@ if ($json) {
 } else {
 	for my $key (sort keys %results) {
 		my $r = $results{$key};
-		next unless ref $r eq 'HASH';
+		next unless ref($r) eq 'HASH';
 		printf "[%s] %s: %s\n", $r->{status} // 'unknown', $r->{name} // $key, $r->{notes} // '';
+		if($r->{'resolution'} && length($r->{'resolution'})) {
+			print "\t", $r->{'resolution'}, "\n";
+		}
 	}
 }
