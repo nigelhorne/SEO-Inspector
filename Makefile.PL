@@ -34,6 +34,7 @@ WriteMakefile(
 		'Mojo::UserAgent' => 0,
 		'Mojo::URL' => 0,
 		'Module::Pluggable' => 0,
+		'Object::Configure' => 0.14,
 		'Params::Get' => 0.13,
 	}, TEST_REQUIRES => {
 		'File::Glob' => 0,

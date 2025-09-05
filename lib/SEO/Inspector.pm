@@ -7,6 +7,7 @@ use Carp;
 use Mojo::UserAgent;
 use Mojo::URL;
 use Module::Pluggable require => 1, search_path => 'SEO::Inspector::Plugin';
+use Object::Configure 0.14;
 use Params::Get 0.13;
 
 =head1 NAME
@@ -160,7 +161,7 @@ our $VERSION = '0.01';
 # -------------------------------
 sub new {
 	my $class = shift;
-	my $params = Params::Get::get_params(undef, \@_);
+	my $params = Object::Configure::configure($class, Params::Get::get_params(undef, \@_));
 
 	$params->{'ua'} ||= Mojo::UserAgent->new();
 	$params->{'plugins'} ||= {};
