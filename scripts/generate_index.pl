@@ -286,7 +286,7 @@ foreach my $file (@history_files) {
 
 my $js_data = join(",\n", @data_points);
 
-@data_points = sort { $a->{'x'} <=> $b->{'x'} } @data_points;
+@data_points = sort { $a cmp $b } @data_points;
 
 if(scalar(@data_points)) {
 	$html .= <<'HTML';
