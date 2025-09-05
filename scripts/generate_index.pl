@@ -246,7 +246,11 @@ open($log, '-|', 'git log --pretty=format:"%h %s"') or die "Can't run git log: $
 while (<$log>) {
 	chomp;
 	my ($short_sha, $message) = /^(\w+)\s+(.*)$/;
-	$commit_messages{$short_sha} = $message;
+	if($message =~ /^Merge branch /) {
+		delete $commit_times{$short_sha};
+	} else {
+		$commit_messages{$short_sha} = $message;
+	}
 }
 close $log;
 
@@ -272,6 +276,8 @@ foreach my $file (@history_files) {
 	next unless $json && $json->{summary}{Total};
 
 	my ($sha) = $file =~ /-(\w{7})\.json$/;
+	next unless $commit_messages{$sha};
+
 	my $timestamp = $commit_times{$sha} // strftime('%Y-%m-%dT%H:%M:%S', localtime((stat($file))->mtime));
 	$timestamp =~ s/ /T/;
 	$timestamp =~ s/\s+([+-]\d{2}):?(\d{2})$/$1:$2/;	# Fix space before timezone
@@ -284,7 +290,7 @@ foreach my $file (@history_files) {
 	my $color = $delta > 0 ? 'green' : $delta < 0 ? 'red' : 'gray';
 	my $url = "https://github.com/nigelhorne/SEO-Inspector/commit/$sha";
 
-	my $comment = $commit_messages{$sha} // '';
+	my $comment = $commit_messages{$sha};
 	push @data_points, qq{{ x: "$timestamp", y: $pct, delta: $delta, url: "$url", label: "$timestamp", pointBackgroundColor: "$color", comment: "$comment" }};
 }
 
