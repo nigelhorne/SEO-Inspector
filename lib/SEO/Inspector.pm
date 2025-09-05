@@ -191,7 +191,7 @@ sub load_plugins {
 
 			my $finder = Module::Pluggable::Object->new(
 				search_path => ['SEO::Inspector::Plugin'],
-				require	 => 1,
+				require => 1,
 				instantiate => 'new',
 			);
 
@@ -232,21 +232,21 @@ sub check {
 	$html //= $self->_fetch_html();
 
 	my %dispatch = (
-		title			=> \&_check_title,
+		title => \&_check_title,
 		meta_description => \&_check_meta_description,
-		canonical		=> \&_check_canonical,
-		robots_meta	=> \&_check_robots_meta,
-		viewport		 => \&_check_viewport,
-		h1_presence	=> \&_check_h1_presence,
-		word_count	 => \&_check_word_count,
+		canonical => \&_check_canonical,
+		robots_meta => \&_check_robots_meta,
+		viewport => \&_check_viewport,
+		h1_presence => \&_check_h1_presence,
+		word_count => \&_check_word_count,
 		links_alt_text => \&_check_links_alt_text,
 		check_structured_data => \&_check_structured_data,
-		check_headings	=> \&_check_headings,
-		check_links	=> \&_check_links,
-		open_graph	=> \&_check_open_graph,
-		twitter_cards	=> \&_check_twitter_cards,
-		page_size	=> \&_check_page_size,
-		readability	=> \&_check_readability,
+		check_headings => \&_check_headings,
+		check_links => \&_check_links,
+		open_graph => \&_check_open_graph,
+		twitter_cards => \&_check_twitter_cards,
+		page_size => \&_check_page_size,
+		readability => \&_check_readability,
 	);
 
 	# built-in checks
@@ -619,21 +619,21 @@ sub _check_links {
 # Checks for essential Open Graph tags that improve social media sharing
 sub _check_open_graph {
 	my ($self, $html) = @_;
-	
+
 	my %og_tags;
 	my @required = qw(title description image url);
-	
+
 	# Extract all Open Graph meta tags
 	while ($html =~ /<meta\s+(?:property|name)=["']og:([^"']+)["']\s+content=["']([^"']*)["']/gis) {
 		$og_tags{$1} = $2;
 	}
-	
+
 	my @missing = grep { !exists $og_tags{$_} || !$og_tags{$_} } @required;
 	my $found = keys %og_tags;
-	
+
 	my $status = @missing ? 'warn' : 'ok';
 	my $notes;
-	
+
 	if ($found == 0) {
 		$notes = 'no Open Graph tags found';
 		$status = 'warn';
@@ -642,7 +642,7 @@ sub _check_open_graph {
 	} else {
 		$notes = sprintf('all essential OG tags present (%d total)', $found);
 	}
-	
+
 	return {
 		name => 'Open Graph',
 		status => $status,
@@ -653,21 +653,21 @@ sub _check_open_graph {
 # Checks for Twitter Card meta tags for better Twitter sharing
 sub _check_twitter_cards {
 	my ($self, $html) = @_;
-	
+
 	my %twitter_tags;
 	my @recommended = qw(card title description);
-	
+
 	# Extract Twitter Card meta tags
 	while ($html =~ /<meta\s+(?:property|name)=["']twitter:([^"']+)["']\s+content=["']([^"']*)["']/gis) {
 		$twitter_tags{$1} = $2;
 	}
-	
+
 	my @missing = grep { !exists $twitter_tags{$_} || !$twitter_tags{$_} } @recommended;
 	my $found = keys %twitter_tags;
-	
+
 	my $status = @missing ? 'warn' : 'ok';
 	my $notes;
-	
+
 	if ($found == 0) {
 		$notes = 'no Twitter Card tags found';
 		$status = 'warn';
@@ -676,7 +676,7 @@ sub _check_twitter_cards {
 	} else {
 		$notes = sprintf('essential Twitter Card tags present (%d total)', $found);
 	}
-	
+
 	return {
 		name => 'Twitter Cards',
 		status => $status,
@@ -687,13 +687,13 @@ sub _check_twitter_cards {
 # Checks HTML size and warns if too large (impacts loading speed)
 sub _check_page_size {
 	my ($self, $html) = @_;
-	
+
 	my $size_bytes = length($html);
 	my $size_kb = int($size_bytes / 1024);
-	
+
 	my $status = 'ok';
 	my $notes = "${size_kb}KB HTML size";
-	
+
 	if ($size_bytes > 1_048_576) {	# > 1MB
 		$status = 'error';
 		$notes .= ' (too large, over 1MB)';
@@ -706,7 +706,7 @@ sub _check_page_size {
 	} else {
 		$notes .= ' (good size)';
 	}
-	
+
 	return {
 		name => 'Page Size',
 		status => $status,
@@ -717,7 +717,7 @@ sub _check_page_size {
 # Calculates approximate Flesch Reading Ease score for content readability
 sub _check_readability {
 	my ($self, $html) = @_;
-	
+
 	# Extract text content (remove scripts, styles, and HTML tags)
 	my $text = $html;
 	$text =~ s/<script\b[^>]*>.*?<\/script>//gis;
@@ -725,50 +725,50 @@ sub _check_readability {
 	$text =~ s/<[^>]+>//g;
 	$text =~ s/\s+/ /g;
 	$text =~ s/^\s+|\s+$//g;
-	
+
 	return {
 		name => 'Readability',
 		status => 'warn',
 		notes => 'insufficient text for analysis',
 	} if length($text) < 100;
-	
+
 	# Count sentences (approximate)
 	my $sentences = () = $text =~ /[.!?]+/g;
 	$sentences = 1 if $sentences == 0;	# avoid division by zero
-	
+
 	# Count words
 	my @words = split /\s+/, $text;
 	my $word_count = @words;
-	
+
 	return {
 		name => 'Readability',
 		status => 'warn',
 		notes => 'insufficient content for analysis',
 	} if $word_count < 50;
-	
+
 	# Count syllables (very basic approximation)
 	my $syllables = 0;
 	for my $word (@words) {
 		$word = lc($word);
 		$word =~ s/[^a-z]//g;	# remove punctuation
 		next if length($word) == 0;
-		
+
 		# Simple syllable counting heuristic
 		my $vowels = () = $word =~ /[aeiouy]/g;
 		$syllables += $vowels > 0 ? $vowels : 1;
 		$syllables-- if $word =~ /e$/;	# silent e
 	}
 	$syllables = $word_count if $syllables < $word_count;	# minimum 1 syllable per word
-	
+
 	# Flesch Reading Ease formula
 	my $avg_sentence_length = $word_count / $sentences;
 	my $avg_syllables_per_word = $syllables / $word_count;
 	my $flesch_score = 206.835 - (1.015 * $avg_sentence_length) - (84.6 * $avg_syllables_per_word);
-	
+
 	my $status = 'ok';
 	my $level;
 	my $notes;
-	
+
 	if ($flesch_score >= 90) {
 		$level = 'very easy';
 	} elsif ($flesch_score >= 80) {
@@ -787,10 +787,10 @@ sub _check_readability {
 		$level = 'very difficult';
 		$status = 'warn';
 	}
-	
-	$notes = sprintf('Flesch score: %.1f (%s) - %d words, %d sentences', 
+
+	$notes = sprintf('Flesch score: %.1f (%s) - %d words, %d sentences',
 		$flesch_score, $level, $word_count, $sentences);
-	
+
 	return {
 		name => 'Readability',
 		status => $status,
