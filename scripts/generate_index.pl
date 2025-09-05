@@ -208,7 +208,7 @@ if (my $total_info = $data->{summary}{Total}) {
 
 my $timestamp = 'Unknown';
 if (my $stat = stat($cover_db)) {
-	$timestamp = strftime("%Y-%m-%d %H:%M:%S", localtime($stat->mtime));
+	$timestamp = strftime('%Y-%m-%d %H:%M:%S', localtime($stat->mtime));
 }
 
 my $commit_url = "https://github.com/nigelhorne/SEO-Inspector/commit/$commit_sha";
@@ -233,7 +233,7 @@ foreach my $file (sort @history_files) {
 
 # Inject chart if we have data
 my %commit_times;
-open(my $log, '-|', 'git log --all --pretty=format:"%H %h %ci"') or die "Can't run git log: $!";
+open(my $log, '-|', 'git log main master --pretty=format:"%H %h %ci"') or die "Can't run git log: $!";
 while (<$log>) {
 	chomp;
 	my ($full_sha, $short_sha, $datetime) = split ' ', $_, 3;
@@ -242,7 +242,7 @@ while (<$log>) {
 close $log;
 
 my %commit_messages;
-open($log, '-|', 'git log --pretty=format:"%h %s"') or die "Can't run git log: $!";
+open($log, '-|', 'git log main master --pretty=format:"%h %s"') or die "Can't run git log: $!";
 while (<$log>) {
 	chomp;
 	my ($short_sha, $message) = /^(\w+)\s+(.*)$/;
