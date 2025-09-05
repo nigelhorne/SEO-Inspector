@@ -29,11 +29,12 @@ WriteMakefile(
 		'Carp' => 0,
 		'Getopt::Long' => 0,
 		'File::Slurp' => 0,
+		'HTML::TreeBuilder' => 0,
 		'IPC::System::Simple' => 0,
 		'Mojo::UserAgent' => 0,
 		'Mojo::URL' => 0,
 		'Module::Pluggable' => 0,
-		'HTML::TreeBuilder' => 0,
+		'Params::Get' => 0.13,
 	}, TEST_REQUIRES => {
 		'File::Glob' => 0,
 		'File::Path' => 0,
