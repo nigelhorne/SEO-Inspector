@@ -34,7 +34,7 @@ SEO::Inspector provides:
 
 =over 4
 
-=item * Built-in SEO checks: title, meta description, canonical link, robots meta, viewport, H1 presence, word count, image alt text
+=item * 14 built-in SEO checks
 
 =item * Plugin system: dynamically load modules under SEO::Inspector::Plugin namespace
 
@@ -479,7 +479,7 @@ sub _check_headings {
 
 	# Capture all headings and their order
 	while ($html =~ /<(h[1-6])\b[^>]*>(.*?)<\/\1>/gi) {
-		my $tag  = lc $1;
+		my $tag = lc $1;
 		my $text = $2 // '';
 		$text =~ s/\s+/ /g;	# normalize whitespace
 		$text =~ s/^\s+|\s+$//g;
@@ -494,9 +494,9 @@ sub _check_headings {
 	# Check for no headings
 	if (!%counts) {
 		return {
-			name   => 'Headings',
+			name => 'Headings',
 			status => 'warn',
-			notes  => 'no headings found',
+			notes => 'no headings found',
 		};
 	}
 
@@ -536,12 +536,12 @@ sub _check_headings {
 
 	# Summarize counts and issues
 	my $summary = join ', ', map { "$_: $counts{$_}" } sort keys %counts;
-	$summary   .= @issues ? " | Issues: " . join('; ', @issues) : '';
+	$summary .= @issues ? " | Issues: " . join('; ', @issues) : '';
 
 	return {
-		name   => 'Headings',
+		name => 'Headings',
 		status => $status,
-		notes  => $summary,
+		notes => $summary,
 	};
 }
 
@@ -560,7 +560,7 @@ sub _check_links {
 
 	while ($html =~ m{<a\b([^>]*)>(.*?)</a>}gis) {
 		my $attrs = $1;
-		my $text  = $2 // '';
+		my $text = $2 // '';
 
 		$total++;
 
@@ -610,9 +610,9 @@ sub _check_links {
 	}
 
 	return {
-		name   => 'Links',
+		name => 'Links',
 		status => $status,
-		notes  => $notes,
+		notes => $notes,
 	};
 }
 
@@ -694,13 +694,13 @@ sub _check_page_size {
 	my $status = 'ok';
 	my $notes = "${size_kb}KB HTML size";
 	
-	if ($size_bytes > 1_048_576) {  # > 1MB
+	if ($size_bytes > 1_048_576) {	# > 1MB
 		$status = 'error';
 		$notes .= ' (too large, over 1MB)';
-	} elsif ($size_bytes > 102_400) {  # > 100KB
+	} elsif ($size_bytes > 102_400) {	# > 100KB
 		$status = 'warn';
 		$notes .= ' (large, consider optimization)';
-	} elsif ($size_bytes < 1024) {  # < 1KB
+	} elsif ($size_bytes < 1024) {	# < 1KB
 		$status = 'warn';
 		$notes .= ' (suspiciously small)';
 	} else {
@@ -734,7 +734,7 @@ sub _check_readability {
 	
 	# Count sentences (approximate)
 	my $sentences = () = $text =~ /[.!?]+/g;
-	$sentences = 1 if $sentences == 0;  # avoid division by zero
+	$sentences = 1 if $sentences == 0;	# avoid division by zero
 	
 	# Count words
 	my @words = split /\s+/, $text;
@@ -750,15 +750,15 @@ sub _check_readability {
 	my $syllables = 0;
 	for my $word (@words) {
 		$word = lc($word);
-		$word =~ s/[^a-z]//g;  # remove punctuation
+		$word =~ s/[^a-z]//g;	# remove punctuation
 		next if length($word) == 0;
 		
 		# Simple syllable counting heuristic
 		my $vowels = () = $word =~ /[aeiouy]/g;
 		$syllables += $vowels > 0 ? $vowels : 1;
-		$syllables-- if $word =~ /e$/;  # silent e
+		$syllables-- if $word =~ /e$/;	# silent e
 	}
-	$syllables = $word_count if $syllables < $word_count;  # minimum 1 syllable per word
+	$syllables = $word_count if $syllables < $word_count;	# minimum 1 syllable per word
 	
 	# Flesch Reading Ease formula
 	my $avg_sentence_length = $word_count / $sentences;
