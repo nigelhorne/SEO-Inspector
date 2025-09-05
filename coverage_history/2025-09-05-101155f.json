@@ -1,0 +1,411 @@
+{
+   "runs" : [
+      {
+         "OS" : "linux",
+         "abstract" : "Run SEO checks on HTML or URLs",
+         "dir" : "/home/runner/work/SEO-Inspector/SEO-Inspector",
+         "finish" : 1757091363.8851,
+         "name" : "SEO-Inspector",
+         "perl" : "5.40.3",
+         "run" : "-e",
+         "start" : 1757091363.88482,
+         "version" : "0.01"
+      },
+      {
+         "OS" : "linux",
+         "abstract" : "Run SEO checks on HTML or URLs",
+         "dir" : "/home/runner/work/SEO-Inspector/SEO-Inspector",
+         "finish" : 1757091364.0465,
+         "name" : "SEO-Inspector",
+         "perl" : "5.40.3",
+         "run" : "-e",
+         "start" : 1757091364.0463,
+         "version" : "0.01"
+      },
+      {
+         "OS" : "linux",
+         "abstract" : "Run SEO checks on HTML or URLs",
+         "dir" : "/home/runner/work/SEO-Inspector/SEO-Inspector",
+         "finish" : 1757091364.20886,
+         "name" : "SEO-Inspector",
+         "perl" : "5.40.3",
+         "run" : "-e",
+         "start" : 1757091364.20857,
+         "version" : "0.01"
+      },
+      {
+         "OS" : "linux",
+         "abstract" : "Run SEO checks on HTML or URLs",
+         "dir" : "/home/runner/work/SEO-Inspector/SEO-Inspector",
+         "finish" : 1757091364.37127,
+         "name" : "SEO-Inspector",
+         "perl" : "5.40.3",
+         "run" : "-e",
+         "start" : 1757091364.37097,
+         "version" : "0.01"
+      },
+      {
+         "OS" : "linux",
+         "abstract" : "Run SEO checks on HTML or URLs",
+         "dir" : "/home/runner/work/SEO-Inspector/SEO-Inspector",
+         "finish" : 1757091364.53259,
+         "name" : "SEO-Inspector",
+         "perl" : "5.40.3",
+         "run" : "-e",
+         "start" : 1757091364.53239,
+         "version" : "0.01"
+      },
+      {
+         "OS" : "linux",
+         "abstract" : "Run SEO checks on HTML or URLs",
+         "dir" : "/home/runner/work/SEO-Inspector/SEO-Inspector",
+         "finish" : 1757091364.69478,
+         "name" : "SEO-Inspector",
+         "perl" : "5.40.3",
+         "run" : "-e",
+         "start" : 1757091364.69456,
+         "version" : "0.01"
+      },
+      {
+         "OS" : "linux",
+         "abstract" : "Run SEO checks on HTML or URLs",
+         "dir" : "/home/runner/work/SEO-Inspector/SEO-Inspector",
+         "finish" : 1757091364.85714,
+         "name" : "SEO-Inspector",
+         "perl" : "5.40.3",
+         "run" : "-e",
+         "start" : 1757091364.85691,
+         "version" : "0.01"
+      },
+      {
+         "OS" : "linux",
+         "abstract" : "Run SEO checks on HTML or URLs",
+         "dir" : "/home/runner/work/SEO-Inspector/SEO-Inspector",
+         "finish" : 1757091365.02213,
+         "name" : "SEO-Inspector",
+         "perl" : "5.40.3",
+         "run" : "-e",
+         "start" : 1757091365.02184,
+         "version" : "0.01"
+      },
+      {
+         "OS" : "linux",
+         "abstract" : "Run SEO checks on HTML or URLs",
+         "dir" : "/home/runner/work/SEO-Inspector/SEO-Inspector",
+         "finish" : 1757091365.20771,
+         "name" : "SEO-Inspector",
+         "perl" : "5.40.3",
+         "run" : "-e",
+         "start" : 1757091365.19722,
+         "version" : "0.01"
+      },
+      {
+         "OS" : "linux",
+         "abstract" : "Run SEO checks on HTML or URLs",
+         "dir" : "/home/runner/work/SEO-Inspector/SEO-Inspector",
+         "finish" : 1757091370.16232,
+         "name" : "SEO-Inspector",
+         "perl" : "5.40.3",
+         "run" : "-e",
+         "start" : 1757091365.40454,
+         "version" : "0.01"
+      },
+      {
+         "OS" : "linux",
+         "abstract" : "Run SEO checks on HTML or URLs",
+         "dir" : "/home/runner/work/SEO-Inspector/SEO-Inspector",
+         "finish" : 1757091365.54633,
+         "name" : "SEO-Inspector",
+         "perl" : "5.40.3",
+         "run" : "-e",
+         "start" : 1757091365.54625,
+         "version" : "0.01"
+      },
+      {
+         "OS" : "linux",
+         "abstract" : "Run SEO checks on HTML or URLs",
+         "dir" : "/home/runner/work/SEO-Inspector/SEO-Inspector",
+         "finish" : 1757091365.97769,
+         "name" : "SEO-Inspector",
+         "perl" : "5.40.3",
+         "run" : "t/10-load.t",
+         "start" : 1757091365.80252,
+         "version" : "0.01"
+      },
+      {
+         "OS" : "linux",
+         "abstract" : "Run SEO checks on HTML or URLs",
+         "dir" : "/home/runner/work/SEO-Inspector/SEO-Inspector",
+         "finish" : 1757091366.60049,
+         "name" : "SEO-Inspector",
+         "perl" : "5.40.3",
+         "run" : "t/30-basics.t",
+         "start" : 1757091366.58104,
+         "version" : "0.01"
+      },
+      {
+         "OS" : "linux",
+         "abstract" : "Run SEO checks on HTML or URLs",
+         "dir" : "/home/runner/work/SEO-Inspector/SEO-Inspector",
+         "finish" : 1757091366.97482,
+         "name" : "SEO-Inspector",
+         "perl" : "5.40.3",
+         "run" : "t/eof.t",
+         "start" : 1757091366.97462,
+         "version" : "0.01"
+      },
+      {
+         "OS" : "linux",
+         "abstract" : "Run SEO checks on HTML or URLs",
+         "dir" : "/home/runner/work/SEO-Inspector/SEO-Inspector",
+         "finish" : 1757091367.2069,
+         "name" : "SEO-Inspector",
+         "perl" : "5.40.3",
+         "run" : "t/eol.t",
+         "start" : 1757091367.20668,
+         "version" : "0.01"
+      },
+      {
+         "OS" : "linux",
+         "abstract" : "Run SEO checks on HTML or URLs",
+         "dir" : "/home/runner/work/SEO-Inspector/SEO-Inspector",
+         "finish" : 1757091367.68953,
+         "name" : "SEO-Inspector",
+         "perl" : "5.40.3",
+         "run" : "t/plugins.t",
+         "start" : 1757091367.67214,
+         "version" : "0.01"
+      },
+      {
+         "OS" : "linux",
+         "abstract" : "Run SEO checks on HTML or URLs",
+         "dir" : "/home/runner/work/SEO-Inspector/SEO-Inspector",
+         "finish" : 1757091368.06258,
+         "name" : "SEO-Inspector",
+         "perl" : "5.40.3",
+         "run" : "t/pod-synopsis.t",
+         "start" : 1757091368.06238,
+         "version" : "0.01"
+      },
+      {
+         "OS" : "linux",
+         "abstract" : "Run SEO checks on HTML or URLs",
+         "dir" : "/home/runner/work/SEO-Inspector/SEO-Inspector",
+         "finish" : 1757091369.4678,
+         "name" : "SEO-Inspector",
+         "perl" : "5.40.3",
+         "run" : "t/seo-inspect.t",
+         "start" : 1757091368.34507,
+         "version" : "0.01"
+      },
+      {
+         "OS" : "linux",
+         "abstract" : "Run SEO checks on HTML or URLs",
+         "dir" : "/home/runner/work/SEO-Inspector/SEO-Inspector",
+         "finish" : 1757091368.73706,
+         "name" : "SEO-Inspector",
+         "perl" : "5.40.3",
+         "run" : "/home/runner/work/SEO-Inspector/SEO-Inspector/t/../bin/seo-inspect",
+         "start" : 1757091368.71757,
+         "version" : "0.01"
+      },
+      {
+         "OS" : "linux",
+         "abstract" : "Run SEO checks on HTML or URLs",
+         "dir" : "/home/runner/work/SEO-Inspector/SEO-Inspector",
+         "finish" : 1757091369.29611,
+         "name" : "SEO-Inspector",
+         "perl" : "5.40.3",
+         "run" : "/home/runner/work/SEO-Inspector/SEO-Inspector/t/../bin/seo-inspect",
+         "start" : 1757091369.27684,
+         "version" : "0.01"
+      },
+      {
+         "OS" : "linux",
+         "abstract" : "Run SEO checks on HTML or URLs",
+         "dir" : "/home/runner/work/SEO-Inspector/SEO-Inspector",
+         "finish" : 1757091369.97946,
+         "name" : "SEO-Inspector",
+         "perl" : "5.40.3",
+         "run" : "t/url.t",
+         "start" : 1757091369.96149,
+         "version" : "0.01"
+      }
+   ],
+   "summary" : {
+      "Total" : {
+         "branch" : {
+            "covered" : 52,
+            "error" : 88,
+            "percentage" : 37.1428571428571,
+            "total" : 140,
+            "uncoverable" : 0
+         },
+         "condition" : {
+            "covered" : 21,
+            "error" : 46,
+            "percentage" : 31.3432835820896,
+            "total" : 67,
+            "uncoverable" : 0
+         },
+         "statement" : {
+            "covered" : 272,
+            "error" : 108,
+            "percentage" : 71.5789473684211,
+            "total" : 380
+         },
+         "subroutine" : {
+            "covered" : 45,
+            "error" : 3,
+            "percentage" : 93.75,
+            "total" : 48
+         },
+         "total" : {
+            "covered" : 390,
+            "error" : 245,
+            "percentage" : 61.4173228346457,
+            "total" : 635,
+            "uncoverable" : 0
+         }
+      },
+      "bin/seo-inspect" : {
+         "branch" : {
+            "covered" : 7,
+            "error" : 5,
+            "percentage" : 58.3333333333333,
+            "total" : 12,
+            "uncoverable" : 0
+         },
+         "condition" : {
+            "covered" : 5,
+            "error" : 5,
+            "percentage" : 50,
+            "total" : 10,
+            "uncoverable" : 0
+         },
+         "statement" : {
+            "covered" : 38,
+            "error" : 8,
+            "percentage" : 82.6086956521739,
+            "total" : 46
+         },
+         "subroutine" : {
+            "covered" : 7,
+            "percentage" : 100,
+            "total" : 7
+         },
+         "total" : {
+            "covered" : 57,
+            "error" : 18,
+            "percentage" : 76,
+            "total" : 75,
+            "uncoverable" : 0
+         }
+      },
+      "blib/lib/SEO/Inspector.pm" : {
+         "branch" : {
+            "covered" : 40,
+            "error" : 82,
+            "percentage" : 32.7868852459016,
+            "total" : 122,
+            "uncoverable" : 0
+         },
+         "condition" : {
+            "covered" : 13,
+            "error" : 38,
+            "percentage" : 25.4901960784314,
+            "total" : 51,
+            "uncoverable" : 0
+         },
+         "statement" : {
+            "covered" : 191,
+            "error" : 98,
+            "percentage" : 66.0899653979239,
+            "total" : 289
+         },
+         "subroutine" : {
+            "covered" : 28,
+            "error" : 1,
+            "percentage" : 96.551724137931,
+            "total" : 29
+         },
+         "total" : {
+            "covered" : 272,
+            "error" : 219,
+            "percentage" : 55.3971486761711,
+            "total" : 491,
+            "uncoverable" : 0
+         }
+      },
+      "lib/SEO/Inspector/Plugin/MetaDescriptionCheck.pm" : {
+         "branch" : {
+            "covered" : 3,
+            "error" : 1,
+            "percentage" : 75,
+            "total" : 4,
+            "uncoverable" : 0
+         },
+         "condition" : {
+            "covered" : 1,
+            "error" : 2,
+            "percentage" : 33.3333333333333,
+            "total" : 3,
+            "uncoverable" : 0
+         },
+         "statement" : {
+            "covered" : 22,
+            "error" : 1,
+            "percentage" : 95.6521739130435,
+            "total" : 23
+         },
+         "subroutine" : {
+            "covered" : 5,
+            "error" : 1,
+            "percentage" : 83.3333333333333,
+            "total" : 6
+         },
+         "total" : {
+            "covered" : 31,
+            "error" : 5,
+            "percentage" : 86.1111111111111,
+            "total" : 36,
+            "uncoverable" : 0
+         }
+      },
+      "lib/SEO/Inspector/Plugin/TitleCheck.pm" : {
+         "branch" : {
+            "covered" : 2,
+            "error" : 0,
+            "percentage" : 100,
+            "total" : 2,
+            "uncoverable" : 0
+         },
+         "condition" : {
+            "covered" : 2,
+            "error" : 1,
+            "percentage" : 66.6666666666667,
+            "total" : 3,
+            "uncoverable" : 0
+         },
+         "statement" : {
+            "covered" : 21,
+            "error" : 1,
+            "percentage" : 95.4545454545455,
+            "total" : 22
+         },
+         "subroutine" : {
+            "covered" : 5,
+            "error" : 1,
+            "percentage" : 83.3333333333333,
+            "total" : 6
+         },
+         "total" : {
+            "covered" : 30,
+            "error" : 3,
+            "percentage" : 90.9090909090909,
+            "total" : 33,
+            "uncoverable" : 0
+         }
+      }
+   }
+}
