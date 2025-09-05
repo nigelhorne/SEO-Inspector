@@ -1,45 +1,35 @@
 <!DOCTYPE html>
 <html>
-	<head>
-	<title>SEO::Inspector Coverage Report</title>
-	<style>
-		body { font-family: sans-serif; }
-		table { border-collapse: collapse; width: 100%; }
-		th, td { border: 1px solid #ccc; padding: 8px; text-align: left; }
-		th { background-color: #f2f2f2; }
-		.low { background-color: #fdd; }
-		.med { background-color: #ffd; }
-		.high { background-color: #dfd; }
-		.badges img { margin-right: 10px; }
-		.disabled-icon {
-			opacity: 0.4;
-			cursor: default;
-		}
-		.icon-link {
-			text-decoration: none;
-		}
-		.icon-link:hover {
-			opacity: 0.7;
-			cursor: pointer;
-		}
-		.coverage-badge {
-			padding: 2px 6px;
-			border-radius: 4px;
-			font-weight: bold;
-			color: white;
-			font-size: 0.9em;
-		}
-		.badge-good { background-color: #4CAF50; }
-		.badge-warn { background-color: #FFC107; }
-		.badge-bad { background-color: #F44336; }
-		.summary-row {
-			font-weight: bold;
-			background-color: #f0f0f0;
-		}
-		td.positive { color: green; font-weight: bold; }
-		td.negative { color: red; font-weight: bold; }
-		td.neutral { color: gray; }
-	</style>
+<head>
+<title>SEO::Inspector Coverage Report</title>
+<style>
+/* consider moving CSS into separate file for maintainability */
+body { font-family: sans-serif; }
+table { border-collapse: collapse; width: 100%; }
+th, td { border: 1px solid #ccc; padding: 8px; text-align: left; }
+th { background-color: #f2f2f2; }
+.low { background-color: #fdd; }
+.med { background-color: #ffd; }
+.high { background-color: #dfd; }
+.badges img { margin-right: 10px; }
+.disabled-icon { opacity: 0.4; cursor: default; }
+.icon-link { text-decoration: none; }
+.icon-link:hover { opacity: 0.7; cursor: pointer; }
+.coverage-badge {
+	padding: 2px 6px;
+	border-radius: 4px;
+	font-weight: bold;
+	color: white;
+	font-size: 0.9em;
+}
+.badge-good { background-color: #4CAF50; }
+.badge-warn { background-color: #FFC107; }
+.badge-bad { background-color: #F44336; }
+.summary-row { font-weight: bold; background-color: #f0f0f0; }
+td.positive { color: green; font-weight: bold; }
+td.negative { color: red; font-weight: bold; }
+td.neutral { color: gray; }
+</style>
 </head>
 <body>
 <div class="badges">
@@ -51,135 +41,16 @@
 <h1>SEO::Inspector</h1><h2>Coverage Report</h2>
 <table>
 <tr><th>File</th><th>Stmt</th><th>Branch</th><th>Cond</th><th>Sub</th><th>Total</th><th>&Delta;</th></tr>
-<tr class="med"><td><a href="bin-seo-inspect.html" title="View coverage line by line">bin/seo-inspect</a> <a href="https://github.com/nigelhorne/SEO-Inspector/blob/9b8e6b199ef639111dc8b0b810c9b9b35842cc6d/bin/seo-inspect" class="icon-link" title="View source on GitHub">&#128269;</a></td><td>82.6</td><td>58.3</td><td>50.0</td><td>100.0</td><td><span class="coverage-badge badge-warn" title="Moderate coverage">76.0%</span></td><td class="neutral" title="Previous: 76.0%">&#9679; 0.0%</td></tr>
-<tr class="low"><td><a href="blib-lib-SEO-Inspector-pm.html" title="View coverage line by line">blib/lib/SEO/Inspector.pm</a> <a href="https://github.com/nigelhorne/SEO-Inspector/blob/9b8e6b199ef639111dc8b0b810c9b9b35842cc6d/blib/lib/SEO/Inspector.pm" class="icon-link" title="View source on GitHub">&#128269;</a></td><td>72.2</td><td>41.0</td><td>24.4</td><td>95.8</td><td><span class="coverage-badge badge-bad" title="Needs improvement">60.6%</span></td><td class="neutral" title="Previous: 60.6%">&#9679; 0.0%</td></tr>
-<tr class="med"><td><a href="lib-SEO-Inspector-Plugin-MetaDescriptionCheck-pm.html" title="View coverage line by line">lib/SEO/Inspector/Plugin/MetaDescriptionCheck.pm</a> <a href="https://github.com/nigelhorne/SEO-Inspector/blob/9b8e6b199ef639111dc8b0b810c9b9b35842cc6d/lib/SEO/Inspector/Plugin/MetaDescriptionCheck.pm" class="icon-link" title="View source on GitHub">&#128269;</a></td><td>95.7</td><td>75.0</td><td>33.3</td><td>83.3</td><td><span class="coverage-badge badge-warn" title="Moderate coverage">86.1%</span></td><td class="neutral" title="Previous: 86.1%">&#9679; 0.0%</td></tr>
-<tr class="high"><td><a href="lib-SEO-Inspector-Plugin-TitleCheck-pm.html" title="View coverage line by line">lib/SEO/Inspector/Plugin/TitleCheck.pm</a> <a href="https://github.com/nigelhorne/SEO-Inspector/blob/9b8e6b199ef639111dc8b0b810c9b9b35842cc6d/lib/SEO/Inspector/Plugin/TitleCheck.pm" class="icon-link" title="View source on GitHub">&#128269;</a></td><td>95.5</td><td>100.0</td><td>66.7</td><td>83.3</td><td><span class="coverage-badge badge-good" title="Excellent coverage">90.9%</span></td><td class="neutral" title="Previous: 90.9%">&#9679; 0.0%</td></tr>
+<tr class="med"><td><a href="bin-seo-inspect.html" title="View coverage line by line">bin/seo-inspect</a> <a href="https://github.com/nigelhorne/SEO-Inspector/blob/ea93acb6966aa981435bc996460a73292db780a8/bin/seo-inspect" class="icon-link" title="View source on GitHub">&#128269;</a></td><td>82.6</td><td>58.3</td><td>50.0</td><td>100.0</td><td><span class="coverage-badge badge-warn" title="Moderate coverage">76.0%</span></td><td class="neutral" title="Previous: 76.0%">&#9679; 0.0%</td></tr>
+<tr class="low"><td><a href="blib-lib-SEO-Inspector-pm.html" title="View coverage line by line">blib/lib/SEO/Inspector.pm</a> <a href="https://github.com/nigelhorne/SEO-Inspector/blob/ea93acb6966aa981435bc996460a73292db780a8/blib/lib/SEO/Inspector.pm" class="icon-link" title="View source on GitHub">&#128269;</a></td><td>72.2</td><td>41.0</td><td>24.4</td><td>95.8</td><td><span class="coverage-badge badge-bad" title="Needs improvement">60.6%</span></td><td class="neutral" title="Previous: 60.6%">&#9679; 0.0%</td></tr>
+<tr class="med"><td><a href="lib-SEO-Inspector-Plugin-MetaDescriptionCheck-pm.html" title="View coverage line by line">lib/SEO/Inspector/Plugin/MetaDescriptionCheck.pm</a> <a href="https://github.com/nigelhorne/SEO-Inspector/blob/ea93acb6966aa981435bc996460a73292db780a8/lib/SEO/Inspector/Plugin/MetaDescriptionCheck.pm" class="icon-link" title="View source on GitHub">&#128269;</a></td><td>95.7</td><td>75.0</td><td>33.3</td><td>83.3</td><td><span class="coverage-badge badge-warn" title="Moderate coverage">86.1%</span></td><td class="neutral" title="Previous: 86.1%">&#9679; 0.0%</td></tr>
+<tr class="high"><td><a href="lib-SEO-Inspector-Plugin-TitleCheck-pm.html" title="View coverage line by line">lib/SEO/Inspector/Plugin/TitleCheck.pm</a> <a href="https://github.com/nigelhorne/SEO-Inspector/blob/ea93acb6966aa981435bc996460a73292db780a8/lib/SEO/Inspector/Plugin/TitleCheck.pm" class="icon-link" title="View source on GitHub">&#128269;</a></td><td>95.5</td><td>100.0</td><td>66.7</td><td>83.3</td><td><span class="coverage-badge badge-good" title="Excellent coverage">90.9%</span></td><td class="neutral" title="Previous: 90.9%">&#9679; 0.0%</td></tr>
 <tr class="summary-row"><td colspan="2"><strong>Summary</strong></td><td colspan="2">4 files</td><td colspan="3">Avg: 78%, Low: 1</td></tr>
 <tr class="med"><td><strong>Total</strong></td><td>77.5</td><td>45.8</td><td>31.1</td><td>93.0</td><td colspan="2"><strong>66.9</strong></td></tr>
 </table>
-<p>
-	<label>
-		<input type="checkbox" id="toggleTrend" checked>
-		Show regression trend
-	</label>
-</p>
-<canvas id="coverageTrend" width="600" height="300"></canvas>
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-date-fns"></script>
-<script>
-function linearRegression(data) {
-	const xs = data.map(p => new Date(p.x).getTime());
-	const ys = data.map(p => p.y);
-	const n = xs.length;
-
-	const sumX = xs.reduce((a, b) => a + b, 0);
-	const sumY = ys.reduce((a, b) => a + b, 0);
-	const sumXY = xs.reduce((acc, val, i) => acc + val * ys[i], 0);
-	const sumX2 = xs.reduce((acc, val) => acc + val * val, 0);
-
-	const slope = (n * sumXY - sumX * sumY) / (n * sumX2 - sumX * sumX);
-	const intercept = (sumY - slope * sumX) / n;
-
-	return xs.map(x => ({
-		x: new Date(x).toISOString(),
-		y: slope * x + intercept
-	}));
-}
-
-const dataPoints = [ { x: "2025-08-30T08:41:18-04:00", y: 66.8711656441718, delta: 0, url: "https://github.com/nigelhorne/SEO-Inspector/commit/e652ec0", label: "2025-08-30T08:41:18-04:00", pointBackgroundColor: "gray", comment: "Only show new canvas" },
-{ x: "2025-08-30T15:43:10-04:00", y: 66.8711656441718, delta: 0.0, url: "https://github.com/nigelhorne/SEO-Inspector/commit/ffeb734", label: "2025-08-30T15:43:10-04:00", pointBackgroundColor: "gray", comment: "Ensure colour is set" },
-{ x: "2025-08-30T16:25:11-04:00", y: 66.8711656441718, delta: 0.0, url: "https://github.com/nigelhorne/SEO-Inspector/commit/f6ece58", label: "2025-08-30T16:25:11-04:00", pointBackgroundColor: "gray", comment: "Show the delta on the tooltip" },
-{ x: "2025-08-30T20:32:32-04:00", y: 66.8711656441718, delta: 0.0, url: "https://github.com/nigelhorne/SEO-Inspector/commit/ac5ec7a", label: "2025-08-30T20:32:32-04:00", pointBackgroundColor: "gray", comment: "Don't say the time twice" },
-{ x: "2025-08-30T20:55:39-04:00", y: 66.8711656441718, delta: 0.0, url: "https://github.com/nigelhorne/SEO-Inspector/commit/84ba679", label: "2025-08-30T20:55:39-04:00", pointBackgroundColor: "gray", comment: "Fix syntax error" },
-{ x: "2025-08-30T21:02:36-04:00", y: 66.8711656441718, delta: 0.0, url: "https://github.com/nigelhorne/SEO-Inspector/commit/8e811dc", label: "2025-08-30T21:02:36-04:00", pointBackgroundColor: "gray", comment: "Fix syntax error" },
-{ x: "2025-08-30T21:13:34-04:00", y: 66.8711656441718, delta: 0.0, url: "https://github.com/nigelhorne/SEO-Inspector/commit/88b3879", label: "2025-08-30T21:13:34-04:00", pointBackgroundColor: "gray", comment: "Fix indentation" },
-{ x: "2025-08-31T19:16:43-04:00", y: 66.8711656441718, delta: 0.0, url: "https://github.com/nigelhorne/SEO-Inspector/commit/dd4c227", label: "2025-08-31T19:16:43-04:00", pointBackgroundColor: "gray", comment: "Only show the regression trend checkbox when there is a line to display" },
-{ x: "2025-09-04T21:10:48-04:00", y: 66.8711656441718, delta: 0.0, url: "https://github.com/nigelhorne/SEO-Inspector/commit/e891da6", label: "2025-09-04T21:10:48-04:00", pointBackgroundColor: "gray", comment: "Try again with the sort" },
-{ x: "2025-09-05T10:30:23-04:00", y: 66.8711656441718, delta: 0.0, url: "https://github.com/nigelhorne/SEO-Inspector/commit/b11771b", label: "2025-09-05T10:30:23-04:00", pointBackgroundColor: "gray", comment: "Fix syntax error" } ];
-const regressionPoints = linearRegression(dataPoints);
-const ctx = document.getElementById('coverageTrend').getContext('2d');
-const chart = new Chart(ctx, {
-	type: 'line',
-	data: {
-		datasets: [{
-			label: 'Total Coverage (%)',
-			data: dataPoints,
-			borderColor: 'green',
-			backgroundColor: 'rgba(0,128,0,0.1)',
-			pointRadius: 5,
-			pointHoverRadius: 7,
-			pointStyle: 'circle',
-			fill: false,
-			tension: 0.3,
-			pointBackgroundColor: function(context) {
-				return context.raw.pointBackgroundColor || 'gray';
-			}
-		}, {
-			label: 'Regression Line',
-			data: regressionPoints,
-			borderColor: 'blue',
-			borderDash: [5, 5],
-			pointRadius: 0,
-			fill: false,
-			tension: 0.0
-		}]
-	}, options: {
-		scales: {
-			x: {
-				type: 'time',
-				time: {
-					tooltipFormat: 'MMM d, yyyy HH:mm:ss',
-					unit: 'minute'
-				},
-				title: { display: true, text: 'Timestamp' }
-			},
-			y: { beginAtZero: true, max: 100, title: { display: true, text: 'Coverage (%)' } }
-		}, plugins: {
-			legend: {
-				display: true,
-				position: 'top', // You can also use 'bottom', 'left', or 'right'
-				labels: {
-					boxWidth: 12,
-					padding: 10,
-					font: {
-						size: 12,
-						weight: 'bold'
-					}
-				}
-			}, tooltip: {
-				callbacks: {
-					label: function(context) {
-						const raw = context.raw;
-						const coverage = raw.y.toFixed(1);
-						const delta = raw.delta?.toFixed(1) ?? '0.0';
-						const sign = delta > 0 ? '+' : delta < 0 ? '-' : '±';
-						// const baseLine = `${raw.label}: ${coverage}% (${sign}${Math.abs(delta)}%)`;
-						const baseLine = `${coverage}% (${sign}${Math.abs(delta)}%)`;
-						const commentLine = raw.comment ? raw.comment : null;
-						return commentLine ? [baseLine, commentLine] : [baseLine];
-					}
-				}
-			}
-		}, onClick: (e) => {
-			const points = chart.getElementsAtEventForMode(e, 'nearest', { intersect: true }, true);
-			if (points.length) {
-				const url = chart.data.datasets[0].data[points[0].index].url;
-				window.open(url, '_blank');
-			}
-		}
-	}
-});
-document.getElementById('toggleTrend').addEventListener('change', function(e) {
-	const show = e.target.checked;
-	const trendDataset = chart.data.datasets.find(ds => ds.label === 'Regression Line');
-	trendDataset.hidden = !show;
-	chart.update();
-});
-</script>
 <footer>
-	<p>Project: <a href="https://github.com/nigelhorne/SEO-Inspector">SEO-Inspector</a></p>
-	<p><em>Last updated: 2025-09-05 14:57:03 - <a href="https://github.com/nigelhorne/SEO-Inspector/commit/9b8e6b199ef639111dc8b0b810c9b9b35842cc6d">commit <code>9b8e6b1</code></a></em></p>
+<p>Project: <a href="https://github.com/nigelhorne/SEO-Inspector">SEO-Inspector</a></p>
+<p><em>Last updated: 2025-09-05 15:09:02 - <a href="https://github.com/nigelhorne/SEO-Inspector/commit/ea93acb6966aa981435bc996460a73292db780a8">commit <code>ea93acb</code></a></em></p>
 </footer>
 </body>
 </html>
