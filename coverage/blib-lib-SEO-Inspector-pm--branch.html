@@ -25,60 +25,60 @@ https://pjcj.net
 <div><br/></div>
 <table>
 <tr><th>line</th><th>%</th><th colspan="2">coverage</th><th>branch</th></tr>
-<tr><td class="h"><a id="L193">193</a></td><td class="c3">100</td><td class="c3">T</td><td class="c3">F</td><td class="s">if ($$self{&quot;plugin_dirs&quot;})</td></tr>
-<tr><td class="h"><a id="L217">217</a></td><td class="c0">0</td><td class="c0">T</td><td class="c0">F</td><td class="s">unless $url</td></tr>
-<tr><td class="h"><a id="L220">220</a></td><td class="c0">0</td><td class="c0">T</td><td class="c0">F</td><td class="s">if ($res-&gt;is_error)</td></tr>
-<tr><td class="h"><a id="L258">258</a></td><td class="c0">50</td><td class="c3">T</td><td class="c0">F</td><td class="s">if (exists $dispatch{$check_name}) { }</td></tr>
-<tr><td class="h"><a id="L265">265</a></td><td class="c0">0</td><td class="c0">T</td><td class="c0">F</td><td class="s">if (exists $$self{&quot;plugins&quot;}{$check_name})</td></tr>
-<tr><td class="h"><a id="L335">335</a></td><td class="c0">50</td><td class="c0">T</td><td class="c3">F</td><td class="s">unless $url</td></tr>
-<tr><td class="h"><a id="L353">353</a></td><td class="c0">50</td><td class="c3">T</td><td class="c0">F</td><td class="s">if ($html =~ m[&lt;title&gt;(.*?)&lt;/title&gt;]is)</td></tr>
-<tr><td class="h"><a id="L362">362</a></td><td class="c0">50</td><td class="c0">T</td><td class="c3">F</td><td class="s">if ($len == 0) { }</td></tr>
+<tr><td class="h"><a id="L199">199</a></td><td class="c3">100</td><td class="c3">T</td><td class="c3">F</td><td class="s">if ($$self{&quot;plugin_dirs&quot;})</td></tr>
+<tr><td class="h"><a id="L223">223</a></td><td class="c0">0</td><td class="c0">T</td><td class="c0">F</td><td class="s">unless $url</td></tr>
+<tr><td class="h"><a id="L226">226</a></td><td class="c0">0</td><td class="c0">T</td><td class="c0">F</td><td class="s">if ($res-&gt;is_error)</td></tr>
+<tr><td class="h"><a id="L264">264</a></td><td class="c0">50</td><td class="c3">T</td><td class="c0">F</td><td class="s">if (exists $dispatch{$check_name}) { }</td></tr>
+<tr><td class="h"><a id="L271">271</a></td><td class="c0">0</td><td class="c0">T</td><td class="c0">F</td><td class="s">if (exists $$self{&quot;plugins&quot;}{$check_name})</td></tr>
+<tr><td class="h"><a id="L341">341</a></td><td class="c0">50</td><td class="c0">T</td><td class="c3">F</td><td class="s">unless $url</td></tr>
+<tr><td class="h"><a id="L359">359</a></td><td class="c0">50</td><td class="c3">T</td><td class="c0">F</td><td class="s">if ($html =~ m[&lt;title&gt;(.*?)&lt;/title&gt;]is)</td></tr>
+<tr><td class="h"><a id="L368">368</a></td><td class="c0">50</td><td class="c0">T</td><td class="c3">F</td><td class="s">if ($len == 0) { }</td></tr>
 <tr><td class="h"></td><td class="c0">50</td><td class="c3">T</td><td class="c0">F</td><td class="s">elsif ($len &lt; 10) { }</td></tr>
 <tr><td class="h"></td><td class="c0">0</td><td class="c0">T</td><td class="c0">F</td><td class="s">elsif ($len &gt; 65) { }</td></tr>
-<tr><td class="h"><a id="L374">374</a></td><td class="c0">50</td><td class="c0">T</td><td class="c3">F</td><td class="s">if ($title =~ /^(home|untitled|index)$/i)</td></tr>
-<tr><td class="h"><a id="L388">388</a></td><td class="c3">100</td><td class="c3">T</td><td class="c3">F</td><td class="s">if ($html =~ /&lt;meta\s+name=[&quot;&#39;]description[&quot;&#39;]\s+content=[&quot;&#39;](.*?)[&quot;&#39;]/is)</td></tr>
-<tr><td class="h"><a id="L398">398</a></td><td class="c0">50</td><td class="c0">T</td><td class="c3">F</td><td class="s">if ($html =~ /&lt;link\s+rel=[&quot;&#39;]canonical[&quot;&#39;]\s+href=[&quot;&#39;](.*?)[&quot;&#39;]/is)</td></tr>
-<tr><td class="h"><a id="L411">411</a></td><td class="c0">50</td><td class="c0">T</td><td class="c3">F</td><td class="s">if ($html =~ /&lt;meta\s+name=[&quot;&#39;]robots[&quot;&#39;]\s+content=[&quot;&#39;](.*?)[&quot;&#39;]/is)</td></tr>
-<tr><td class="h"><a id="L424">424</a></td><td class="c0">50</td><td class="c0">T</td><td class="c3">F</td><td class="s">if ($html =~ /&lt;meta\s+name=[&quot;&#39;]viewport[&quot;&#39;]\s+content=[&quot;&#39;](.*?)[&quot;&#39;]/is)</td></tr>
-<tr><td class="h"><a id="L437">437</a></td><td class="c3">100</td><td class="c3">T</td><td class="c3">F</td><td class="s">if ($html =~ m[&lt;h1\b[^&gt;]*&gt;(.*?)&lt;/h1&gt;]is)</td></tr>
-<tr><td class="h"><a id="L448">448</a></td><td class="c0">50</td><td class="c3">T</td><td class="c0">F</td><td class="s">$words &gt; 0 ? :</td></tr>
-<tr><td class="h"><a id="L456">456</a></td><td class="c0">0</td><td class="c0">T</td><td class="c0">F</td><td class="s">unless $attr =~ /alt=/i</td></tr>
-<tr><td class="h"><a id="L458">458</a></td><td class="c0">50</td><td class="c0">T</td><td class="c3">F</td><td class="s">if (scalar @missing)</td></tr>
-<tr><td class="h"><a id="L479">479</a></td><td class="c0">50</td><td class="c0">T</td><td class="c3">F</td><td class="s">if (scalar @jsonld)</td></tr>
-<tr><td class="h"><a id="L538">538</a></td><td class="c3">100</td><td class="c3">T</td><td class="c3">F</td><td class="s">unless (%counts)</td></tr>
-<tr><td class="h"><a id="L547">547</a></td><td class="c0">50</td><td class="c0">T</td><td class="c3">F</td><td class="s">if (not $counts{&#39;h1&#39;}) { }</td></tr>
+<tr><td class="h"><a id="L380">380</a></td><td class="c0">50</td><td class="c0">T</td><td class="c3">F</td><td class="s">if ($title =~ /^(home|untitled|index)$/i)</td></tr>
+<tr><td class="h"><a id="L394">394</a></td><td class="c3">100</td><td class="c3">T</td><td class="c3">F</td><td class="s">if ($html =~ /&lt;meta\s+name=[&quot;&#39;]description[&quot;&#39;]\s+content=[&quot;&#39;](.*?)[&quot;&#39;]/is)</td></tr>
+<tr><td class="h"><a id="L404">404</a></td><td class="c0">50</td><td class="c0">T</td><td class="c3">F</td><td class="s">if ($html =~ /&lt;link\s+rel=[&quot;&#39;]canonical[&quot;&#39;]\s+href=[&quot;&#39;](.*?)[&quot;&#39;]/is)</td></tr>
+<tr><td class="h"><a id="L417">417</a></td><td class="c0">50</td><td class="c0">T</td><td class="c3">F</td><td class="s">if ($html =~ /&lt;meta\s+name=[&quot;&#39;]robots[&quot;&#39;]\s+content=[&quot;&#39;](.*?)[&quot;&#39;]/is)</td></tr>
+<tr><td class="h"><a id="L430">430</a></td><td class="c0">50</td><td class="c0">T</td><td class="c3">F</td><td class="s">if ($html =~ /&lt;meta\s+name=[&quot;&#39;]viewport[&quot;&#39;]\s+content=[&quot;&#39;](.*?)[&quot;&#39;]/is)</td></tr>
+<tr><td class="h"><a id="L443">443</a></td><td class="c3">100</td><td class="c3">T</td><td class="c3">F</td><td class="s">if ($html =~ m[&lt;h1\b[^&gt;]*&gt;(.*?)&lt;/h1&gt;]is)</td></tr>
+<tr><td class="h"><a id="L454">454</a></td><td class="c0">50</td><td class="c3">T</td><td class="c0">F</td><td class="s">$words &gt; 0 ? :</td></tr>
+<tr><td class="h"><a id="L462">462</a></td><td class="c0">0</td><td class="c0">T</td><td class="c0">F</td><td class="s">unless $attr =~ /alt=/i</td></tr>
+<tr><td class="h"><a id="L464">464</a></td><td class="c0">50</td><td class="c0">T</td><td class="c3">F</td><td class="s">if (scalar @missing)</td></tr>
+<tr><td class="h"><a id="L485">485</a></td><td class="c0">50</td><td class="c0">T</td><td class="c3">F</td><td class="s">if (scalar @jsonld)</td></tr>
+<tr><td class="h"><a id="L544">544</a></td><td class="c3">100</td><td class="c3">T</td><td class="c3">F</td><td class="s">unless (%counts)</td></tr>
+<tr><td class="h"><a id="L553">553</a></td><td class="c0">50</td><td class="c0">T</td><td class="c3">F</td><td class="s">if (not $counts{&#39;h1&#39;}) { }</td></tr>
 <tr><td class="h"></td><td class="c0">50</td><td class="c0">T</td><td class="c3">F</td><td class="s">elsif ($counts{&#39;h1&#39;} &gt; 1) { }</td></tr>
-<tr><td class="h"><a id="L560">560</a></td><td class="c0">50</td><td class="c0">T</td><td class="c3">F</td><td class="s">if ($last_level and $level &gt; $last_level + 1)</td></tr>
-<tr><td class="h"><a id="L570">570</a></td><td class="c0">50</td><td class="c0">T</td><td class="c3">F</td><td class="s">if ($len &lt; 2) { }</td></tr>
+<tr><td class="h"><a id="L566">566</a></td><td class="c0">50</td><td class="c0">T</td><td class="c3">F</td><td class="s">if ($last_level and $level &gt; $last_level + 1)</td></tr>
+<tr><td class="h"><a id="L576">576</a></td><td class="c0">50</td><td class="c0">T</td><td class="c3">F</td><td class="s">if ($len &lt; 2) { }</td></tr>
 <tr><td class="h"></td><td class="c0">50</td><td class="c0">T</td><td class="c3">F</td><td class="s">elsif ($len &gt; 120) { }</td></tr>
-<tr><td class="h"><a id="L582">582</a></td><td class="c0">50</td><td class="c0">T</td><td class="c3">F</td><td class="s">@issues ? :</td></tr>
-<tr><td class="h"><a id="L595">595</a></td><td class="c0">50</td><td class="c0">T</td><td class="c3">F</td><td class="s">if ($$self{&quot;url&quot;} and $$self{&quot;url&quot;} =~ m[^https?://]i)</td></tr>
-<tr><td class="h"><a id="L612">612</a></td><td class="c0">0</td><td class="c0">T</td><td class="c0">F</td><td class="s">$attrs =~ /\bhref\s*=\s*&#39;(.*?)&#39;/i ? :</td></tr>
-<tr><td class="h"><a id="L613">613</a></td><td class="c0">0</td><td class="c0">T</td><td class="c0">F</td><td class="s">$attrs =~ /\bhref\s*=\s*([^\s&gt;]+)/i ? :</td></tr>
-<tr><td class="h"><a id="L616">616</a></td><td class="c0">0</td><td class="c0">T</td><td class="c0">F</td><td class="s">if (defined $href and $href =~ m[^\s*https?://]i) { }</td></tr>
-<tr><td class="h"><a id="L619">619</a></td><td class="c0">0</td><td class="c0">T</td><td class="c0">F</td><td class="s">if (defined $base_host and defined $host) { }</td></tr>
-<tr><td class="h"><a id="L620">620</a></td><td class="c0">0</td><td class="c0">T</td><td class="c0">F</td><td class="s">if (lc $host eq lc $base_host) { }</td></tr>
-<tr><td class="h"><a id="L640">640</a></td><td class="c0">0</td><td class="c0">T</td><td class="c0">F</td><td class="s">if ($text =~ /$bad_rx/)</td></tr>
-<tr><td class="h"><a id="L645">645</a></td><td class="c0">50</td><td class="c0">T</td><td class="c3">F</td><td class="s">$total ? :</td></tr>
+<tr><td class="h"><a id="L588">588</a></td><td class="c0">50</td><td class="c0">T</td><td class="c3">F</td><td class="s">@issues ? :</td></tr>
+<tr><td class="h"><a id="L601">601</a></td><td class="c0">50</td><td class="c0">T</td><td class="c3">F</td><td class="s">if ($$self{&quot;url&quot;} and $$self{&quot;url&quot;} =~ m[^https?://]i)</td></tr>
+<tr><td class="h"><a id="L618">618</a></td><td class="c0">0</td><td class="c0">T</td><td class="c0">F</td><td class="s">$attrs =~ /\bhref\s*=\s*&#39;(.*?)&#39;/i ? :</td></tr>
+<tr><td class="h"><a id="L619">619</a></td><td class="c0">0</td><td class="c0">T</td><td class="c0">F</td><td class="s">$attrs =~ /\bhref\s*=\s*([^\s&gt;]+)/i ? :</td></tr>
+<tr><td class="h"><a id="L622">622</a></td><td class="c0">0</td><td class="c0">T</td><td class="c0">F</td><td class="s">if (defined $href and $href =~ m[^\s*https?://]i) { }</td></tr>
+<tr><td class="h"><a id="L625">625</a></td><td class="c0">0</td><td class="c0">T</td><td class="c0">F</td><td class="s">if (defined $base_host and defined $host) { }</td></tr>
+<tr><td class="h"><a id="L626">626</a></td><td class="c0">0</td><td class="c0">T</td><td class="c0">F</td><td class="s">if (lc $host eq lc $base_host) { }</td></tr>
+<tr><td class="h"><a id="L646">646</a></td><td class="c0">0</td><td class="c0">T</td><td class="c0">F</td><td class="s">if ($text =~ /$bad_rx/)</td></tr>
+<tr><td class="h"><a id="L651">651</a></td><td class="c0">50</td><td class="c0">T</td><td class="c3">F</td><td class="s">$total ? :</td></tr>
 <tr><td class="h"></td><td class="c0">50</td><td class="c0">T</td><td class="c3">F</td><td class="s">$external || $badtext ? :</td></tr>
-<tr><td class="h"><a id="L648">648</a></td><td class="c0">50</td><td class="c0">T</td><td class="c3">F</td><td class="s">if ($total) { }</td></tr>
-<tr><td class="h"><a id="L677">677</a></td><td class="c0">50</td><td class="c3">T</td><td class="c0">F</td><td class="s">@missing ? :</td></tr>
-<tr><td class="h"><a id="L680">680</a></td><td class="c0">50</td><td class="c3">T</td><td class="c0">F</td><td class="s">if ($found == 0) { }</td></tr>
+<tr><td class="h"><a id="L654">654</a></td><td class="c0">50</td><td class="c0">T</td><td class="c3">F</td><td class="s">if ($total) { }</td></tr>
+<tr><td class="h"><a id="L683">683</a></td><td class="c0">50</td><td class="c3">T</td><td class="c0">F</td><td class="s">@missing ? :</td></tr>
+<tr><td class="h"><a id="L686">686</a></td><td class="c0">50</td><td class="c3">T</td><td class="c0">F</td><td class="s">if ($found == 0) { }</td></tr>
 <tr><td class="h"></td><td class="c0">0</td><td class="c0">T</td><td class="c0">F</td><td class="s">elsif (@missing) { }</td></tr>
-<tr><td class="h"><a id="L712">712</a></td><td class="c0">50</td><td class="c3">T</td><td class="c0">F</td><td class="s">@missing ? :</td></tr>
-<tr><td class="h"><a id="L715">715</a></td><td class="c0">50</td><td class="c3">T</td><td class="c0">F</td><td class="s">if ($found == 0) { }</td></tr>
+<tr><td class="h"><a id="L718">718</a></td><td class="c0">50</td><td class="c3">T</td><td class="c0">F</td><td class="s">@missing ? :</td></tr>
+<tr><td class="h"><a id="L721">721</a></td><td class="c0">50</td><td class="c3">T</td><td class="c0">F</td><td class="s">if ($found == 0) { }</td></tr>
 <tr><td class="h"></td><td class="c0">0</td><td class="c0">T</td><td class="c0">F</td><td class="s">elsif (@missing) { }</td></tr>
-<tr><td class="h"><a id="L743">743</a></td><td class="c0">50</td><td class="c0">T</td><td class="c3">F</td><td class="s">if ($size_bytes &gt; 1048576) { }</td></tr>
+<tr><td class="h"><a id="L749">749</a></td><td class="c0">50</td><td class="c0">T</td><td class="c3">F</td><td class="s">if ($size_bytes &gt; 1048576) { }</td></tr>
 <tr><td class="h"></td><td class="c0">50</td><td class="c0">T</td><td class="c3">F</td><td class="s">elsif ($size_bytes &gt; 102400) { }</td></tr>
 <tr><td class="h"></td><td class="c0">50</td><td class="c3">T</td><td class="c0">F</td><td class="s">elsif ($size_bytes &lt; 1024) { }</td></tr>
-<tr><td class="h"><a id="L778">778</a></td><td class="c0">50</td><td class="c3">T</td><td class="c0">F</td><td class="s">if length $text &lt; 100</td></tr>
-<tr><td class="h"><a id="L786">786</a></td><td class="c0">0</td><td class="c0">T</td><td class="c0">F</td><td class="s">if $sentences == 0</td></tr>
-<tr><td class="h"><a id="L793">793</a></td><td class="c0">0</td><td class="c0">T</td><td class="c0">F</td><td class="s">if $word_count &lt; 50</td></tr>
-<tr><td class="h"><a id="L804">804</a></td><td class="c0">0</td><td class="c0">T</td><td class="c0">F</td><td class="s">if length $word == 0</td></tr>
-<tr><td class="h"><a id="L808">808</a></td><td class="c0">0</td><td class="c0">T</td><td class="c0">F</td><td class="s">$vowels &gt; 0 ? :</td></tr>
-<tr><td class="h"><a id="L809">809</a></td><td class="c0">0</td><td class="c0">T</td><td class="c0">F</td><td class="s">if $word =~ /e$/</td></tr>
-<tr><td class="h"><a id="L811">811</a></td><td class="c0">0</td><td class="c0">T</td><td class="c0">F</td><td class="s">if $syllables &lt; $word_count</td></tr>
-<tr><td class="h"><a id="L823">823</a></td><td class="c0">0</td><td class="c0">T</td><td class="c0">F</td><td class="s">if ($flesch_score &gt;= 90) { }</td></tr>
+<tr><td class="h"><a id="L784">784</a></td><td class="c0">50</td><td class="c3">T</td><td class="c0">F</td><td class="s">if length $text &lt; 100</td></tr>
+<tr><td class="h"><a id="L792">792</a></td><td class="c0">0</td><td class="c0">T</td><td class="c0">F</td><td class="s">if $sentences == 0</td></tr>
+<tr><td class="h"><a id="L799">799</a></td><td class="c0">0</td><td class="c0">T</td><td class="c0">F</td><td class="s">if $word_count &lt; 50</td></tr>
+<tr><td class="h"><a id="L810">810</a></td><td class="c0">0</td><td class="c0">T</td><td class="c0">F</td><td class="s">if length $word == 0</td></tr>
+<tr><td class="h"><a id="L814">814</a></td><td class="c0">0</td><td class="c0">T</td><td class="c0">F</td><td class="s">$vowels &gt; 0 ? :</td></tr>
+<tr><td class="h"><a id="L815">815</a></td><td class="c0">0</td><td class="c0">T</td><td class="c0">F</td><td class="s">if $word =~ /e$/</td></tr>
+<tr><td class="h"><a id="L817">817</a></td><td class="c0">0</td><td class="c0">T</td><td class="c0">F</td><td class="s">if $syllables &lt; $word_count</td></tr>
+<tr><td class="h"><a id="L829">829</a></td><td class="c0">0</td><td class="c0">T</td><td class="c0">F</td><td class="s">if ($flesch_score &gt;= 90) { }</td></tr>
 <tr><td class="h"></td><td class="c0">0</td><td class="c0">T</td><td class="c0">F</td><td class="s">elsif ($flesch_score &gt;= 80) { }</td></tr>
 <tr><td class="h"></td><td class="c0">0</td><td class="c0">T</td><td class="c0">F</td><td class="s">elsif ($flesch_score &gt;= 70) { }</td></tr>
 <tr><td class="h"></td><td class="c0">0</td><td class="c0">T</td><td class="c0">F</td><td class="s">elsif ($flesch_score &gt;= 60) { }</td></tr>
