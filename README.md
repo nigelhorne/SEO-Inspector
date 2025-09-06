@@ -2,6 +2,10 @@
 
 SEO::Inspector - Run SEO checks on HTML or URLs
 
+# VERSION
+
+Version 0.02
+
 # SYNOPSIS
 
     use SEO::Inspector;
@@ -71,6 +75,7 @@ A plugin must provide at least two methods:
           name   => 'My Check',
           status => 'ok' | 'warn' | 'error',
           notes  => 'human-readable message',
+          resolution => 'how to resolve'
         }
 
 ## Running Plugins
@@ -101,10 +106,10 @@ the string "Hello":
 
         sub run {
                 my ($self, $html) = @_;
-                if ($html =~ /Hello/) {
+                if($html =~ /Hello/) {
                         return { name => 'Hello Check', status => 'ok', notes => 'found Hello' };
                 } else {
-                        return { name => 'Hello Check', status => 'warn', notes => 'no Hello' };
+                        return { name => 'Hello Check', status => 'warn', notes => 'no Hello', resolution => 'add a hello field' };
                 }
         }
 

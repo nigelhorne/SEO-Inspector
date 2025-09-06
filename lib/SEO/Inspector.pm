@@ -14,6 +14,14 @@ use Params::Get 0.13;
 
 SEO::Inspector - Run SEO checks on HTML or URLs
 
+=head1 VERSION
+
+Version 0.02
+
+=cut
+
+our $VERSION = '0.02';
+
 =head1 SYNOPSIS
 
   use SEO::Inspector;
@@ -154,8 +162,6 @@ Create a new inspector object. Accepts optional C<url> and C<plugin_dirs> argume
 If C<plugin_dirs> isn't given, it tries hard to find the right place.
 
 =cut
-
-our $VERSION = '0.01';
 
 # -------------------------------
 # Constructor

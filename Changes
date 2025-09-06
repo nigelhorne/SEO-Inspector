@@ -1,6 +1,6 @@
 Revision history for SEO-Inspector
 
-0.02
+0.02	Fri Sep  5 20:59:35 EDT 2025
 	Added tests for Open Graph/Twitter Cards, readability analysis, and page size
 	Use Params::Get and Object::Configure
 	Added the resolution field
