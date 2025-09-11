@@ -39,6 +39,8 @@
 		td.positive { color: green; font-weight: bold; }
 		td.negative { color: red; font-weight: bold; }
 		td.neutral { color: gray; }
+		// Show a cursor points on the headers to show that they are clickable
+		th { background-color: #f2f2f2; cursor: pointer; }
 	</style>
 </head>
 <body>
@@ -50,15 +52,25 @@
 </div>
 <h1>SEO::Inspector</h1><h2>Coverage Report</h2>
 <table>
-<tr><th>File</th><th>Stmt</th><th>Branch</th><th>Cond</th><th>Sub</th><th>Total</th><th>&Delta;</th></tr>
+<!-- Make the column headers clickable -->
+<tr>
+	<th onclick="sortTable(0)">File</th>
+	<th onclick="sortTable(1)">Stmt</th>
+	<th onclick="sortTable(2)">Branch</th>
+	<th onclick="sortTable(3)">Cond</th>
+	<th onclick="sortTable(4)">Sub</th>
+	<th onclick="sortTable(5)">Total</th>
+	<th onclick="sortTable(6)">Δ</th>
+</tr>
 
-<tr class="med"><td><a href="bin-seo-inspect.html" title="View coverage line by line">bin/seo-inspect</a> <a href="https://github.com/nigelhorne/SEO-Inspector/blob/0db1a5eccac234264dd10b484f35279def94b70f/bin/seo-inspect" class="icon-link" title="View source on GitHub">&#128269;</a></td><td>85.2</td><td>65.0</td><td>35.0</td><td>100.0</td><td><span class="coverage-badge badge-warn" title="Moderate coverage">73.4%</span></td><td class="neutral" title="Previous: 73.4%">&#9679; 0.0%</td></tr>
 
-<tr class="low"><td><a href="blib-lib-SEO-Inspector-pm.html" title="View coverage line by line">blib/lib/SEO/Inspector.pm</a> <a href="https://github.com/nigelhorne/SEO-Inspector/blob/0db1a5eccac234264dd10b484f35279def94b70f/blib/lib/SEO/Inspector.pm" class="icon-link" title="View source on GitHub">&#128269;</a></td><td>65.7</td><td>32.2</td><td>26.4</td><td>96.8</td><td><span class="coverage-badge badge-bad" title="Needs improvement">55.7%</span></td><td class="positive" title="Previous: 55.1%">&#9650; 0.6%</td></tr>
+<tr class="med"><td><a href="bin-seo-inspect.html" title="View coverage line by line">bin/seo-inspect</a> <a href="https://github.com/nigelhorne/SEO-Inspector/blob/25d51b0c3091910297a425a2eb2c0eed595a9fd5/bin/seo-inspect" class="icon-link" title="View source on GitHub">&#128269;</a></td><td>85.2</td><td>65.0</td><td>35.0</td><td>100.0</td><td><span class="coverage-badge badge-warn" title="Moderate coverage">73.4%</span></td><td class="neutral" title="Previous: 73.4%">&#9679; 0.0%</td></tr>
 
-<tr class="med"><td><a href="lib-SEO-Inspector-Plugin-MetaDescriptionCheck-pm.html" title="View coverage line by line">lib/SEO/Inspector/Plugin/MetaDescriptionCheck.pm</a> <a href="https://github.com/nigelhorne/SEO-Inspector/blob/0db1a5eccac234264dd10b484f35279def94b70f/lib/SEO/Inspector/Plugin/MetaDescriptionCheck.pm" class="icon-link" title="View source on GitHub">&#128269;</a></td><td>95.7</td><td>75.0</td><td>33.3</td><td>83.3</td><td><span class="coverage-badge badge-warn" title="Moderate coverage">86.1%</span></td><td class="neutral" title="Previous: 86.1%">&#9679; 0.0%</td></tr>
+<tr class="low"><td><a href="blib-lib-SEO-Inspector-pm.html" title="View coverage line by line">blib/lib/SEO/Inspector.pm</a> <a href="https://github.com/nigelhorne/SEO-Inspector/blob/25d51b0c3091910297a425a2eb2c0eed595a9fd5/blib/lib/SEO/Inspector.pm" class="icon-link" title="View source on GitHub">&#128269;</a></td><td>65.7</td><td>32.2</td><td>26.4</td><td>96.8</td><td><span class="coverage-badge badge-bad" title="Needs improvement">55.7%</span></td><td class="positive" title="Previous: 55.1%">&#9650; 0.6%</td></tr>
 
-<tr class="high"><td><a href="lib-SEO-Inspector-Plugin-TitleCheck-pm.html" title="View coverage line by line">lib/SEO/Inspector/Plugin/TitleCheck.pm</a> <a href="https://github.com/nigelhorne/SEO-Inspector/blob/0db1a5eccac234264dd10b484f35279def94b70f/lib/SEO/Inspector/Plugin/TitleCheck.pm" class="icon-link" title="View source on GitHub">&#128269;</a></td><td>95.5</td><td>100.0</td><td>66.7</td><td>83.3</td><td><span class="coverage-badge badge-good" title="Excellent coverage">90.9%</span></td><td class="neutral" title="Previous: 90.9%">&#9679; 0.0%</td></tr>
+<tr class="med"><td><a href="lib-SEO-Inspector-Plugin-MetaDescriptionCheck-pm.html" title="View coverage line by line">lib/SEO/Inspector/Plugin/MetaDescriptionCheck.pm</a> <a href="https://github.com/nigelhorne/SEO-Inspector/blob/25d51b0c3091910297a425a2eb2c0eed595a9fd5/lib/SEO/Inspector/Plugin/MetaDescriptionCheck.pm" class="icon-link" title="View source on GitHub">&#128269;</a></td><td>95.7</td><td>75.0</td><td>33.3</td><td>83.3</td><td><span class="coverage-badge badge-warn" title="Moderate coverage">86.1%</span></td><td class="neutral" title="Previous: 86.1%">&#9679; 0.0%</td></tr>
+
+<tr class="high"><td><a href="lib-SEO-Inspector-Plugin-TitleCheck-pm.html" title="View coverage line by line">lib/SEO/Inspector/Plugin/TitleCheck.pm</a> <a href="https://github.com/nigelhorne/SEO-Inspector/blob/25d51b0c3091910297a425a2eb2c0eed595a9fd5/lib/SEO/Inspector/Plugin/TitleCheck.pm" class="icon-link" title="View source on GitHub">&#128269;</a></td><td>95.5</td><td>100.0</td><td>66.7</td><td>83.3</td><td><span class="coverage-badge badge-good" title="Excellent coverage">90.9%</span></td><td class="neutral" title="Previous: 90.9%">&#9679; 0.0%</td></tr>
 
 <tr class="summary-row"><td colspan="2"><strong>Summary</strong></td><td colspan="2">4 files</td><td colspan="3">Avg: 76%, Low: 1</td></tr>
 
@@ -186,11 +198,40 @@ document.getElementById('toggleTrend').addEventListener('change', function(e) {
 	trendDataset.hidden = !show;
 	chart.update();
 });
+
+function sortTable(n) {
+	const table = document.querySelector("table");
+	let rows = Array.from(table.rows).slice(1); // skip header row
+	const isNumeric = n > 0; // everything except "File" is numeric
+	const asc = table.getAttribute("data-sort-col") != n || table.getAttribute("data-sort-order") === "desc";
+
+	rows.sort((a, b) => {
+		let x = a.cells[n].innerText.trim();
+		let y = b.cells[n].innerText.trim();
+
+		if (isNumeric) {
+			x = parseFloat(x) || 0;
+			y = parseFloat(y) || 0;
+		}
+
+		if (x < y) return asc ? -1 : 1;
+		if (x > y) return asc ? 1 : -1;
+		return 0;
+	});
+
+	// Reattach sorted rows
+	rows.forEach(r => table.tBodies[0].appendChild(r));
+
+	// Remember sort state
+	table.setAttribute("data-sort-col", n);
+	table.setAttribute("data-sort-order", asc ? "asc" : "desc");
+}
+
 </script>
 
 <footer>
 	<p>Project: <a href="https://github.com/nigelhorne/SEO-Inspector">SEO-Inspector</a></p>
-	<p><em>Last updated: 2025-09-11 15:49:28 - <a href="https://github.com/nigelhorne/SEO-Inspector/commit/0db1a5eccac234264dd10b484f35279def94b70f">commit <code>0db1a5e</code></a></em></p>
+	<p><em>Last updated: 2025-09-11 17:37:46 - <a href="https://github.com/nigelhorne/SEO-Inspector/commit/25d51b0c3091910297a425a2eb2c0eed595a9fd5">commit <code>25d51b0</code></a></em></p>
 </footer>
 </body>
 </html>
