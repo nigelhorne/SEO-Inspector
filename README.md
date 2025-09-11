@@ -132,7 +132,8 @@ This is the key you will see in the hashref returned by `check_html` or
 
 ## new(%args)
 
-Create a new inspector object. Accepts optional `url` and `plugin_dirs` arguments.
+Create a new inspector object.
+Accepts optional `ua`, `plugins`, `url` and `plugin_dirs` arguments.
 If `plugin_dirs` isn't given, it tries hard to find the right place.
 
 ## load\_plugins

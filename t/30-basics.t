@@ -19,7 +19,7 @@ use SEO::Inspector;
 # -------------------------------
 # Object creation
 # -------------------------------
-my $inspector = SEO::Inspector->new;
+my $inspector = new_ok('SEO::Inspector');
 isa_ok($inspector, 'SEO::Inspector', 'Object created');
 
 # -------------------------------

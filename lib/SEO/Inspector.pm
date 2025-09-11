@@ -9,6 +9,7 @@ use Mojo::URL;
 use Module::Pluggable require => 1, search_path => 'SEO::Inspector::Plugin';
 use Object::Configure 0.14;
 use Params::Get 0.13;
+use Params::Validate::Strict 0.11;
 
 =head1 NAME
 
@@ -158,17 +159,46 @@ C<check_url>.
 
 =head2 new(%args)
 
-Create a new inspector object. Accepts optional C<url> and C<plugin_dirs> arguments.
+Create a new inspector object.
+Accepts optional C<ua>, C<plugins>, C<url> and C<plugin_dirs> arguments.
 If C<plugin_dirs> isn't given, it tries hard to find the right place.
 
 =cut
 
-# -------------------------------
-# Constructor
-# -------------------------------
 sub new {
 	my $class = shift;
-	my $params = Object::Configure::configure($class, Params::Get::get_params(undef, \@_));
+
+	my $params = Params::Validate::Strict::validate_strict({
+		args => Params::Get::get_params(undef, \@_) || {},
+		schema => {
+			'ua' => {
+				'type' => 'object',
+				'can' => 'get',
+				'optional' => 1,
+			}, 'plugins' => {
+				'type' => 'hashref',
+				'optional' => 1,
+			}, 'url' => {
+				'type' => 'string',
+				'matches' => qr{
+					^
+					(?:https?://)?		# Optional http or https scheme
+					(?:www\.)?		# Optional www subdomain
+					[a-zA-Z0-9-]+		# Domain name part (alphanumeric and hyphens)
+					(?:\.[a-zA-Z0-9-]+)+	# Subdomains or TLDs (e.g., .com, .co.uk)
+					(?::\d{1,5})?		# Optional port number
+					(?:/[^\s]*)?		# Optional path (any non-whitespace characters)
+					$
+				}x,
+				'optional' => 1,
+			}, 'plugin_dirs' => {
+				'type' => 'arrayref',
+				'optional' => 1,
+			}
+		}
+	});
+
+	$params = Object::Configure::configure($class, $params);
 
 	$params->{'ua'} ||= Mojo::UserAgent->new();
 	$params->{'plugins'} ||= {};
@@ -186,10 +216,8 @@ Loads plugins from the C<SEO::Inspector::Plugin> namespace.
 
 =cut
 
-# -------------------------------
-# Load plugins from SEO::Inspector::Plugin namespace
-# -------------------------------
-sub load_plugins {
+sub load_plugins
+{
 	my $self = $_[0];
 
 	for my $plugin ($self->plugins()) {
@@ -214,15 +242,14 @@ sub load_plugins {
 	}
 }
 
-# -------------------------------
 # Fetch HTML from URL or object default
-# -------------------------------
 sub _fetch_html {
 	my ($self, $url) = @_;
+
 	$url //= $self->{url};
 	croak 'URL missing' unless $url;
 
-	my $res = $self->{ua}->get($url)->result;
+	my $res = $self->{'ua'}->get($url)->result;
 	if ($res->is_error) {
 		croak 'Fetch failed: ', $res->message();
 	}
