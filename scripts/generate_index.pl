@@ -254,25 +254,19 @@ while (<$log>) {
 }
 close $log;
 
-# Only display the last 15 commits
-my $elements_to_keep = 15;
-
-# Calculate the number of elements to remove from the beginning
-my $elements_to_remove = scalar(@history_files) - $elements_to_keep;
-
-# Use splice to remove elements from the beginning of the array
-@history_files = sort(@history_files);
-splice(@history_files, 0, $elements_to_remove);
-
 my @data_points;
 my $prev_pct;
+my $processed_count = 0;
+my $max_points = 10;	# Only display the last 10 commits
 
-foreach my $file (@history_files) {
+foreach my $file (reverse sort @history_files) {
+	last if $processed_count >= $max_points;
+
 	my $json = eval { decode_json(read_file($file)) };
 	next unless $json && $json->{summary}{Total};
 
 	my ($sha) = $file =~ /-(\w{7})\.json$/;
-	next unless $commit_messages{$sha};
+	next unless $commit_messages{$sha};	# Skip merge commits
 
 	my $timestamp = $commit_times{$sha} // strftime('%Y-%m-%dT%H:%M:%S', localtime((stat($file))->mtime));
 	$timestamp =~ s/ /T/;
@@ -288,9 +282,11 @@ foreach my $file (@history_files) {
 
 	my $comment = $commit_messages{$sha};
 	push @data_points, qq{{ x: "$timestamp", y: $pct, delta: $delta, url: "$url", label: "$timestamp", pointBackgroundColor: "$color", comment: "$comment" }};
+
+	$processed_count++;
 }
 
-@data_points = sort { $a cmp $b } @data_points;
+@data_points = reverse @data_points;
 
 my $js_data = join(",\n", @data_points);
 
