@@ -96,11 +96,11 @@ push @html, <<"HTML";
 	<img src="$coverage_badge_url" alt="Coverage badge">
 </div>
 <h1>SEO::Inspector</h1><h2>Coverage Report</h2>
-<table>
+<table data-sort-col="0" data-sort-order="asc">
 <!-- Make the column headers clickable -->
 <thead>
 <tr>
-	<th class="sortable" onclick="sortTable(0)"><span class="label">File</span> <span class="arrow">&#x25B2;</span></th>
+	<th class="sortable" onclick="sortTable(0)"><span class="label">File</span> <span class="arrow active">&#x25B2;</span></th>
 	<th class="sortable" onclick="sortTable(1)"><span class="label">Stmt</span> <span class="arrow">&#x25B2;</span></th>
 	<th class="sortable" onclick="sortTable(2)"><span class="label">Branch</span> <span class="arrow">&#x25B2;</span></th>
 	<th class="sortable" onclick="sortTable(3)"><span class="label">Cond</span> <span class="arrow">&#x25B2;</span></th>
@@ -518,6 +518,16 @@ function sortTable(n) {
 	table.setAttribute("data-sort-order", asc ? "asc" : "desc");
 }
 
+// Apply initial sort (File ascending) on page load.
+// Because the table already carries data-sort-col="0" and data-sort-order="asc",
+// the first call to sortTable(0) will not flip to descending - it will enforce asc
+document.addEventListener("DOMContentLoaded", () => {
+	const table = document.querySelector("table");
+	if (table) {
+		// Force a sort run so rows are ordered by File ascending
+		sortTable(0);
+	}
+});
 </script>
 HTML
 
