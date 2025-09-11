@@ -443,23 +443,35 @@ document.getElementById('toggleTrend').addEventListener('change', function(e) {
 
 function sortTable(n) {
 	const table = document.querySelector("table");
-	let rows = Array.from(table.tBodies[0].rows);
-	// rows = Array.from(table.rows).slice(1); // skip header row
+	if (!table || !table.tBodies || !table.tBodies[0]) return;
 
-	// Separate sortable vs nosort rows
-	const normalRows = rows.filter(r => !r.classList.contains("nosort"));
-	const fixedRows = rows.filter(r => r.classList.contains("nosort"));
+	// All rows in tbody
+	const allBodyRows = Array.from(table.tBodies[0].rows);
 
-	const isNumeric = n > 0; // everything except "File" is numeric
-	const asc = table.getAttribute("data-sort-col") != n || table.getAttribute("data-sort-order") === "desc";
+	// Separate normal (sortable) rows and fixed (nosort) rows.
+	const normalRows = allBodyRows.filter(r => !r.classList.contains("nosort"));
+	const fixedRows = allBodyRows.filter(r => r.classList.contains("nosort"));
+
+	// Decide numeric vs text column (column 0 = File => text)
+	const isNumeric = n > 0;
+
+	// Determine ascending/descending toggle logic
+	const prevCol = table.getAttribute("data-sort-col");
+	const prevOrder = table.getAttribute("data-sort-order") || "desc";
+	const asc = (prevCol != n) ? true : (prevOrder === "desc");
 
 	normalRows.sort((a, b) => {
-		let x = a.cells[n].innerText.trim();
-		let y = b.cells[n].innerText.trim();
+		let x = (a.cells[n] && a.cells[n].innerText) ? a.cells[n].innerText.trim() : "";
+		let y = (b.cells[n] && b.cells[n].innerText) ? b.cells[n].innerText.trim() : "";
 
 		if (isNumeric) {
-			x = parseFloat(x) || 0;
-			y = parseFloat(y) || 0;
+			// Remove non-number characters (arrows, percent signs, bullets, etc.)
+			x = parseFloat(x.replace(/[^0-9.\-+eE]/g, '')) || 0;
+			y = parseFloat(y.replace(/[^0-9.\-+eE]/g, '')) || 0;
+		} else {
+			// Text compare (case-insensitive)
+			x = x.toLowerCase();
+			y = y.toLowerCase();
 		}
 
 		if (x < y) return asc ? -1 : 1;
@@ -467,13 +479,15 @@ function sortTable(n) {
 		return 0;
 	});
 
-	// Reattach sorted + fixed rows
-	[...normalRows, ...fixedRows].forEach(r => table.tBodies[0].appendChild(r));
+	// Reattach rows: sorted normalRows first, then fixedRows (keeps summary/total last)
+	normalRows.forEach(r => table.tBodies[0].appendChild(r));
+	fixedRows.forEach(r => table.tBodies[0].appendChild(r));
 
-	// Remember sort state
+	// Remember state (so clicking same column toggles)
 	table.setAttribute("data-sort-col", n);
 	table.setAttribute("data-sort-order", asc ? "asc" : "desc");
 }
+
 </script>
 HTML
 
