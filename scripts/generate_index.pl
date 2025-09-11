@@ -86,6 +86,10 @@ push @html, <<"HTML";
 			color: #000;	/* dark for active */
 			font-weight: bold;
 		}
+		.sparkline {
+			display: inline-block;
+			vertical-align: middle;
+		}
 	</style>
 </head>
 <body>
@@ -557,6 +561,37 @@ document.addEventListener("DOMContentLoaded", () => {
 		}
 	}
 });
+
+document.addEventListener("DOMContentLoaded", () => {
+	document.querySelectorAll("canvas.sparkline").forEach(canvas => {
+		const raw = canvas.getAttribute("data-points");
+		if (!raw) return;
+		const points = raw.split(",").map(v => parseFloat(v));
+
+		new Chart(canvas.getContext("2d"), {
+			type: 'line',
+			data: {
+				labels: points.map((_, i) => i+1),
+				datasets: [{
+					data: points,
+					borderColor: points.length > 1 && points[points.length-1] >= points[0] ? "green" : "red",
+					borderWidth: 1,
+					fill: false,
+					tension: 0.3,
+					pointRadius: 0
+				}]
+			},
+			options: {
+				responsive: false,
+				maintainAspectRatio: false,
+				elements: { line: { borderJoinStyle: 'round' } },
+				plugins: { legend: { display: false }, tooltip: { enabled: false } },
+				scales: { x: { display: false }, y: { display: false } }
+			}
+		});
+	});
+});
+
 </script>
 HTML
 
