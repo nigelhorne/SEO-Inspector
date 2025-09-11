@@ -78,6 +78,14 @@ push @html, <<"HTML";
 			user-select: none;
 			white-space: nowrap;
 		}
+		th .arrow {
+			color: #aaa;	/* dimmed for inactive */
+			font-weight: normal;
+		}
+		th .arrow.active {
+			color: #000;	/* dark for active */
+			font-weight: bold;
+		}
 	</style>
 </head>
 <body>
@@ -91,16 +99,17 @@ push @html, <<"HTML";
 <table>
 <!-- Make the column headers clickable -->
 <thead>
-	<tr>
-		<th class="sortable" onclick="sortTable(0)">File</th>
-		<th class="sortable" onclick="sortTable(1)">Stmt</th>
-		<th class="sortable" onclick="sortTable(2)">Branch</th>
-		<th class="sortable" onclick="sortTable(3)">Cond</th>
-		<th class="sortable" onclick="sortTable(4)">Sub</th>
-		<th class="sortable" onclick="sortTable(5)">Total</th>
-		<th class="sortable" onclick="sortTable(6)">&Delta;</th>
-	</tr>
+<tr>
+	<th class="sortable" onclick="sortTable(0)"><span class="label">File</span> <span class="arrow">&#x25B2;</span></th>
+	<th class="sortable" onclick="sortTable(1)"><span class="label">Stmt</span> <span class="arrow">&#x25B2;</span></th>
+	<th class="sortable" onclick="sortTable(2)"><span class="label">Branch</span> <span class="arrow">&#x25B2;</span></th>
+	<th class="sortable" onclick="sortTable(3)"><span class="label">Cond</span> <span class="arrow">&#x25B2;</span></th>
+	<th class="sortable" onclick="sortTable(4)"><span class="label">Sub</span> <span class="arrow">&#x25B2;</span></th>
+	<th class="sortable" onclick="sortTable(5)"><span class="label">Total</span> <span class="arrow">&#x25B2;</span></th>
+	<th class="sortable" onclick="sortTable(6)"><span class="label">&Delta;</span> <span class="arrow">&#x25B2;</span></th>
+</tr>
 </thead>
+
 <tbody>
 HTML
 
@@ -488,13 +497,21 @@ function sortTable(n) {
 	normalRows.forEach(r => table.tBodies[0].appendChild(r));
 	fixedRows.forEach(r => table.tBodies[0].appendChild(r));
 
-	// Update header sort state (arrows)
+	// Update header arrows
 	const headers = table.tHead.rows[0].cells;
 	for (let i = 0; i < headers.length; i++) {
-		// remove existing arrows
-		headers[i].innerText = headers[i].innerText.replace(/[▲▼]$/, '');
+		const arrow = headers[i].querySelector(".arrow");
+		if (!arrow) continue;
+		if (i === n) {
+			// active column: bold arrow, direction ▲ or ▼
+			arrow.textContent = asc ? "▲" : "▼";
+			arrow.classList.add("active");
+		} else {
+			// inactive column: always ▲, dimmed
+			arrow.textContent = "▲";
+			arrow.classList.remove("active");
+		}
 	}
-	headers[n].innerText += asc ? ' ▲' : ' ▼';
 
 	// Remember state (so clicking same column toggles)
 	table.setAttribute("data-sort-col", n);
