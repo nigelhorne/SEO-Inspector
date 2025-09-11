@@ -7,11 +7,13 @@ use autodie qw(:all);
 use JSON::MaybeXS;
 use File::Glob ':glob';
 use File::Slurp;
-use POSIX qw(strftime);
 use File::stat;
+use POSIX qw(strftime);
+use Readonly;
 
-my $cover_db = 'cover_db/cover.json';
-my $output = 'cover_html/index.html';
+Readonly my $cover_db => 'cover_db/cover.json';
+Readonly my $output => 'cover_html/index.html';
+Readonly my $max_points => 10;	# Only display the last 10 commits in the coverage trend graph
 
 # Read and decode coverage data
 my $json_text = read_file($cover_db);
@@ -25,7 +27,7 @@ if(my $total_info = $data->{summary}{Total}) {
 	$badge_color = $coverage_pct > 80 ? 'brightgreen' : $coverage_pct > 50 ? 'yellow' : 'red';
 }
 
-my $coverage_badge_url = "https://img.shields.io/badge/coverage-${coverage_pct}%25-${badge_color}";
+Readonly my $coverage_badge_url => "https://img.shields.io/badge/coverage-${coverage_pct}%25-${badge_color}";
 
 # Start HTML
 my @html;	# build in array, join later
@@ -308,7 +310,6 @@ close $log;
 # Collect data points from non-merge commits
 my @data_points_with_time;
 my $processed_count = 0;
-my $max_points = 10;	# Only display the last 10 commits
 
 foreach my $file (reverse sort @history_files) {
 	last if $processed_count >= $max_points;
@@ -373,6 +374,7 @@ HTML
 push @html, <<"HTML";
 <canvas id="coverageTrend" width="600" height="300"></canvas>
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-zoom@2.1.1/dist/chartjs-plugin-zoom.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-date-fns"></script>
 <script>
 function linearRegression(data) {
@@ -587,7 +589,7 @@ document.addEventListener("DOMContentLoaded", () => {
 				plugins: {
 					legend: { display: false },
 					tooltip: { enabled: false },
-					zoom: {	//Enable zoom and pan
+					zoom: {	// Enable zoom and pan
 						pan: {
 							enabled: true,
 							mode: 'x',
