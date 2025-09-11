@@ -518,14 +518,24 @@ function sortTable(n) {
 	table.setAttribute("data-sort-order", asc ? "asc" : "desc");
 }
 
-// Apply initial sort (File ascending) on page load.
-// Because the table already carries data-sort-col="0" and data-sort-order="asc",
-// the first call to sortTable(0) will not flip to descending - it will enforce asc
+// Initial display.
+// The table has been set up sorted in ascending order on the filename, reflect that in the GUI
 document.addEventListener("DOMContentLoaded", () => {
 	const table = document.querySelector("table");
-	if (table) {
-		// Force a sort run so rows are ordered by File ascending
-		sortTable(0);
+	if (!table) return;
+
+	const headers = table.tHead.rows[0].cells;
+	for (let i = 0; i < headers.length; i++) {
+		const arrow = headers[i].querySelector(".arrow");
+		if (!arrow) continue;
+
+		if (i === 0) {
+			arrow.textContent = "▲";
+			arrow.classList.add("active");
+		} else {
+			arrow.textContent = "▲";
+			arrow.classList.remove("active");
+		}
 	}
 });
 </script>
