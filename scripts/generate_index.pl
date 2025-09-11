@@ -71,6 +71,8 @@ push @html, <<"HTML";
 		td.positive { color: green; font-weight: bold; }
 		td.negative { color: red; font-weight: bold; }
 		td.neutral { color: gray; }
+		// Show a cursor points on the headers to show that they are clickable
+		th { background-color: #f2f2f2; cursor: pointer; }
 	</style>
 </head>
 <body>
@@ -82,7 +84,17 @@ push @html, <<"HTML";
 </div>
 <h1>SEO::Inspector</h1><h2>Coverage Report</h2>
 <table>
-<tr><th>File</th><th>Stmt</th><th>Branch</th><th>Cond</th><th>Sub</th><th>Total</th><th>&Delta;</th></tr>
+<!-- Make the column headers clickable -->
+<tr>
+	<th onclick="sortTable(0)">File</th>
+	<th onclick="sortTable(1)">Stmt</th>
+	<th onclick="sortTable(2)">Branch</th>
+	<th onclick="sortTable(3)">Cond</th>
+	<th onclick="sortTable(4)">Sub</th>
+	<th onclick="sortTable(5)">Total</th>
+	<th onclick="sortTable(6)">Δ</th>
+</tr>
+
 HTML
 
 # Load previous snapshot for delta comparison
@@ -426,6 +438,35 @@ document.getElementById('toggleTrend').addEventListener('change', function(e) {
 	trendDataset.hidden = !show;
 	chart.update();
 });
+
+function sortTable(n) {
+	const table = document.querySelector("table");
+	let rows = Array.from(table.rows).slice(1); // skip header row
+	const isNumeric = n > 0; // everything except "File" is numeric
+	const asc = table.getAttribute("data-sort-col") != n || table.getAttribute("data-sort-order") === "desc";
+
+	rows.sort((a, b) => {
+		let x = a.cells[n].innerText.trim();
+		let y = b.cells[n].innerText.trim();
+
+		if (isNumeric) {
+			x = parseFloat(x) || 0;
+			y = parseFloat(y) || 0;
+		}
+
+		if (x < y) return asc ? -1 : 1;
+		if (x > y) return asc ? 1 : -1;
+		return 0;
+	});
+
+	// Reattach sorted rows
+	rows.forEach(r => table.tBodies[0].appendChild(r));
+
+	// Remember sort state
+	table.setAttribute("data-sort-col", n);
+	table.setAttribute("data-sort-order", asc ? "asc" : "desc");
+}
+
 </script>
 HTML
 
