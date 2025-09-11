@@ -73,6 +73,11 @@ push @html, <<"HTML";
 		td.neutral { color: gray; }
 		// Show a cursor points on the headers to show that they are clickable
 		th { background-color: #f2f2f2; cursor: pointer; }
+		th.sortable {
+			cursor: pointer;
+			user-select: none;
+			white-space: nowrap;
+		}
 	</style>
 </head>
 <body>
@@ -87,13 +92,13 @@ push @html, <<"HTML";
 <!-- Make the column headers clickable -->
 <thead>
 	<tr>
-		<th onclick="sortTable(0)">File</th>
-		<th onclick="sortTable(1)">Stmt</th>
-		<th onclick="sortTable(2)">Branch</th>
-		<th onclick="sortTable(3)">Cond</th>
-		<th onclick="sortTable(4)">Sub</th>
-		<th onclick="sortTable(5)">Total</th>
-		<th onclick="sortTable(6)">Δ</th>
+		<th class="sortable" onclick="sortTable(0)">File</th>
+		<th class="sortable" onclick="sortTable(1)">Stmt</th>
+		<th class="sortable" onclick="sortTable(2)">Branch</th>
+		<th class="sortable" onclick="sortTable(3)">Cond</th>
+		<th class="sortable" onclick="sortTable(4)">Sub</th>
+		<th class="sortable" onclick="sortTable(5)">Total</th>
+		<th class="sortable" onclick="sortTable(6)">&Delta;</th>
 	</tr>
 </thead>
 <tbody>
@@ -482,6 +487,14 @@ function sortTable(n) {
 	// Reattach rows: sorted normalRows first, then fixedRows (keeps summary/total last)
 	normalRows.forEach(r => table.tBodies[0].appendChild(r));
 	fixedRows.forEach(r => table.tBodies[0].appendChild(r));
+
+	// Update header sort state (arrows)
+	const headers = table.tHead.rows[0].cells;
+	for (let i = 0; i < headers.length; i++) {
+		// remove existing arrows
+		headers[i].innerText = headers[i].innerText.replace(/[▲▼]$/, '');
+	}
+	headers[n].innerText += asc ? ' ▲' : ' ▼';
 
 	// Remember state (so clicking same column toggles)
 	table.setAttribute("data-sort-col", n);
