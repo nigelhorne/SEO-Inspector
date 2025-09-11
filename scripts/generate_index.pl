@@ -254,8 +254,8 @@ while (<$log>) {
 }
 close $log;
 
-my @data_points;
-my $prev_pct;
+# Collect data points from non-merge commits
+my @data_points_with_time;
 my $processed_count = 0;
 my $max_points = 10;	# Only display the last 10 commits
 
@@ -274,19 +274,36 @@ foreach my $file (reverse sort @history_files) {
 	$timestamp =~ s/ //g;	# Remove any remaining spaces
 
 	my $pct = $json->{summary}{Total}{total}{percentage} // 0;
-	my $delta = defined $prev_pct ? sprintf('%.1f', $pct - $prev_pct) : 0;
-	$prev_pct = $pct;
-
-	my $color = $delta > 0 ? 'green' : $delta < 0 ? 'red' : 'gray';
+	my $color = 'gray';	# Will be set properly after sorting
 	my $url = "https://github.com/nigelhorne/SEO-Inspector/commit/$sha";
-
 	my $comment = $commit_messages{$sha};
-	push @data_points, qq{{ x: "$timestamp", y: $pct, delta: $delta, url: "$url", label: "$timestamp", pointBackgroundColor: "$color", comment: "$comment" }};
+
+	# Store with timestamp for sorting
+	push @data_points_with_time, {
+		timestamp => $timestamp,
+		pct => $pct,
+		url => $url,
+		comment => $comment
+	};
 
 	$processed_count++;
 }
 
-@data_points = reverse @data_points;
+# Sort by timestamp to ensure chronological order
+@data_points_with_time = sort { $a->{timestamp} cmp $b->{timestamp} } @data_points_with_time;
+
+# Now calculate deltas and create JavaScript data points
+my @data_points;
+my $prev_pct;
+
+foreach my $point (@data_points_with_time) {
+	my $delta = defined $prev_pct ? sprintf('%.1f', $point->{pct} - $prev_pct) : 0;
+	$prev_pct = $point->{pct};
+
+	my $color = $delta > 0 ? 'green' : $delta < 0 ? 'red' : 'gray';
+
+	push @data_points, qq{{ x: "$point->{timestamp}", y: $point->{pct}, delta: $delta, url: "$point->{url}", label: "$point->{timestamp}", pointBackgroundColor: "$color", comment: "$point->{comment}" }};
+}
 
 my $js_data = join(",\n", @data_points);
 
