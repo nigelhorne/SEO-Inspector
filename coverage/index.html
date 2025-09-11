@@ -41,6 +41,11 @@
 		td.neutral { color: gray; }
 		// Show a cursor points on the headers to show that they are clickable
 		th { background-color: #f2f2f2; cursor: pointer; }
+		th.sortable {
+			cursor: pointer;
+			user-select: none;
+			white-space: nowrap;
+		}
 	</style>
 </head>
 <body>
@@ -55,24 +60,24 @@
 <!-- Make the column headers clickable -->
 <thead>
 	<tr>
-		<th onclick="sortTable(0)">File</th>
-		<th onclick="sortTable(1)">Stmt</th>
-		<th onclick="sortTable(2)">Branch</th>
-		<th onclick="sortTable(3)">Cond</th>
-		<th onclick="sortTable(4)">Sub</th>
-		<th onclick="sortTable(5)">Total</th>
-		<th onclick="sortTable(6)">Δ</th>
+		<th class="sortable" onclick="sortTable(0)">File</th>
+		<th class="sortable" onclick="sortTable(1)">Stmt</th>
+		<th class="sortable" onclick="sortTable(2)">Branch</th>
+		<th class="sortable" onclick="sortTable(3)">Cond</th>
+		<th class="sortable" onclick="sortTable(4)">Sub</th>
+		<th class="sortable" onclick="sortTable(5)">Total</th>
+		<th class="sortable" onclick="sortTable(6)">&Delta;</th>
 	</tr>
 </thead>
 <tbody>
 
-<tr class="med"><td><a href="bin-seo-inspect.html" title="View coverage line by line">bin/seo-inspect</a> <a href="https://github.com/nigelhorne/SEO-Inspector/blob/f67a03b60a6366a70ad635bf003304acad489e77/bin/seo-inspect" class="icon-link" title="View source on GitHub">&#128269;</a></td><td>85.2</td><td>65.0</td><td>35.0</td><td>100.0</td><td><span class="coverage-badge badge-warn" title="Moderate coverage">73.4%</span></td><td class="neutral" title="Previous: 73.4%">&#9679; 0.0%</td></tr>
+<tr class="med"><td><a href="bin-seo-inspect.html" title="View coverage line by line">bin/seo-inspect</a> <a href="https://github.com/nigelhorne/SEO-Inspector/blob/f6dbf03d6c2ba105f62eec753e6f755dd12a3418/bin/seo-inspect" class="icon-link" title="View source on GitHub">&#128269;</a></td><td>85.2</td><td>65.0</td><td>35.0</td><td>100.0</td><td><span class="coverage-badge badge-warn" title="Moderate coverage">73.4%</span></td><td class="neutral" title="Previous: 73.4%">&#9679; 0.0%</td></tr>
 
-<tr class="low"><td><a href="blib-lib-SEO-Inspector-pm.html" title="View coverage line by line">blib/lib/SEO/Inspector.pm</a> <a href="https://github.com/nigelhorne/SEO-Inspector/blob/f67a03b60a6366a70ad635bf003304acad489e77/blib/lib/SEO/Inspector.pm" class="icon-link" title="View source on GitHub">&#128269;</a></td><td>65.7</td><td>32.2</td><td>26.4</td><td>96.8</td><td><span class="coverage-badge badge-bad" title="Needs improvement">55.7%</span></td><td class="neutral" title="Previous: 55.7%">&#9679; 0.0%</td></tr>
+<tr class="low"><td><a href="blib-lib-SEO-Inspector-pm.html" title="View coverage line by line">blib/lib/SEO/Inspector.pm</a> <a href="https://github.com/nigelhorne/SEO-Inspector/blob/f6dbf03d6c2ba105f62eec753e6f755dd12a3418/blib/lib/SEO/Inspector.pm" class="icon-link" title="View source on GitHub">&#128269;</a></td><td>65.7</td><td>32.2</td><td>26.4</td><td>96.8</td><td><span class="coverage-badge badge-bad" title="Needs improvement">55.7%</span></td><td class="neutral" title="Previous: 55.7%">&#9679; 0.0%</td></tr>
 
-<tr class="med"><td><a href="lib-SEO-Inspector-Plugin-MetaDescriptionCheck-pm.html" title="View coverage line by line">lib/SEO/Inspector/Plugin/MetaDescriptionCheck.pm</a> <a href="https://github.com/nigelhorne/SEO-Inspector/blob/f67a03b60a6366a70ad635bf003304acad489e77/lib/SEO/Inspector/Plugin/MetaDescriptionCheck.pm" class="icon-link" title="View source on GitHub">&#128269;</a></td><td>95.7</td><td>75.0</td><td>33.3</td><td>83.3</td><td><span class="coverage-badge badge-warn" title="Moderate coverage">86.1%</span></td><td class="neutral" title="Previous: 86.1%">&#9679; 0.0%</td></tr>
+<tr class="med"><td><a href="lib-SEO-Inspector-Plugin-MetaDescriptionCheck-pm.html" title="View coverage line by line">lib/SEO/Inspector/Plugin/MetaDescriptionCheck.pm</a> <a href="https://github.com/nigelhorne/SEO-Inspector/blob/f6dbf03d6c2ba105f62eec753e6f755dd12a3418/lib/SEO/Inspector/Plugin/MetaDescriptionCheck.pm" class="icon-link" title="View source on GitHub">&#128269;</a></td><td>95.7</td><td>75.0</td><td>33.3</td><td>83.3</td><td><span class="coverage-badge badge-warn" title="Moderate coverage">86.1%</span></td><td class="neutral" title="Previous: 86.1%">&#9679; 0.0%</td></tr>
 
-<tr class="high"><td><a href="lib-SEO-Inspector-Plugin-TitleCheck-pm.html" title="View coverage line by line">lib/SEO/Inspector/Plugin/TitleCheck.pm</a> <a href="https://github.com/nigelhorne/SEO-Inspector/blob/f67a03b60a6366a70ad635bf003304acad489e77/lib/SEO/Inspector/Plugin/TitleCheck.pm" class="icon-link" title="View source on GitHub">&#128269;</a></td><td>95.5</td><td>100.0</td><td>66.7</td><td>83.3</td><td><span class="coverage-badge badge-good" title="Excellent coverage">90.9%</span></td><td class="neutral" title="Previous: 90.9%">&#9679; 0.0%</td></tr>
+<tr class="high"><td><a href="lib-SEO-Inspector-Plugin-TitleCheck-pm.html" title="View coverage line by line">lib/SEO/Inspector/Plugin/TitleCheck.pm</a> <a href="https://github.com/nigelhorne/SEO-Inspector/blob/f6dbf03d6c2ba105f62eec753e6f755dd12a3418/lib/SEO/Inspector/Plugin/TitleCheck.pm" class="icon-link" title="View source on GitHub">&#128269;</a></td><td>95.5</td><td>100.0</td><td>66.7</td><td>83.3</td><td><span class="coverage-badge badge-good" title="Excellent coverage">90.9%</span></td><td class="neutral" title="Previous: 90.9%">&#9679; 0.0%</td></tr>
 
 <tr class="summary-row nosort"><td colspan="2"><strong>Summary</strong></td><td colspan="2">4 files</td><td colspan="3">Avg: 76%, Low: 1</td></tr>
 
@@ -113,13 +118,13 @@ function linearRegression(data) {
 const dataPoints = [ { x: "2025-09-04T21:10:48-04:00", y: 66.8711656441718, delta: 0, url: "https://github.com/nigelhorne/SEO-Inspector/commit/e891da6", label: "2025-09-04T21:10:48-04:00", pointBackgroundColor: "gray", comment: "Try again with the sort" },
 { x: "2025-09-05T10:30:23-04:00", y: 66.8711656441718, delta: 0.0, url: "https://github.com/nigelhorne/SEO-Inspector/commit/b11771b", label: "2025-09-05T10:30:23-04:00", pointBackgroundColor: "gray", comment: "Fix syntax error" },
 { x: "2025-09-05T11:20:49-04:00", y: 66.8711656441718, delta: 0.0, url: "https://github.com/nigelhorne/SEO-Inspector/commit/692629c", label: "2025-09-05T11:20:49-04:00", pointBackgroundColor: "gray", comment: "Backtrack, but keep writing to an array" },
-{ x: "2025-09-05T11:52:40-04:00", y: 61.0492845786963, delta: -5.8, url: "https://github.com/nigelhorne/SEO-Inspector/commit/3b64512", label: "2025-09-05T11:52:40-04:00", pointBackgroundColor: "red", comment: "Ran pod2markdown to generate new README" },
-{ x: "2025-09-05T12:01:37-04:00", y: 61.0492845786963, delta: 0.0, url: "https://github.com/nigelhorne/SEO-Inspector/commit/557b1ff", label: "2025-09-05T12:01:37-04:00", pointBackgroundColor: "gray", comment: "White space" },
+{ x: "2025-09-05T12:01:37-04:00", y: 61.0492845786963, delta: -5.8, url: "https://github.com/nigelhorne/SEO-Inspector/commit/557b1ff", label: "2025-09-05T12:01:37-04:00", pointBackgroundColor: "red", comment: "White space" },
 { x: "2025-09-05T20:59:46-04:00", y: 61.4138438880707, delta: 0.4, url: "https://github.com/nigelhorne/SEO-Inspector/commit/3401e2d", label: "2025-09-05T20:59:46-04:00", pointBackgroundColor: "green", comment: "Release 0.02" },
 { x: "2025-09-11T09:49:42-04:00", y: 61.4138438880707, delta: 0.0, url: "https://github.com/nigelhorne/SEO-Inspector/commit/366aa69", label: "2025-09-11T09:49:42-04:00", pointBackgroundColor: "gray", comment: "Added the Coverage Trend header to the testing dashboard" },
 { x: "2025-09-11T11:25:27-04:00", y: 61.8075801749271, delta: 0.4, url: "https://github.com/nigelhorne/SEO-Inspector/commit/169669d", label: "2025-09-11T11:25:27-04:00", pointBackgroundColor: "green", comment: "Use Params::Validate::Strict" },
 { x: "2025-09-11T13:32:46-04:00", y: 61.8075801749271, delta: 0.0, url: "https://github.com/nigelhorne/SEO-Inspector/commit/25d51b0", label: "2025-09-11T13:32:46-04:00", pointBackgroundColor: "gray", comment: "Allow the test dashboard columns to be sortable" },
-{ x: "2025-09-11T13:58:47-04:00", y: 61.8075801749271, delta: 0.0, url: "https://github.com/nigelhorne/SEO-Inspector/commit/b4bb65c", label: "2025-09-11T13:58:47-04:00", pointBackgroundColor: "gray", comment: "Don't sort the total and summary rows - use thead for that" } ];
+{ x: "2025-09-11T13:58:47-04:00", y: 61.8075801749271, delta: 0.0, url: "https://github.com/nigelhorne/SEO-Inspector/commit/b4bb65c", label: "2025-09-11T13:58:47-04:00", pointBackgroundColor: "gray", comment: "Don't sort the total and summary rows - use thead for that" },
+{ x: "2025-09-11T14:18:00-04:00", y: 61.8075801749271, delta: 0.0, url: "https://github.com/nigelhorne/SEO-Inspector/commit/f67a03b", label: "2025-09-11T14:18:00-04:00", pointBackgroundColor: "gray", comment: "ensure sortTable only sorts what it should" } ];
 
 const regressionPoints = linearRegression(dataPoints);
 const ctx = document.getElementById('coverageTrend').getContext('2d');
@@ -243,6 +248,14 @@ function sortTable(n) {
 	normalRows.forEach(r => table.tBodies[0].appendChild(r));
 	fixedRows.forEach(r => table.tBodies[0].appendChild(r));
 
+	// Update header sort state (arrows)
+	const headers = table.tHead.rows[0].cells;
+	for (let i = 0; i < headers.length; i++) {
+		// remove existing arrows
+		headers[i].innerText = headers[i].innerText.replace(/[▲▼]$/, '');
+	}
+	headers[n].innerText += asc ? ' ▲' : ' ▼';
+
 	// Remember state (so clicking same column toggles)
 	table.setAttribute("data-sort-col", n);
 	table.setAttribute("data-sort-order", asc ? "asc" : "desc");
@@ -252,7 +265,7 @@ function sortTable(n) {
 
 <footer>
 	<p>Project: <a href="https://github.com/nigelhorne/SEO-Inspector">SEO-Inspector</a></p>
-	<p><em>Last updated: 2025-09-11 18:20:25 - <a href="https://github.com/nigelhorne/SEO-Inspector/commit/f67a03b60a6366a70ad635bf003304acad489e77">commit <code>f67a03b</code></a></em></p>
+	<p><em>Last updated: 2025-09-11 18:28:20 - <a href="https://github.com/nigelhorne/SEO-Inspector/commit/f6dbf03d6c2ba105f62eec753e6f755dd12a3418">commit <code>f6dbf03</code></a></em></p>
 </footer>
 </body>
 </html>
