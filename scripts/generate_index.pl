@@ -542,7 +542,7 @@ function sortTable(n) {
 }
 
 // Initial display.
-// The table has been set up sorted in ascending order on the filename, reflect that in the GUI
+// The table has been set up sorted in ascending order on the filename; reflect that in the GUI
 document.addEventListener("DOMContentLoaded", () => {
 	const table = document.querySelector("table");
 	if (!table) return;
@@ -580,13 +580,28 @@ document.addEventListener("DOMContentLoaded", () => {
 					tension: 0.3,
 					pointRadius: 0
 				}]
-			},
-			options: {
+			}, options: {
 				responsive: false,
 				maintainAspectRatio: false,
 				elements: { line: { borderJoinStyle: 'round' } },
-				plugins: { legend: { display: false }, tooltip: { enabled: false } },
-				scales: { x: { display: false }, y: { display: false } }
+				plugins: {
+					legend: { display: false },
+					tooltip: { enabled: false },
+					zoom: {	//Enable zoom and pan
+						pan: {
+							enabled: true,
+							mode: 'x',
+						}, zoom: {
+							wheel: {
+								enabled: true,
+							},
+							pinch: {
+								enabled: true
+							},
+							mode: 'x',
+						}
+					}
+				}, scales: { x: { display: false }, y: { display: false } }
 			}
 		});
 	});
