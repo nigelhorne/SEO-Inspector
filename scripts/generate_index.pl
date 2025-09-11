@@ -380,9 +380,9 @@ const chart = new Chart(ctx, {
 				type: 'time',
 				time: {
 					tooltipFormat: 'MMM d, yyyy HH:mm:ss',
-					unit: 'minute'
+					unit: 'day'
 				},
-				title: { display: true, text: 'Timestamp' }
+				title: { display: true, text: 'Commit Date' }
 			},
 			y: { beginAtZero: true, max: 100, title: { display: true, text: 'Coverage (%)' } }
 		}, plugins: {
