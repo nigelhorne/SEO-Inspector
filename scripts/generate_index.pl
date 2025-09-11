@@ -297,6 +297,7 @@ my $js_data = join(",\n", @data_points);
 if(scalar(@data_points)) {
 	push @html, <<'HTML';
 <p>
+	<h2>Coverage Trend</h2>
 	<label>
 		<input type="checkbox" id="toggleTrend" checked>
 		Show regression trend

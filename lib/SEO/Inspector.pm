@@ -404,9 +404,9 @@ sub _check_canonical
 	if ($html =~ /<link\s+rel=["']canonical["']\s+href=["'](.*?)["']/is) {
 		return { name => 'Canonical', status => 'ok', notes => 'canonical link present' };
 	}
-	return { 
-		name => 'Canonical', 
-		status => 'warn', 
+	return {
+		name => 'Canonical',
+		status => 'warn',
 		notes => 'missing canonical link',
 		resolution => 'Add canonical link to <head>: <link rel="canonical" href="https://your-domain.com/this-page-url"> - use the preferred URL for this page to prevent duplicate content issues'
 	};
@@ -417,9 +417,9 @@ sub _check_robots_meta {
 	if ($html =~ /<meta\s+name=["']robots["']\s+content=["'](.*?)["']/is) {
 		return { name => 'Robots Meta', status => 'ok', notes => 'robots meta present' };
 	}
-	return { 
-		name => 'Robots Meta', 
-		status => 'warn', 
+	return {
+		name => 'Robots Meta',
+		status => 'warn',
 		notes => 'missing robots meta',
 		resolution => 'Add robots meta tag to <head>: <meta name="robots" content="index, follow"> for normal indexing, or <meta name="robots" content="noindex, nofollow"> to prevent indexing - controls how search engines crawl and index this page'
 	};
@@ -430,9 +430,9 @@ sub _check_viewport {
 	if ($html =~ /<meta\s+name=["']viewport["']\s+content=["'](.*?)["']/is) {
 		return { name => 'Viewport', status => 'ok', notes => 'viewport meta present' };
 	}
-	return { 
-		name => 'Viewport', 
-		status => 'warn', 
+	return {
+		name => 'Viewport',
+		status => 'warn',
 		notes => 'missing viewport meta',
 		resolution => 'Add viewport meta tag to <head>: <meta name="viewport" content="width=device-width, initial-scale=1.0"> - essential for mobile responsiveness and Google mobile-first indexing'
 	};
@@ -462,17 +462,17 @@ sub _check_links_alt_text {
 		push @missing, $1 unless $attr =~ /alt=/i;
 	}
 	if(scalar(@missing)) {
-		return { 
-			name => 'Links Alt Text', 
-			status => 'warn', 
+		return {
+			name => 'Links Alt Text',
+			status => 'warn',
 			notes => scalar(@missing) . ' images missing alt',
 			resolution => 'Add alt attributes to all images: <img src="image.jpg" alt="Descriptive text"> - describe the image content for screen readers and SEO. Use alt="" for decorative images that don\'t add meaning'
 		};
 	}
-	
-	return { 
-		name => 'Links Alt Text', 
-		status => 'ok', 
+
+	return {
+		name => 'Links Alt Text',
+		status => 'ok',
 		notes => 'all images have alt'
 	};
 }
@@ -489,7 +489,7 @@ sub _check_structured_data {
 			notes => scalar(@jsonld) . ' JSON-LD block(s) found'
 		};
 	}
-	
+
 	return {
 		name => 'Structured Data',
 		status => 'warn',
