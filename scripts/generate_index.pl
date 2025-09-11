@@ -200,7 +200,7 @@ for my $file (sort keys %{$data->{summary}}) {
 my $avg_coverage = $total_files ? int($total_coverage / $total_files) : 0;
 
 push @html, sprintf(
-	qq{<tr class="summary-row"><td colspan="2"><strong>Summary</strong></td><td colspan="2">%d files</td><td colspan="3">Avg: %d%%, Low: %d</td></tr>\n},
+	qq{<tr class="summary-row nosort"><td colspan="2"><strong>Summary</strong></td><td colspan="2">%d files</td><td colspan="3">Avg: %d%%, Low: %d</td></tr>\n},
 	$total_files, $avg_coverage, $low_coverage_count
 );
 
@@ -210,7 +210,7 @@ if (my $total_info = $data->{summary}{Total}) {
 	my $class = $total_pct > 80 ? 'high' : $total_pct > 50 ? 'med' : 'low';
 
 	push @html, sprintf(
-		qq{<tr class="%s"><td><strong>Total</strong></td><td>%.1f</td><td>%.1f</td><td>%.1f</td><td>%.1f</td><td colspan="2"><strong>%.1f</strong></td></tr>\n},
+		qq{<tr class="%s nosort"><td><strong>Total</strong></td><td>%.1f</td><td>%.1f</td><td>%.1f</td><td>%.1f</td><td colspan="2"><strong>%.1f</strong></td></tr>\n},
 		$class,
 		$total_info->{statement}{percentage} // 0,
 		$total_info->{branch}{percentage} // 0,
@@ -441,11 +441,17 @@ document.getElementById('toggleTrend').addEventListener('change', function(e) {
 
 function sortTable(n) {
 	const table = document.querySelector("table");
-	let rows = Array.from(table.rows).slice(1); // skip header row
+	let rows = Array.from(table.tBodies[0].rows);
+	// rows = Array.from(table.rows).slice(1); // skip header row
+
+	// Separate sortable vs nosort rows
+	const normalRows = rows.filter(r => !r.classList.contains("nosort"));
+	const fixedRows = rows.filter(r => r.classList.contains("nosort"));
+
 	const isNumeric = n > 0; // everything except "File" is numeric
 	const asc = table.getAttribute("data-sort-col") != n || table.getAttribute("data-sort-order") === "desc";
 
-	rows.sort((a, b) => {
+	normalRows.sort((a, b) => {
 		let x = a.cells[n].innerText.trim();
 		let y = b.cells[n].innerText.trim();
 
@@ -459,14 +465,13 @@ function sortTable(n) {
 		return 0;
 	});
 
-	// Reattach sorted rows
-	rows.forEach(r => table.tBodies[0].appendChild(r));
+	// Reattach sorted + fixed rows
+	[...normalRows, ...fixedRows].forEach(r => table.tBodies[0].appendChild(r));
 
 	// Remember sort state
 	table.setAttribute("data-sort-col", n);
 	table.setAttribute("data-sort-order", asc ? "asc" : "desc");
 }
-
 </script>
 HTML
 
