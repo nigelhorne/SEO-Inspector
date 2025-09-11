@@ -85,16 +85,18 @@ push @html, <<"HTML";
 <h1>SEO::Inspector</h1><h2>Coverage Report</h2>
 <table>
 <!-- Make the column headers clickable -->
-<tr>
-	<th onclick="sortTable(0)">File</th>
-	<th onclick="sortTable(1)">Stmt</th>
-	<th onclick="sortTable(2)">Branch</th>
-	<th onclick="sortTable(3)">Cond</th>
-	<th onclick="sortTable(4)">Sub</th>
-	<th onclick="sortTable(5)">Total</th>
-	<th onclick="sortTable(6)">Δ</th>
-</tr>
-
+<thead>
+	<tr>
+		<th onclick="sortTable(0)">File</th>
+		<th onclick="sortTable(1)">Stmt</th>
+		<th onclick="sortTable(2)">Branch</th>
+		<th onclick="sortTable(3)">Cond</th>
+		<th onclick="sortTable(4)">Sub</th>
+		<th onclick="sortTable(5)">Total</th>
+		<th onclick="sortTable(6)">Δ</th>
+	</tr>
+</thead>
+<tbody>
 HTML
 
 # Load previous snapshot for delta comparison
@@ -228,7 +230,7 @@ if (my $stat = stat($cover_db)) {
 my $commit_url = "https://github.com/nigelhorne/SEO-Inspector/commit/$commit_sha";
 my $short_sha = substr($commit_sha, 0, 7);
 
-push @html, '</table>';
+push @html, '</tbody></table>';
 
 # Parse historical snapshots
 my @history_files = bsd_glob("coverage_history/*.json");
