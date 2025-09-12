@@ -381,7 +381,8 @@ push @html, <<"HTML";
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <!-- Add chartjs-plugin-zoom (required for wheel/pinch/drag zoom & pan) -->
 <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-zoom\@2.1.1/dist/chartjs-plugin-zoom.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-date-fns"></script>script>
+<script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-date-fns"></script>
+<script>
 function linearRegression(data) {
 	const xs = data.map(p => new Date(p.x).getTime());
 	const ys = data.map(p => p.y);
