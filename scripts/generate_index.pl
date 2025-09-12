@@ -421,7 +421,7 @@ const regressionPoints = linearRegression(dataPoints);
 		console.warn('registerZoomPlugin error', e);
 	}
 })();
-+const ctx = document.getElementById('coverageTrend').getContext('2d');
+const ctx = document.getElementById('coverageTrend').getContext('2d');
 const chart = new Chart(ctx, {
 	type: 'line',
 	data: {
