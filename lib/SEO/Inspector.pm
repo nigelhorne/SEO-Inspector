@@ -633,6 +633,7 @@ sub _check_links {
 
 	# common "bad" link text patterns (exact match or just punctuation around)
 	my $bad_rx = qr/^(?:click\s*here|read\s*more|more|link|here|details)$/i;
+	my $badtext_content;
 
 	while ($html =~ m{<a\b([^>]*)>(.*?)</a>}gis) {
 		my $attrs = $1;
@@ -670,26 +671,44 @@ sub _check_links {
 		$text =~ s/\s+/ /g;
 
 		# check for bad link text (exact-ish)
-		if ($text =~ $bad_rx) {
+		if($text =~ $bad_rx) {
 			$badtext++;
+			$badtext_content = $text;
 		}
 	}
 
 	my $status = ($external || $badtext) ? 'warn' : ($total ? 'ok' : 'warn');
 
-	my $notes;
 	if ($total) {
-		$notes = sprintf("%d total (%d internal, %d external). %d link(s) with poor anchor text",
-						 $total, $internal, $external, $badtext);
-	} else {
-		$notes = 'no links found';
+		if($badtext == 0) {
+			return {
+				name => 'Links',
+				status => $status,
+				notes => sprintf('%d total (%d internal, %d external)',
+								 $total, $internal, $external),
+			}
+		}
+		if($badtext == 1) {
+			return {
+				name => 'Links',
+				status => $status,
+				notes => sprintf('%d total (%d internal, %d external). 1 link with poor anchor text',
+								 $total, $internal, $external),
+				resolution => "fix link text '$badtext_content'"
+			}
+		}
+		return {
+			name => 'Links',
+			status => $status,
+			notes => sprintf('%d total (%d internal, %d external). %d links with poor anchor text',
+							 $total, $internal, $external, $badtext),
+		};
 	}
-
 	return {
 		name => 'Links',
 		status => $status,
-		notes => $notes,
-	};
+		notes => 'no links found'
+	}
 }
 
 # Checks for essential Open Graph tags that improve social media sharing

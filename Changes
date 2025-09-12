@@ -2,6 +2,7 @@ Revision history for SEO-Inspector
 
 0.03
 	Use Params::Validate::Strict
+	More helpful message about link text (e.g. "click here")
 
 0.02	Fri Sep  5 20:59:35 EDT 2025
 	Added tests for Open Graph/Twitter Cards, readability analysis, and page size
