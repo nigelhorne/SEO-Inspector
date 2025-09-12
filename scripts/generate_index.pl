@@ -266,7 +266,7 @@ if (my $stat = stat($cover_db)) {
 	$timestamp = strftime('%Y-%m-%d %H:%M:%S', localtime($stat->mtime));
 }
 
-Readonly my $commit_url = "https://github.com/nigelhorne/SEO-Inspector/commit/$commit_sha";
+Readonly my $commit_url => "https://github.com/nigelhorne/SEO-Inspector/commit/$commit_sha";
 my $short_sha = substr($commit_sha, 0, 7);
 
 push @html, '</tbody></table>';
