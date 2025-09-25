@@ -11,12 +11,19 @@ use File::stat;
 use POSIX qw(strftime);
 use Readonly;
 
-Readonly my $cover_db => 'cover_db/cover.json';
-Readonly my $output => 'cover_html/index.html';
-Readonly my $max_points => 10;	# Only display the last 10 commits in the coverage trend graph
+Readonly my %config = (
+	github_user => 'nigelhorne',
+	github_repo => 'SEO-Inspector',
+	package_name => 'SEO::Inspector',
+	low_threshold => 70,
+	med_threshold => 90,
+	max_points => 10,	# Only display the last 10 commits in the coverage trend graph
+	cover_db => 'cover_db/cover.json',
+	output => 'cover_html/index.html'
+);
 
 # Read and decode coverage data
-my $json_text = read_file($cover_db);
+my $json_text = read_file($config{cover_db});
 my $data = decode_json($json_text);
 
 my $coverage_pct = 0;
@@ -35,7 +42,7 @@ push @html, <<"HTML";
 <!DOCTYPE html>
 <html>
 	<head>
-	<title>SEO::Inspector Coverage Report</title>
+	<title>$config{package_name} Coverage Report</title>
 	<style>
 		body { font-family: sans-serif; }
 		table { border-collapse: collapse; width: 100%; }
@@ -96,12 +103,12 @@ push @html, <<"HTML";
 </head>
 <body>
 <div class="badges">
-	<a href="https://github.com/nigelhorne/SEO-Inspector">
-		<img src="https://img.shields.io/github/stars/nigelhorne/SEO-Inspector?style=social" alt="GitHub stars">
+	<a href="https://github.com/$config{github_user}/$config{github_repo}">
+		<img src="https://img.shields.io/github/stars/$config{github_user}/$config{github_repo}?style=social" alt="GitHub stars">
 	</a>
 	<img src="$coverage_badge_url" alt="Coverage badge">
 </div>
-<h1>SEO::Inspector</h1><h2>Coverage Report</h2>
+<h1>$config{package_name}</h1><h2>Coverage Report</h2>
 <table data-sort-col="0" data-sort-order="asc">
 <!-- Make the column headers clickable -->
 <thead>
@@ -150,7 +157,7 @@ if ($prev_data) {
 
 my $commit_sha = `git rev-parse HEAD`;
 chomp $commit_sha;
-my $github_base = "https://github.com/nigelhorne/SEO-Inspector/blob/$commit_sha/";
+my $github_base = "https://github.com/$config{github_user}/$config{github_repo}/blob/$commit_sha/";
 
 # Add rows
 my ($total_files, $total_coverage, $low_coverage_count) = (0, 0, 0);
@@ -168,18 +175,18 @@ for my $file (sort keys %{$data->{summary}}) {
 	my $total = $info->{total}{percentage} // 0;
 	$total_files++;
 	$total_coverage += $total;
-	$low_coverage_count++ if $total < 70;
+	$low_coverage_count++ if $total < $config{low_threshold};
 
-	my $badge_class = $total >= 90 ? 'badge-good'
-					: $total >= 70 ? 'badge-warn'
+	my $badge_class = $total >= $config{med_threshold} ? 'badge-good'
+					: $total >= $config{low_threshold} ? 'badge-warn'
 					: 'badge-bad';
 
-	my $tooltip = $total >= 90 ? 'Excellent coverage'
-				 : $total >= 70 ? 'Moderate coverage'
+	my $tooltip = $total >= $config{med_threshold} ? 'Excellent coverage'
+				 : $total >= $config{low_threshold} ? 'Moderate coverage'
 				 : 'Needs improvement';
 
-	my $row_class = $total >= 90 ? 'high'
-			: $total >= 70 ? 'med'
+	my $row_class = $total >= $config{med_threshold} ? 'high'
+			: $total >= $config{low_threshold} ? 'med'
 			: 'low';
 
 	my $badge_html = sprintf(
@@ -269,11 +276,11 @@ if (my $total_info = $data->{summary}{Total}) {
 }
 
 my $timestamp = 'Unknown';
-if (my $stat = stat($cover_db)) {
+if (my $stat = stat($config{cover_db})) {
 	$timestamp = strftime('%Y-%m-%d %H:%M:%S', localtime($stat->mtime));
 }
 
-Readonly my $commit_url => "https://github.com/nigelhorne/SEO-Inspector/commit/$commit_sha";
+Readonly my $commit_url => "https://github.com/$config{github_user}/$config{github_repo}/commit/$commit_sha";
 my $short_sha = substr($commit_sha, 0, 7);
 
 push @html, '</tbody></table>';
@@ -318,7 +325,7 @@ my @data_points_with_time;
 my $processed_count = 0;
 
 foreach my $file (reverse sort @history_files) {
-	last if $processed_count >= $max_points;
+	last if $processed_count >= $config{max_points};
 
 	my $json = $historical_cache{$file};
 	next unless $json->{summary}{Total};
@@ -333,7 +340,7 @@ foreach my $file (reverse sort @history_files) {
 
 	my $pct = $json->{summary}{Total}{total}{percentage} // 0;
 	my $color = 'gray';	# Will be set properly after sorting
-	my $url = "https://github.com/nigelhorne/SEO-Inspector/commit/$sha";
+	my $url = "https://github.com/$config{github_user}/$config{github_repo}/commit/$sha";
 	my $comment = $commit_messages{$sha};
 
 	# Store with timestamp for sorting
@@ -668,7 +675,7 @@ HTML
 
 push @html, <<"HTML";
 <footer>
-	<p>Project: <a href="https://github.com/nigelhorne/SEO-Inspector">SEO-Inspector</a></p>
+	<p>Project: <a href="https://github.com/$config{github_user}/$config{github_repo}">$config{github_repo}</a></p>
 	<p><em>Last updated: $timestamp - <a href="$commit_url">commit <code>$short_sha</code></a></em></p>
 </footer>
 </body>
@@ -676,4 +683,4 @@ push @html, <<"HTML";
 HTML
 
 # Write to index.html
-write_file($output, join("\n", @html));
+write_file($config{output}, join("\n", @html));
