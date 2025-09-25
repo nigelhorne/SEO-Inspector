@@ -119,16 +119,24 @@ push @html, <<"HTML";
 <tbody>
 HTML
 
+my @history_files = bsd_glob("coverage_history/*.json");
+
+# Cache historical data instead of reading for each file
+my %historical_cache;
+for my $hist_file (@history_files) {
+	my $json = eval { decode_json(read_file($hist_file)) };
+	$historical_cache{$hist_file} = $json if $json;
+}
+
 # Load previous snapshot for delta comparison
 my @history = sort { $a cmp $b } bsd_glob("coverage_history/*.json");
 my $prev_data;
 
 if (@history >= 1) {
 	my $prev_file = $history[-1];	# Most recent before current
-	eval {
-		$prev_data = decode_json(read_file($prev_file));
-	};
+	$prev_data = $historical_cache{$prev_file};
 }
+
 my %deltas;
 if ($prev_data) {
 	for my $file (keys %{$data->{summary}}) {
@@ -213,9 +221,8 @@ for my $file (sort keys %{$data->{summary}}) {
 
 	my %history;
 	for my $hist_file (sort @history_files) {
-		my $json = eval { decode_json(read_file($hist_file)) };
+		my $json = $historical_cache{$hist_file};
 
-		next unless $json;
 		$history{$hist_file} = $json;
 
 		if($json->{summary}{$file}) {
@@ -272,12 +279,11 @@ my $short_sha = substr($commit_sha, 0, 7);
 push @html, '</tbody></table>';
 
 # Parse historical snapshots
-my @history_files = bsd_glob("coverage_history/*.json");
 my @trend_points;
 
 foreach my $file (sort @history_files) {
-	my $json = eval { decode_json(read_file($file)) };
-	next unless $json && $json->{summary}{Total};
+	my $json = $historical_cache{$file};
+	next unless $json->{summary}{Total};
 
 	my $pct = $json->{summary}{Total}{total}{percentage} // 0;
 	my ($date) = $file =~ /(\d{4}-\d{2}-\d{2})/;
@@ -314,8 +320,8 @@ my $processed_count = 0;
 foreach my $file (reverse sort @history_files) {
 	last if $processed_count >= $max_points;
 
-	my $json = eval { decode_json(read_file($file)) };
-	next unless $json && $json->{summary}{Total};
+	my $json = $historical_cache{$file};
+	next unless $json->{summary}{Total};
 
 	my ($sha) = $file =~ /-(\w{7})\.json$/;
 	next unless $commit_messages{$sha};	# Skip merge commits
