@@ -212,16 +212,16 @@ for my $file (sort keys %{$data->{summary}}) {
 	my @history_files = sort <coverage_history/*.json>;
 
 	my %history;
-	for my $file (@history_files) {
-		my $json = eval { decode_json(read_file($file)) };
-		next unless $json;
-		$history{$file} = $json;
-	}
 	for my $hist_file (sort @history_files) {
 		my $json = eval { decode_json(read_file($hist_file)) };
-		next unless $json && $json->{summary}{$file};
-		my $pct = $json->{summary}{$file}{total}{percentage} // 0;
-		push @file_history, sprintf('%.1f', $pct);
+
+		next unless $json;
+		$history{$hist_file} = $json;
+
+		if($json->{summary}{$file}) {
+			my $pct = $json->{summary}{$file}{total}{percentage} // 0;
+			push @file_history, sprintf('%.1f', $pct);
+		}
 	}
 	my $points_attr = join(',', @file_history);
 
