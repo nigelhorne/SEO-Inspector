@@ -11,7 +11,7 @@ use File::stat;
 use POSIX qw(strftime);
 use Readonly;
 
-Readonly my %config = (
+Readonly my %config => (
 	github_user => 'nigelhorne',
 	github_repo => 'SEO-Inspector',
 	package_name => 'SEO::Inspector',
