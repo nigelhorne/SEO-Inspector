@@ -386,7 +386,7 @@ if(scalar(@data_points)) {
 	</div>
 	<div id="zoomControls" style="margin-top:8px;">
 		<button id="resetZoomBtn" type="button">Reset Zoom</button>
-		<span style="margin-left:8px;color:#666;font-size:0.9em;">Use mouse wheel or pinch to zoom; drag to pan</span>
+		<input type="button" value="Refresh" onClick="refresh(this)">
 	</div>
 </div>
 HTML
@@ -674,11 +674,15 @@ document.addEventListener("DOMContentLoaded", () => {
 	});
 });
 
+function refresh(){
+	window.location.reload("Refresh")
+}
 </script>
 HTML
 
 push @html, <<"HTML";
 <footer>
+	<p><span style="margin-left:8px;color:#666;font-size:0.9em;">Use mouse wheel or pinch to zoom; drag to pan</span></p>
 	<p>Project: <a href="https://github.com/$config{github_user}/$config{github_repo}">$config{github_repo}</a></p>
 	<p><em>Last updated: $timestamp - <a href="$commit_url">commit <code>$short_sha</code></a></em></p>
 </footer>
