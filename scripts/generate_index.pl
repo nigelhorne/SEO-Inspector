@@ -385,8 +385,8 @@ if(scalar(@data_points)) {
 		</div>
 	</div>
 	<div id="zoomControls" style="margin-top:8px;">
-		<button id="resetZoomBtn" type="button">Reset Zoom</button>
 		<input type="button" value="Refresh" onClick="refresh(this)">
+		<button id="resetZoomBtn" type="button">Reset Zoom</button>
 	</div>
 </div>
 HTML
