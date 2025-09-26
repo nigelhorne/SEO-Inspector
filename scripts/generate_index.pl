@@ -374,23 +374,27 @@ my $js_data = join(",\n", @data_points);
 
 if(scalar(@data_points)) {
 	push @html, <<'HTML';
-<p>
-	<h2>Coverage Trend</h2>
-	<label>
-		<input type="checkbox" id="toggleTrend" checked>
-		Show regression trend
-	</label>
-</p>
+<div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1em;">
+	<div>
+		<h2>Coverage Trend</h2>
+		<label>
+			<input type="checkbox" id="toggleTrend" checked>
+			Show regression trend
+		</label>
+		<div>
+		</div>
+	</div>
+	<div id="zoomControls" style="margin-top:8px;">
+		<button id="resetZoomBtn" type="button">Reset Zoom</button>
+		<span style="margin-left:8px;color:#666;font-size:0.9em;">Use mouse wheel or pinch to zoom; drag to pan</span>
+	</div>
+</div>
 HTML
 }
 
 push @html, <<"HTML";
 <canvas id="coverageTrend" width="600" height="300"></canvas>
 <!-- Zoom controls for the trend chart -->
-<div id="zoomControls" style="margin-top:8px;">
-	<button id="resetZoomBtn" type="button">Reset Zoom</button>
-	<span style="margin-left:8px;color:#666;font-size:0.9em;">Use mouse wheel or pinch to zoom; drag to pan</span>
-</div>
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <!-- Add chartjs-plugin-zoom (required for wheel/pinch/drag zoom & pan) -->
 <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-zoom\@2.1.1/dist/chartjs-plugin-zoom.min.js"></script>
