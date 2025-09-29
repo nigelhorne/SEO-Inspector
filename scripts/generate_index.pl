@@ -4,10 +4,10 @@ use strict;
 use warnings;
 use autodie qw(:all);
 
-use JSON::MaybeXS;
 use File::Glob ':glob';
 use File::Slurp;
 use File::stat;
+use JSON::MaybeXS;
 use POSIX qw(strftime);
 use Readonly;
 
